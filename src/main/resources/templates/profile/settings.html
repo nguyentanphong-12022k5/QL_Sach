@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cài Đặt Tài Khoản - Thư Viện</title>
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+.settings-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+}
+.settings-section {
+    margin-bottom: 40px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #eee;
+}
+.settings-section:last-child {
+    border-bottom: none;
+}
+.section-title {
+    font-size: 1.3rem;
+    color: #2c3e50;
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.avatar-upload {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+.avatar-preview {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #3498db;
+}
+.form-group {
+    margin-bottom: 20px;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #2c3e50;
+    font-weight: 500;
+}
+.form-group input, .form-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+.form-group input:focus, .form-group textarea:focus {
+    border-color: #3498db;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+.btn-save {
+    padding: 12px 30px;
+    font-size: 1rem;
+}
+.alert {
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+.alert-success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+.alert-error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <header class="header fade-in">
+        <h1><i class="fas fa-cog"></i> Cài Đặt Tài Khoản</h1>
+        <nav class="nav">
+            <a th:href="@{/}" class="nav-link"><i class="fas fa-home"></i> Trang Chủ</a>
+            <a th:href="@{/profile}" class="nav-link"><i class="fas fa-user"></i> Hồ Sơ</a>
+        </nav>
+    </header>
+
+    <main class="main fade-in">
+        <div th:if="${success}" class="alert alert-success">
+            <i class="fas fa-check-circle"></i> <span th:text="${success}"></span>
+        </div>
+        <div th:if="${error}" class="alert alert-error">
+            <i class="fas fa-exclamation-circle"></i> <span th:text="${error}"></span>
+        </div>
+        
+        <div class="settings-container">
+            <!-- Avatar Upload -->
+            <div class="settings-section">
+                <h3 class="section-title"><i class="fas fa-camera"></i> Ảnh Đại Diện</h3>
+                <form th:action="@{/profile/upload-avatar}" method="post" enctype="multipart/form-data">
+                    <div class="avatar-upload">
+                        <img th:src="@{${taiKhoan.avatar} ?: 'https://ui-avatars.com/api/?name=' + ${taiKhoan.hoTen} + '&background=1877f2&color=fff&size=100'}"
+                             alt="Avatar" class="avatar-preview"
+                             onerror="this.src='https://ui-avatars.com/api/?name=User&background=1877f2&color=fff&size=100'">
+                        <div style="flex: 1;">
+                            <input type="file" name="avatar" accept="image/*" class="form-control" required>
+                            <button type="submit" class="btn btn-primary" style="margin-top: 15px;">
+                                <i class="fas fa-upload"></i> Tải Lên
+                            </button>
+                            <a th:href="@{/profile/remove-avatar}" class="btn btn-outline" style="margin-top: 15px; margin-left: 10px;"
+                               onclick="return confirm('Xóa ảnh đại diện và dùng ảnh mặc định?')">
+                                <i class="fas fa-trash"></i> Xóa ảnh
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Update Profile Info -->
+            <div class="settings-section">
+                <h3 class="section-title"><i class="fas fa-user-edit"></i> Chỉnh Sửa Thông Tin</h3>
+                <form th:action="@{/profile/update-info}" method="post" th:object="${taiKhoan}">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Họ và tên</label>
+                        <input type="text" th:field="*{hoTen}" placeholder="Nhập họ tên" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" th:field="*{email}" placeholder="Nhập email" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-phone"></i> Số điện thoại</label>
+                        <input type="text" th:field="*{soDienThoai}" placeholder="Nhập số điện thoại">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-map-marker-alt"></i> Địa chỉ</label>
+                        <textarea th:field="*{diaChi}" rows="3" placeholder="Nhập địa chỉ"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-save">
+                        <i class="fas fa-save"></i> Lưu Thay Đổi
+                    </button>
+                </form>
+            </div>
+            
+            <!-- Change Password -->
+            <div class="settings-section">
+                <h3 class="section-title"><i class="fas fa-lock"></i> Đổi Mật Khẩu</h3>
+                <form th:action="@{/profile/change-password}" method="post">
+                    <div class="form-group">
+                        <label><i class="fas fa-key"></i> Mật khẩu cũ</label>
+                        <input type="password" name="oldPassword" placeholder="Nhập mật khẩu cũ" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-lock"></i> Mật khẩu mới</label>
+                        <input type="password" name="newPassword" placeholder="Nhập mật khẩu mới" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-check-circle"></i> Xác nhận mật khẩu mới</label>
+                        <input type="password" name="confirmPassword" placeholder="Nhập lại mật khẩu mới" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-save">
+                        <i class="fas fa-save"></i> Đổi Mật Khẩu
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

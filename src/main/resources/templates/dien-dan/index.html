@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diễn Đàn - Thư Viện</title>
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+.dien-dan-container {
+    max-width: 1000px;
+    margin: 40px auto;
+}
+.binh-luan-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+}
+.binh-luan-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+.binh-luan-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.binh-luan-info {
+    flex: 1;
+}
+.binh-luan-name {
+    font-weight: 600;
+    color: var(--dark-color);
+}
+.binh-luan-time {
+    font-size: 0.85rem;
+    color: var(--gray-color);
+}
+.binh-luan-content {
+    padding: 10px 0 10px 65px;
+    line-height: 1.6;
+}
+.form-binh-luan {
+    background: white;
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+}
+.form-binh-luan textarea {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    resize: vertical;
+    min-height: 100px;
+    font-size: 1rem;
+}
+.form-binh-luan textarea:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+.sidebar {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+}
+.sidebar-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--primary-color);
+}
+.sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+.sidebar-item:last-child {
+    border-bottom: none;
+}
+.btn-action {
+    opacity: 0.6;
+    transition: opacity 0.2s;
+    margin-left: 8px;
+}
+.btn-action:hover {
+    opacity: 1;
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <header class="header fade-in">
+        <h1><i class="fas fa-comments"></i> Diễn Đàn</h1>
+        <nav class="nav">
+            <a th:href="@{/}" class="nav-link"><i class="fas fa-home"></i> Trang Chủ</a>
+            <a th:href="@{/sach}" class="nav-link"><i class="fas fa-book"></i> Sách</a>
+            <a th:href="@{/dien-dan}" class="nav-link"><i class="fas fa-comments"></i> Diễn Đàn</a>
+            <a th:if="${currentUser?.quyen == 1}" th:href="@{/dien-dan/admin}" class="nav-link">
+                <i class="fas fa-cog"></i> Quản Lý
+            </a>
+            <!-- Avatar dropdown -->
+            <div class="user-menu">
+                <div class="avatar-dropdown">
+                    <img th:src="@{${currentUser?.avatar} ?: 'https://ui-avatars.com/api/?name=User&background=1877f2&color=fff&size=40'}"
+                         alt="Avatar" class="avatar-small" onclick="toggleDropdown()">
+                    <div class="dropdown-content" id="userDropdown">
+                        <a th:href="@{/profile}"><i class="fas fa-user"></i> Hồ sơ</a>
+                        <a th:href="@{/profile/settings}"><i class="fas fa-cog"></i> Cài đặt</a>
+                        <a th:href="@{/dien-dan/da-thu-hoi}"><i class="fas fa-history"></i> Bình luận đã thu hồi</a>
+                        <hr>
+                        <form th:action="@{/logout}" method="post">
+                            <button type="submit" class="logout-btn">
+                                <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="main fade-in">
+        <div th:if="${success}" class="alert alert-success">
+            <i class="fas fa-check-circle"></i> <span th:text="${success}"></span>
+        </div>
+        <div th:if="${error}" class="alert alert-error">
+            <i class="fas fa-exclamation-circle"></i> <span th:text="${error}"></span>
+        </div>
+
+        <div class="dien-dan-container">
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px;">
+                <!-- Cột chính -->
+                <div>
+                    <!-- Form đăng bình luận -->
+                    <div class="form-binh-luan">
+                        <h3 style="margin-bottom: 15px;">
+                            <i class="fas fa-pen"></i> Đóng góp ý kiến
+                        </h3>
+                        <form th:action="@{/dien-dan/dang}" method="post">
+                            <textarea name="noiDung" placeholder="Chia sẻ ý kiến của bạn..." required></textarea>
+                            <div style="display: flex; justify-content: flex-end; margin-top: 15px;">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-paper-plane"></i> Gửi ý kiến
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Danh sách bình luận -->
+                    <h3 style="margin-bottom: 20px;">
+                        <i class="fas fa-list"></i> Ý kiến đóng góp gần đây
+                    </h3>
+
+                    <div th:if="${binhLuanList == null || binhLuanList.isEmpty()}">
+                        <div class="binh-luan-card" style="text-align: center; padding: 40px;">
+                            <i class="fas fa-comment-dots" style="font-size: 3rem; color: var(--gray-color); margin-bottom: 15px;"></i>
+                            <p>Chưa có ý kiến đóng góp nào. Hãy là người đầu tiên!</p>
+                        </div>
+                    </div>
+
+                    <!-- VÒNG LẶP BÌNH LUẬN - CÁC NÚT ĐÃ ĐƯỢC ĐƯA VÀO ĐÂY -->
+                    <div th:each="bl : ${binhLuanList}" class="binh-luan-card">
+                        <div class="binh-luan-header">
+                            <img th:src="@{${bl.taiKhoan.avatar} ?: 'https://ui-avatars.com/api/?name=' + ${bl.taiKhoan.hoTen} + '&background=1877f2&color=fff&size=50'}"
+                                 alt="Avatar" class="binh-luan-avatar"
+                                 onerror="this.src='https://ui-avatars.com/api/?name=User&background=1877f2&color=fff&size=50'">
+                            <div class="binh-luan-info">
+                                <div class="binh-luan-name">
+                                    <span th:text="${bl.taiKhoan.hoTen} ?: ${bl.taiKhoan.username}">User</span>
+                                    <span th:if="${bl.taiKhoan.quyen == 1}" class="badge badge-danger">Admin</span>
+                                    <span th:if="${bl.taiKhoan.quyen == 2}" class="badge badge-warning">Thủ thư</span>
+                                </div>
+                                <div class="binh-luan-time">
+                                    <i class="far fa-clock"></i>
+                                    <span th:text="${#temporals.format(bl.ngayDang, 'dd/MM/yyyy HH:mm')}"></span>
+                                    <span th:if="${bl.trangThai == 2}" style="color: var(--warning-color); margin-left: 10px;">
+                                        <i class="fas fa-undo-alt"></i> Đã thu hồi
+                                    </span>
+                                </div>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <!-- Nút chỉnh sửa -->
+                                <a th:if="${currentUser != null && (currentUser.id == bl.taiKhoan.id || currentUser.quyen == 1)}"
+                                   th:href="@{/dien-dan/sua/{id}(id=${bl.id})}" 
+                                   class="btn-action" style="color: var(--primary-color);"
+                                   title="Chỉnh sửa">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                
+                                <!-- Nút thu hồi -->
+                                <a th:if="${currentUser != null && (currentUser.id == bl.taiKhoan.id || currentUser.quyen == 1)}"
+                                   th:href="@{/dien-dan/thu-hoi/{id}(id=${bl.id})}" 
+                                   class="btn-action" style="color: var(--warning-color);"
+                                   onclick="return confirm('Thu hồi bình luận này?')"
+                                   title="Thu hồi">
+                                    <i class="fas fa-undo-alt"></i>
+                                </a>
+                                
+                                <!-- Nút xóa vĩnh viễn -->
+                                <a th:if="${currentUser != null && currentUser.quyen == 1}"
+                                   th:href="@{/dien-dan/xoa-vinh-vien/{id}(id=${bl.id})}" 
+                                   class="btn-action" style="color: var(--danger-color);"
+                                   onclick="return confirm('Xóa vĩnh viễn bình luận này?')"
+                                   title="Xóa vĩnh viễn">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="binh-luan-content" th:text="${bl.noiDung}"></div>
+                        <div th:if="${bl.sach != null}" class="binh-luan-sach">
+                            <i class="fas fa-book"></i> 
+                            <a th:href="@{/sach/{id}(id=${bl.sach.id})}" th:text="${bl.sach.tenSach}"></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div>
+                    <div class="sidebar">
+                        <h4 class="sidebar-title"><i class="fas fa-fire"></i> Bình luận mới nhất</h4>
+                        <div th:each="bl : ${binhLuanMoiNhat}">
+                            <div class="sidebar-item">
+                                <img th:src="@{${bl.taiKhoan.avatar} ?: 'https://ui-avatars.com/api/?name=' + ${bl.taiKhoan.hoTen} + '&background=1877f2&color=fff&size=40'}"
+                                     alt="Avatar" style="width: 35px; height: 35px; border-radius: 50%;"
+                                     onerror="this.src='https://ui-avatars.com/api/?name=User&background=1877f2&color=fff&size=40'">
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 500; font-size: 0.9rem;"
+                                        th:text="${bl.taiKhoan.hoTen} ?: ${bl.taiKhoan.username}"></div>
+                                    <div style="font-size: 0.85rem; color: var(--gray-color); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 180px;"
+                                        th:text="${bl.noiDung}"></div>
+                                    <div style="font-size: 0.75rem; color: var(--gray-color);"
+                                        th:text="${#temporals.format(bl.ngayDang, 'dd/MM HH:mm')}"></div>
+                                </div>
+                                <a th:if="${bl.sach != null}" th:href="@{/dien-dan/sach/{id}(id=${bl.sach.id})}"
+                                   style="color: var(--primary-color);">
+                                    <i class="fas fa-book"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="sidebar" style="margin-top: 20px;">
+                        <h4 class="sidebar-title"><i class="fas fa-info-circle"></i> Hướng dẫn</h4>
+                        <p style="color: var(--gray-color); line-height: 1.6;">
+                            <i class="fas fa-check-circle" style="color: #27ae60;"></i> 
+                            Hãy lịch sự và tôn trọng người khác.<br>
+                            <i class="fas fa-check-circle" style="color: #27ae60;"></i> 
+                            Đóng góp ý kiến xây dựng để cải thiện thư viện.<br>
+                            <i class="fas fa-check-circle" style="color: #27ae60;"></i> 
+                            Bạn có thể bình luận về sách tại trang chi tiết sách.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 Quản Lý Thư Viện. All rights reserved.</p>
+    </footer>
+</div>
+
+<script>
+    function toggleDropdown() {
+        document.getElementById("userDropdown").classList.toggle("show");
+    }
+    window.onclick = function(event) {
+        if (!event.target.matches('.avatar-small')) {
+            var dropdowns = document.getElementsByClassName("dropdown-content");
+            for (var i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+            }
+        }
+    }
+</script>
+</body>
+</html>

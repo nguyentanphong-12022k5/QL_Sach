@@ -1,0 +1,182 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Danh Sách Sách - Thư Viện</title>
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+	<div class="container">
+		<!-- Header -->
+		<header class="header fade-in">
+			<h1>
+				<i class="fas fa-book"></i> Danh Sách Sách
+			</h1>
+			<nav class="nav">
+				<a th:href="@{/}" class="nav-link"> <i class="fas fa-home"></i>
+					Trang Chủ
+				</a> <a th:href="@{/docgia}" class="nav-link"> <i
+					class="fas fa-users"></i> Độc Giả
+				</a> <a th:href="@{/phieumuon}" class="nav-link"> <i
+					class="fas fa-hand-holding"></i> Phiếu Mượn
+				</a> <a th:href="@{/phieunhap}" class="nav-link"> <i
+					class="fas fa-truck"></i> Phiếu Nhập
+				</a> <a th:href="@{/thongke}" class="nav-link"> <i
+					class="fas fa-chart-bar"></i> Thống Kê <a th:href="@{/dien-dan}"
+					class="nav-link"><i class="fas fa-comments"></i> Diễn Đàn</a>
+			</nav>
+		</header>
+
+		<!-- Main Content -->
+		<main class="main fade-in">
+			<!-- Search Bar -->
+			<div style="margin-bottom: 20px; display: flex; gap: 15px">
+				<div style="flex: 1; position: relative">
+					<i class="fas fa-search"
+						style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--gray-color); z-index: 1;"></i>
+					<input type="text" id="searchInput" th:value="${keyword}"
+						placeholder="Tìm kiếm theo tên sách hoặc tác giả..."
+						style="width: 100%; padding: 12px 20px 12px 45px; border: 2px solid #e0e0e0; border-radius: 50px; font-size: 1rem;" />
+				</div>
+				<button class="btn btn-primary" onclick="searchBooks()">
+					<i class="fas fa-search"></i> Tìm Kiếm
+				</button>
+				<a th:href="@{/sach}" class="btn btn-outline"> <i
+					class="fas fa-sync-alt"></i> Làm Mới
+				</a> <a th:href="@{/admin/sach/add}" class="btn btn-success"> <i
+					class="fas fa-plus"></i> Thêm Sách
+				</a>
+			</div>
+
+			<!-- Filter Buttons -->
+			<div class="filter-buttons">
+				<a th:href="@{/sach}" class="btn btn-outline btn-sm"
+					th:classappend="${param.filter == null && param.keyword == null ? 'btn-primary' : ''}">
+					<i class="fas fa-list"></i> Tất Cả
+				</a> <a th:href="@{/sach(filter='available')}"
+					class="btn btn-outline btn-sm"
+					th:classappend="${param.filter == 'available' ? 'btn-primary' : ''}">
+					<i class="fas fa-check-circle"></i> Còn Trong Kho
+				</a>
+			</div>
+
+			<!-- Search Result Info -->
+			<div th:if="${keyword != null}" class="search-result-info">
+				<div class="result-text">
+					<i class="fas fa-search" style="margin-right: 10px;"></i> Kết quả
+					tìm kiếm cho: "<span th:text="${keyword}"></span>" <a
+						th:href="@{/sach}" class="clear-search"> <i
+						class="fas fa-times-circle"></i> Xóa tìm kiếm
+					</a>
+				</div>
+				<div class="result-count">
+					<span th:text="${resultCount}">0</span> kết quả
+				</div>
+			</div>
+
+			<!-- Filter Info -->
+			<div th:if="${filter == 'available'}" class="search-result-info">
+				<div class="result-text">
+					<i class="fas fa-filter" style="margin-right: 10px;"></i> Đang lọc:
+					Sách còn trong kho <a th:href="@{/sach}" class="clear-search">
+						<i class="fas fa-times-circle"></i> Bỏ lọc
+					</a>
+				</div>
+			</div>
+
+			<!-- No Results -->
+			<div th:if="${sachList == null || sachList.isEmpty()}"
+				class="no-results">
+				<i class="fas fa-book-open"></i>
+				<h3>Không tìm thấy sách</h3>
+				<p th:if="${keyword != null}">
+					Không có sách nào phù hợp với từ khóa "<span th:text="${keyword}"></span>".
+				</p>
+				<p th:unless="${keyword != null}">Hiện chưa có sách nào trong
+					thư viện.</p>
+				<a th:href="@{/sach}" class="btn btn-primary"
+					style="margin-top: 20px;"> <i class="fas fa-list"></i> Xem tất
+					cả sách
+				</a>
+			</div>
+
+			<!-- Book Grid -->
+			<div class="book-grid"
+				th:if="${sachList != null && !sachList.isEmpty()}">
+				<div class="book-card" th:each="sach : ${sachList}">
+					<div class="book-image">
+						<img
+							th:src="@{${sach.imageUrl != null ? '/img/sach/' + sach.imageUrl : '/img/default-book.jpg'}}"
+							alt="Ảnh sách" onerror="this.src = '/img/default-book.jpg'" />
+					</div>
+					<div class="book-info">
+						<div class="book-title" th:text="${sach.tenSach}">Tên sách</div>
+						<div class="book-meta">
+							<div>
+								<i class="fas fa-user"></i> <span th:text="${sach.tacGia}">Tác
+									giả</span>
+							</div>
+							<div>
+								<i class="fas fa-building"></i> <span
+									th:text="${sach.nhaXuatBan}">NXB</span>
+							</div>
+							<div>
+								<i class="fas fa-tag"></i> <span th:text="${sach.loaiSach}">Thể
+									loại</span>
+							</div>
+							<div>
+								<i class="fas fa-map-pin"></i> <span th:text="${sach.keSach}">Vị
+									trí</span>
+							</div>
+						</div>
+						<div style="margin-top: 15px; display: flex; gap: 10px">
+							<a th:href="@{'/sach/' + ${sach.id}}" class="btn btn-outline"
+								style="flex: 1"> <i class="fas fa-eye"></i> Chi tiết
+							</a> <a th:href="@{'/muon-sach/' + ${sach.id}}"
+								class="btn btn-primary" style="flex: 1"> <i
+								class="fas fa-hand-holding"></i> Mượn
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+
+		<footer class="footer">
+			<p>&copy; 2026 Quản Lý Thư Viện. All rights reserved.</p>
+		</footer>
+	</div>
+
+	<script>
+		// Tìm kiếm khi nhấn Enter
+		document.getElementById('searchInput').addEventListener('keypress',
+				function(e) {
+					if (e.key === 'Enter') {
+						searchBooks();
+					}
+				});
+
+		// Hàm tìm kiếm
+		function searchBooks() {
+			var keyword = document.getElementById('searchInput').value.trim();
+			if (keyword) {
+				window.location.href = '/sach?keyword='
+						+ encodeURIComponent(keyword);
+			} else {
+				window.location.href = '/sach';
+			}
+		}
+
+		// Focus vào ô tìm kiếm khi trang load
+		document.addEventListener('DOMContentLoaded', function() {
+			// Nếu có từ khóa, focus vào ô tìm kiếm
+			if (document.getElementById('searchInput').value) {
+				document.getElementById('searchInput').focus();
+			}
+		});
+	</script>
+</body>
+</html>

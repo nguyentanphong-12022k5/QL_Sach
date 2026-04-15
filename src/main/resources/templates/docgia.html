@@ -1,0 +1,88 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Danh Sách Độc Giả - Thư Viện</title>
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+	<div class="container">
+		<header class="header fade-in">
+			<h1>
+				<i class="fas fa-users"></i> Danh Sách Độc Giả
+			</h1>
+			<nav class="nav">
+				<a th:href="@{/}" class="nav-link"> <i class="fas fa-home"></i>
+					Trang Chủ
+				</a> <a th:href="@{/sach}" class="nav-link"> <i class="fas fa-book"></i>
+					Sách
+				</a> <a th:href="@{/phieumuon}" class="nav-link"> <i
+					class="fas fa-hand-holding"></i> Phiếu Mượn
+				<a th:href="@{/dien-dan}" class="nav-link"><i class="fas fa-comments"></i> Diễn Đàn</a>
+			</nav>
+		</header>
+
+		<main class="main fade-in">
+			<div
+				style="margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center;">
+				<h2 style="color: var(--dark-color)">
+					<i class="fas fa-list"></i> Tất cả độc giả
+				</h2>
+				<button class="btn btn-primary">
+					<i class="fas fa-user-plus"></i> Thêm Độc Giả
+				</button>
+			</div>
+
+			<div class="table-wrapper">
+				<table>
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Họ Tên</th>
+							<th>Email</th>
+							<th>Số Điện Thoại</th>
+							<th>Trạng Thái</th>
+							<th>Thao Tác</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="docGia : ${docGiaList}">
+							<td><strong th:text="${docGia.id}">1</strong></td>
+							<td>
+								<div style="display: flex; align-items: center; gap: 10px">
+									<div
+										style="width: 40px; height: 40px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
+										<i class="fas fa-user"></i>
+									</div>
+									<span th:text="${docGia.hoTen}">Họ tên</span>
+								</div>
+							</td>
+							<td th:text="${docGia.email}">Email</td>
+							<td th:text="${docGia.soDienThoai}">SĐT</td>
+							<td><span class="badge badge-success"> <i
+									class="fas fa-circle" style="font-size: 0.5rem"></i> Hoạt động
+							</span></td>
+							<td>
+								<button class="btn btn-outline"
+									style="padding: 5px 10px; margin-right: 5px">
+									<i class="fas fa-edit"></i>
+								</button>
+								<button class="btn btn-danger" style="padding: 5px 10px">
+									<i class="fas fa-trash"></i>
+								</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</main>
+
+		<footer class="footer">
+			<p>&copy; 2026 Quản Lý Thư Viện. All rights reserved.</p>
+		</footer>
+	</div>
+</body>
+</html>

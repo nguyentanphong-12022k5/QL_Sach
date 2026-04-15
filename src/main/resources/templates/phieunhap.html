@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<title>Phiếu nhập</title>
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+</head>
+<body>
+	<header class="header fade-in">
+		<h1>Danh sách phiếu nhập</h1>
+
+		<h1>
+			<i class="fas fa-book-open"></i> Quản Lý Thư Viện
+		</h1>
+		<nav class="nav">
+			<a th:href="@{/sach}" class="nav-link"> <i class="fas fa-book"></i>
+				Sách
+			</a> <a th:href="@{/docgia}" class="nav-link"> <i
+				class="fas fa-users"></i> Độc Giả
+			</a> <a th:href="@{/phieumuon}" class="nav-link"> <i
+				class="fas fa-hand-holding"></i> Phiếu Mượn
+			</a> <a th:href="@{/phieunhap}" class="nav-link"> <i
+				class="fas fa-truck"></i> Phiếu Nhập
+			</a> <a th:href="@{/thongke}" class="nav-link"> <i
+				class="fas fa-chart-bar"></i> Thống Kê
+			<a th:href="@{/dien-dan}" class="nav-link"><i class="fas fa-comments"></i> Diễn Đàn</a>
+			<div class="user-menu">
+				<div class="avatar-dropdown">
+					<img
+						th:src="@{${currentUser?.avatar} ?: 'https://ui-avatars.com/api/?name=User&background=3498db&color=fff&size=40'}"
+						alt="Avatar" class="avatar-small" onclick="toggleDropdown()"
+						onerror="this.src='https://ui-avatars.com/api/?name=User&background=3498db&color=fff&size=40'">
+					<div class="dropdown-content" id="userDropdown">
+						<a th:href="@{/profile}"><i class="fas fa-user"></i> Hồ sơ</a> <a
+							th:href="@{/profile/settings}"><i class="fas fa-cog"></i> Cài
+							đặt</a>
+						<hr>
+						<form th:action="@{/logout}" method="post">
+							<button type="submit" class="logout-btn">
+								<i class="fas fa-sign-out-alt"></i> Đăng xuất
+							</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</nav>
+	</header>
+	<main>
+		<table>
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Ngày nhập</th>
+					<th>Nhà cung cấp</th>
+					<th>Ghi chú</th>
+					<th>Chi tiết</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="phieu : ${phieuNhapList}">
+					<td th:text="${phieu.id}">1</td>
+					<td th:text="${phieu.ngayNhap}">2024-01-01</td>
+					<td th:text="${phieu.nhaCungCap}">Nhà cung cấp</td>
+					<td th:text="${phieu.ghiChu}">Ghi chú</td>
+					<td>
+						<ul>
+							<li th:each="ct : ${phieu.chiTiet}"><span
+								th:text="${ct.sach.tenSach}">Tên sách</span> (SL: <span
+								th:text="${ct.soLuong}">1</span>, Giá: <span
+								th:text="${ct.donGia}">0</span>)</li>
+						</ul>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</main>
+	<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

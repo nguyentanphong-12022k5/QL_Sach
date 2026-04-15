@@ -1,0 +1,78 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Thống Kê - Thư Viện</title>
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+<div class="container">
+    <header class="header fade-in">
+        <h1><i class="fas fa-chart-bar"></i> Thống Kê Hệ Thống</h1>
+        <nav class="nav">
+            <a th:href="@{/}" class="nav-link"><i class="fas fa-home"></i> Trang Chủ</a>
+            <a th:href="@{/sach}" class="nav-link"><i class="fas fa-book"></i> Sách</a>
+            <a th:href="@{/docgia}" class="nav-link"><i class="fas fa-users"></i> Độc Giả</a>
+            <a th:href="@{/phieumuon}" class="nav-link"><i class="fas fa-hand-holding"></i> Phiếu Mượn</a>
+        </nav>
+    </header>
+
+    <main class="main fade-in">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-book"></i></div>
+                <h3 th:text="${stats.totalSach}">0</h3>
+                <p>Tổng Sách</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-users"></i></div>
+                <h3 th:text="${stats.totalDocGia}">0</h3>
+                <p>Tổng Độc Giả</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-hand-holding-heart"></i></div>
+                <h3 th:text="${stats.dangMuon}">0</h3>
+                <p>Đang Mượn</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                <h3 th:text="${stats.quaHan}">0</h3>
+                <p>Quá Hạn</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-truck"></i></div>
+                <h3 th:text="${stats.totalPhieuNhap}">0</h3>
+                <p>Phiếu Nhập</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-user-shield"></i></div>
+                <h3 th:text="${stats.totalTaiKhoan}">0</h3>
+                <p>Tài Khoản</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-box"></i></div>
+                <h3 th:text="${stats.sachConTrongKho}">0</h3>
+                <p>Sách Còn Trong Kho</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-exclamation-circle"></i></div>
+                <h3 th:text="${stats.sachSapHet}">0</h3>
+                <p>Sách Sắp Hết (&lt;5)</p>
+            </div>
+        </div>
+
+        <div style="margin-top: 40px; padding: 30px; background: #f8fafc; border-radius: 20px; text-align: center;">
+            <i class="fas fa-calendar-alt" style="font-size: 2rem; color: var(--primary-color); margin-bottom: 15px;"></i>
+            <h3 style="margin-bottom: 10px;">Ngày Thống Kê</h3>
+            <p style="font-size: 1.2rem; color: var(--dark-color);" th:text="${#temporals.format(stats.today, 'dd/MM/yyyy')}"></p>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 Quản Lý Thư Viện. All rights reserved.</p>
+    </footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title th:text="'Bình luận: ' + ${sach.tenSach}">Bình luận sách</title>
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+.binh-luan-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+.binh-luan-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+.binh-luan-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.binh-luan-info {
+    flex: 1;
+}
+.binh-luan-name {
+    font-weight: 600;
+    color: var(--dark-color);
+}
+.binh-luan-time {
+    font-size: 0.85rem;
+    color: var(--gray-color);
+}
+.binh-luan-content {
+    padding: 10px 0 10px 65px;
+    line-height: 1.6;
+}
+.form-binh-luan {
+    background: white;
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+.form-binh-luan textarea {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    resize: vertical;
+    min-height: 100px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <header class="header fade-in">
+        <h1><i class="fas fa-comments"></i> Bình luận sách</h1>
+        <nav class="nav">
+            <a th:href="@{/dien-dan}" class="nav-link"><i class="fas fa-arrow-left"></i> Diễn Đàn</a>
+            <a th:href="@{/sach/{id}(id=${sach.id})}" class="nav-link"><i class="fas fa-book"></i> Chi tiết sách</a>
+        </nav>
+    </header>
+
+    <main class="main fade-in">
+        <div th:if="${success}" class="alert alert-success">
+            <i class="fas fa-check-circle"></i> <span th:text="${success}"></span>
+        </div>
+
+        <!-- Thông tin sách -->
+        <div style="display: flex; gap: 20px; margin-bottom: 30px; padding: 20px; background: #f8fafc; border-radius: 16px;">
+            <img th:src="@{${sach.imageUrl != null ? '/img/sach/' + sach.imageUrl : '/img/default-book.jpg'}}" 
+                 alt="Ảnh sách" style="width: 100px; height: 140px; object-fit: cover; border-radius: 8px;" />
+            <div>
+                <h2 th:text="${sach.tenSach}" style="margin-bottom: 10px;"></h2>
+                <p><i class="fas fa-user"></i> <span th:text="${sach.tacGia?.tenTacGia}"></span></p>
+                <p><i class="fas fa-comment"></i> <span th:text="${soBinhLuan}"></span> bình luận</p>
+            </div>
+        </div>
+
+        <!-- Form bình luận -->
+        <div class="form-binh-luan">
+            <h3 style="margin-bottom: 15px;"><i class="fas fa-pen"></i> Viết bình luận</h3>
+            <form th:action="@{/dien-dan/dang}" method="post">
+                <input type="hidden" name="sachId" th:value="${sach.id}" />
+                <textarea name="noiDung" placeholder="Chia sẻ cảm nhận của bạn về cuốn sách này..." required></textarea>
+                <div style="display: flex; justify-content: flex-end; margin-top: 15px;">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Gửi bình luận
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Danh sách bình luận -->
+        <h3 style="margin-bottom: 20px;">
+            <i class="fas fa-list"></i> <span th:text="${soBinhLuan}"></span> bình luận
+        </h3>
+
+        <div th:if="${binhLuanList == null || binhLuanList.isEmpty()}">
+            <div class="binh-luan-card" style="text-align: center; padding: 40px;">
+                <i class="fas fa-comment-dots" style="font-size: 3rem; color: var(--gray-color); margin-bottom: 15px;"></i>
+                <p>Chưa có bình luận nào. Hãy là người đầu tiên bình luận!</p>
+            </div>
+        </div>
+
+        <div th:each="bl : ${binhLuanList}" class="binh-luan-card">
+            <div class="binh-luan-header">
+                <img th:src="@{${bl.taiKhoan.avatar} ?: 'https://ui-avatars.com/api/?name=' + ${bl.taiKhoan.hoTen} + '&background=1877f2&color=fff&size=50'}"
+                     alt="Avatar" class="binh-luan-avatar">
+                <div class="binh-luan-info">
+                    <div class="binh-luan-name">
+                        <span th:text="${bl.taiKhoan.hoTen} ?: ${bl.taiKhoan.username}"></span>
+                    </div>
+                    <div class="binh-luan-time">
+                        <i class="far fa-clock"></i>
+                        <span th:text="${#temporals.format(bl.ngayDang, 'dd/MM/yyyy HH:mm')}"></span>
+                    </div>
+                </div>
+                <a th:if="${currentUser?.id == bl.taiKhoan.id || currentUser?.quyen == 1}"
+                   th:href="@{/dien-dan/xoa/{id}(id=${bl.id})}" 
+                   style="color: var(--danger-color);"
+                   onclick="return confirm('Xóa bình luận này?')">
+                    <i class="fas fa-trash"></i>
+                </a>
+            </div>
+            <div class="binh-luan-content" th:text="${bl.noiDung}"></div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

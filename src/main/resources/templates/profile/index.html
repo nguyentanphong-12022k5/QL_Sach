@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thông Tin Cá Nhân - Thư Viện</title>
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+.profile-container {
+	max-width: 900px;
+	margin: 40px auto;
+	padding: 30px;
+	background: white;
+	border-radius: 20px;
+	box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.profile-header {
+	display: flex;
+	align-items: center;
+	gap: 30px;
+	margin-bottom: 40px;
+	padding-bottom: 30px;
+	border-bottom: 2px solid #f0f0f0;
+}
+
+.avatar-wrapper {
+	position: relative;
+}
+
+.avatar {
+	width: 120px;
+	height: 120px;
+	border-radius: 50%;
+	object-fit: cover;
+	border: 4px solid #3498db;
+	box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.profile-info h1 {
+	font-size: 2rem;
+	color: #2c3e50;
+	margin-bottom: 10px;
+}
+
+.profile-info .username {
+	color: #7f8c8d;
+	font-size: 1.1rem;
+	margin-bottom: 5px;
+}
+
+.profile-info .role {
+	display: inline-block;
+	padding: 5px 15px;
+	background: #3498db;
+	color: white;
+	border-radius: 20px;
+	font-size: 0.9rem;
+	margin-top: 10px;
+}
+
+.info-section {
+	margin-bottom: 30px;
+}
+
+.section-title {
+	font-size: 1.3rem;
+	color: #2c3e50;
+	margin-bottom: 20px;
+	padding-bottom: 10px;
+	border-bottom: 2px solid #3498db;
+}
+
+.info-grid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 20px;
+}
+
+.info-item {
+	display: flex;
+	align-items: center;
+	gap: 15px;
+	padding: 15px;
+	background: #f8f9fa;
+	border-radius: 12px;
+}
+
+.info-icon {
+	width: 45px;
+	height: 45px;
+	background: #3498db;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: white;
+	font-size: 1.2rem;
+}
+
+.info-content {
+	flex: 1;
+}
+
+.info-label {
+	font-size: 0.85rem;
+	color: #7f8c8d;
+	margin-bottom: 5px;
+}
+
+.info-value {
+	font-size: 1.1rem;
+	font-weight: 500;
+	color: #2c3e50;
+}
+
+.action-buttons {
+	display: flex;
+	gap: 15px;
+	margin-top: 30px;
+}
+
+.alert {
+	padding: 15px 20px;
+	border-radius: 10px;
+	margin-bottom: 20px;
+}
+
+.alert-success {
+	background: #d4edda;
+	color: #155724;
+	border: 1px solid #c3e6cb;
+}
+
+.alert-error {
+	background: #f8d7da;
+	color: #721c24;
+	border: 1px solid #f5c6cb;
+}
+
+@media ( max-width : 768px) {
+	.profile-header {
+		flex-direction: column;
+		text-align: center;
+	}
+	.info-grid {
+		grid-template-columns: 1fr;
+	}
+}
+</style>
+</head>
+<body>
+	<div class="container">
+		<header class="header fade-in">
+			<h1>
+				<i class="fas fa-user-circle"></i> Thông Tin Cá Nhân
+			</h1>
+			<nav class="nav">
+				<a th:href="@{/}" class="nav-link"><i class="fas fa-home"></i>
+					Trang Chủ</a> <a th:href="@{/sach}" class="nav-link"><i
+					class="fas fa-book"></i> Sách</a> <a th:href="@{/docgia}"
+					class="nav-link"><i class="fas fa-users"></i> Độc Giả</a> <a
+					th:href="@{/phieumuon}" class="nav-link"><i
+					class="fas fa-hand-holding"></i> Phiếu Mượn</a> <a
+					th:href="@{/dien-dan}" class="nav-link"><i
+					class="fas fa-comments"></i> Diễn Đàn</a>
+			</nav>
+		</header>
+
+		<main class="main fade-in">
+			<div th:if="${success}" class="alert alert-success">
+				<i class="fas fa-check-circle"></i> <span th:text="${success}"></span>
+			</div>
+
+			<div class="profile-container">
+				<div class="profile-header">
+					<div class="avatar-wrapper">
+						<img
+							th:src="@{${taiKhoan.avatar} ?: '/img/avatar/default-avatar.png'}"
+							alt="Avatar" class="avatar"
+							onerror="this.src='/img/avatar/default-avatar.png'">
+					</div>
+					<div class="profile-info">
+						<h1 th:text="${taiKhoan.hoTen} ?: 'Chưa cập nhật'">Họ tên</h1>
+						<div class="username">
+							<i class="fas fa-at"></i> <span th:text="${taiKhoan.username}">username</span>
+						</div>
+						<div class="role" th:switch="${taiKhoan.quyen}">
+							<span th:case="1">Quản trị viên</span> <span th:case="2">Thủ
+								thư</span> <span th:case="3">Nhân viên</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="info-section">
+					<h3 class="section-title">
+						<i class="fas fa-info-circle"></i> Thông Tin Liên Hệ
+					</h3>
+					<div class="info-grid">
+						<div class="info-item">
+							<div class="info-icon">
+								<i class="fas fa-envelope"></i>
+							</div>
+							<div class="info-content">
+								<div class="info-label">Email</div>
+								<div class="info-value"
+									th:text="${taiKhoan.email} ?: 'Chưa cập nhật'"></div>
+							</div>
+						</div>
+						<div class="info-item">
+							<div class="info-icon">
+								<i class="fas fa-phone"></i>
+							</div>
+							<div class="info-content">
+								<div class="info-label">Số điện thoại</div>
+								<div class="info-value"
+									th:text="${taiKhoan.soDienThoai} ?: 'Chưa cập nhật'"></div>
+							</div>
+						</div>
+						<div class="info-item">
+							<div class="info-icon">
+								<i class="fas fa-calendar"></i>
+							</div>
+							<div class="info-content">
+								<div class="info-label">Ngày tạo tài khoản</div>
+								<div class="info-value"
+									th:text="${#temporals.format(taiKhoan.ngayTao, 'dd/MM/yyyy')}"></div>
+							</div>
+						</div>
+						<div class="info-item">
+							<div class="info-icon">
+								<i class="fas fa-circle"></i>
+							</div>
+							<div class="info-content">
+								<div class="info-label">Trạng thái</div>
+								<div class="info-value">
+									<span th:if="${taiKhoan.trangThai == 1}"
+										style="color: #27ae60;"> <i class="fas fa-check-circle"></i>
+										Hoạt động
+									</span> <span th:unless="${taiKhoan.trangThai == 1}"
+										style="color: #e74c3c;"> <i class="fas fa-lock"></i>
+										Khóa
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="info-section">
+					<h3 class="section-title">
+						<i class="fas fa-map-marker-alt"></i> Địa Chỉ
+					</h3>
+					<div class="info-item">
+						<div class="info-icon">
+							<i class="fas fa-home"></i>
+						</div>
+						<div class="info-content">
+							<div class="info-value"
+								th:text="${taiKhoan.diaChi} ?: 'Chưa cập nhật địa chỉ'"></div>
+						</div>
+					</div>
+				</div>
+
+				<div class="action-buttons">
+					<a th:href="@{/profile/settings}" class="btn btn-primary"> <i
+						class="fas fa-cog"></i> Chỉnh Sửa Thông Tin
+					</a>
+					<form th:action="@{/logout}" method="post" style="display: inline;">
+						<button type="submit" class="btn btn-outline">
+							<i class="fas fa-sign-out-alt"></i> Đăng Xuất
+						</button>
+					</form>
+				</div>
+			</div>
+		</main>
+	</div>
+</body>
+</html>

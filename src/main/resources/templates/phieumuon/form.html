@@ -1,0 +1,83 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tạo Phiếu Mượn - Thư Viện</title>
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+<div class="container">
+    <header class="header fade-in">
+        <h1><i class="fas fa-hand-holding"></i> Tạo Phiếu Mượn Mới</h1>
+        <nav class="nav">
+            <a th:href="@{/phieumuon}" class="nav-link"><i class="fas fa-arrow-left"></i> Quay Lại</a>
+        </nav>
+    </header>
+
+    <main class="main fade-in">
+        <div th:if="${error}" class="alert alert-error"><i class="fas fa-exclamation-circle"></i> <span th:text="${error}"></span></div>
+
+        <form th:action="@{/phieumuon/save}" method="post" id="phieuMuonForm">
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> Chọn Độc Giả <span style="color: red;">*</span></label>
+                <select name="docGiaId" class="form-control" required>
+                    <option value="">-- Chọn độc giả --</option>
+                    <option th:each="dg : ${docGiaList}" th:value="${dg.id}" th:text="${dg.hoTen + ' - ' + dg.soDienThoai}"></option>
+                </select>
+            </div>
+
+            <div id="sachList">
+                <div class="sach-item" style="display: flex; gap: 15px; margin-bottom: 15px; align-items: center;">
+                    <div style="flex: 2;">
+                        <label>Chọn Sách</label>
+                        <select name="sachIds" class="form-control" required>
+                            <option value="">-- Chọn sách --</option>
+                            <option th:each="s : ${sachList}" th:value="${s.id}" th:text="${s.tenSach + ' (Còn: ' + s.soLuong + ')'}"></option>
+                        </select>
+                    </div>
+                    <div style="flex: 1;">
+                        <label>Số Lượng</label>
+                        <input type="number" name="soLuongs" class="form-control" min="1" value="1" required />
+                    </div>
+                    <div style="margin-top: 25px;">
+                        <button type="button" class="btn btn-danger" onclick="removeSachItem(this)"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-outline" onclick="addSachItem()" style="margin-bottom: 20px;">
+                <i class="fas fa-plus"></i> Thêm Sách
+            </button>
+
+            <div class="form-group">
+                <label><i class="fas fa-calendar"></i> Ngày Trả Dự Kiến</label>
+                <input type="date" name="ngayTraDuKien" class="form-control" th:value="${#temporals.format(today.plusDays(7), 'yyyy-MM-dd')}" />
+            </div>
+
+            <div style="display: flex; gap: 15px;">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Tạo Phiếu Mượn</button>
+                <a th:href="@{/phieumuon}" class="btn btn-outline"><i class="fas fa-times"></i> Hủy</a>
+            </div>
+        </form>
+    </main>
+</div>
+
+<script>
+    function addSachItem() {
+        var container = document.getElementById('sachList');
+        var firstItem = container.querySelector('.sach-item');
+        var newItem = firstItem.cloneNode(true);
+        newItem.querySelectorAll('select, input').forEach(el => el.value = '');
+        container.appendChild(newItem);
+    }
+    function removeSachItem(btn) {
+        var items = document.querySelectorAll('.sach-item');
+        if (items.length > 1) {
+            btn.closest('.sach-item').remove();
+        }
+    }
+</script>
+</body>
+</html>

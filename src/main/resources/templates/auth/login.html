@@ -1,0 +1,175 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Đăng Nhập - Thư Viện</title>
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+<style>
+.login-container {
+	min-height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.login-box {
+	background: white;
+	padding: 40px;
+	border-radius: 20px;
+	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+	width: 100%;
+	max-width: 400px;
+	animation: fadeIn 0.5s ease;
+}
+
+.login-header {
+	text-align: center;
+	margin-bottom: 30px;
+}
+
+.login-header i {
+	font-size: 3rem;
+	color: #4361ee;
+	margin-bottom: 15px;
+}
+
+.login-header h2 {
+	color: #1a1a2e;
+	font-size: 1.8rem;
+}
+
+.form-group {
+	margin-bottom: 20px;
+}
+
+.form-group label {
+	display: block;
+	margin-bottom: 8px;
+	color: #1a1a2e;
+	font-weight: 500;
+}
+
+.form-group i {
+	margin-right: 8px;
+	color: #4361ee;
+}
+
+.form-control {
+	width: 100%;
+	padding: 12px 15px;
+	border: 2px solid #e0e0e0;
+	border-radius: 10px;
+	font-size: 1rem;
+	transition: all 0.3s;
+}
+
+.form-control:focus {
+	outline: none;
+	border-color: #4361ee;
+	box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+}
+
+.btn-login {
+	width: 100%;
+	padding: 12px;
+	background: linear-gradient(135deg, #4361ee, #3a56d4);
+	color: white;
+	border: none;
+	border-radius: 10px;
+	font-size: 1rem;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.3s;
+}
+
+.btn-login:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 5px 20px rgba(67, 97, 238, 0.4);
+}
+
+.login-footer {
+	text-align: center;
+	margin-top: 20px;
+}
+
+.login-footer a {
+	color: #4361ee;
+	text-decoration: none;
+}
+
+.alert {
+	padding: 12px 15px;
+	border-radius: 10px;
+	margin-bottom: 20px;
+}
+
+.alert-danger {
+	background: rgba(239, 71, 111, 0.1);
+	color: #ef476f;
+	border: 1px solid rgba(239, 71, 111, 0.2);
+}
+
+.alert-success {
+	background: rgba(6, 214, 160, 0.1);
+	color: #06d6a0;
+	border: 1px solid rgba(6, 214, 160, 0.2);
+}
+</style>
+</head>
+<body>
+	<div class="login-container">
+		<div class="login-box">
+			<div class="login-header">
+				<i class="fas fa-book-open"></i>
+				<h2>Đăng Nhập</h2>
+				<p style="color: #6c757d">Hệ thống quản lý thư viện</p>
+			</div>
+
+			<div th:if="${error}" class="alert alert-danger">
+				<i class="fas fa-exclamation-circle"></i> <span th:text="${error}"></span>
+			</div>
+			<div th:if="${message}" class="alert alert-success">
+				<i class="fas fa-check-circle"></i> <span th:text="${message}"></span>
+			</div>
+			<div th:if="${param.logout}" class="alert alert-success">
+				<i class="fas fa-check-circle"></i> Bạn đã đăng xuất thành công!
+			</div>
+
+			<form th:action="@{/login}" method="post">
+				<div class="form-group">
+					<label><i class="fas fa-user"></i>Tên đăng nhập</label> <input
+						type="text" name="username" class="form-control"
+						placeholder="Nhập tên đăng nhập" required />
+				</div>
+				<div class="form-group">
+					<label><i class="fas fa-lock"></i>Mật khẩu</label> <input
+						type="password" name="password" class="form-control"
+						placeholder="Nhập mật khẩu" required />
+				</div>
+				<div class="form-group" style="display: flex; align-items: center">
+					<input type="checkbox" name="remember-me" id="remember"
+						style="margin-right: 10px" /> <label for="remember"
+						style="margin: 0">Ghi nhớ đăng nhập</label>
+				</div>
+				<button type="submit" class="btn-login">
+					<i class="fas fa-sign-in-alt"></i> Đăng Nhập
+				</button>
+			</form>
+			<div class="login-footer">
+				<div class="auth-footer">
+					<p>
+						Chưa có tài khoản? <a th:href="@{/register}">Đăng ký ngay</a>
+					</p>
+					<p>
+						<a th:href="@{/forgot-password}">Quên mật khẩu?</a>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

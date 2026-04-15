@@ -1,0 +1,74 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Chi Tiết Phiếu Nhập - Thư Viện</title>
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+<div class="container">
+    <header class="header fade-in">
+        <h1><i class="fas fa-truck"></i> Chi Tiết Phiếu Nhập #<span th:text="${phieuNhap.id}"></span></h1>
+        <nav class="nav">
+            <a th:href="@{/phieunhap}" class="nav-link"><i class="fas fa-arrow-left"></i> Quay Lại</a>
+        </nav>
+    </header>
+
+    <main class="main fade-in">
+        <div style="margin-bottom: 30px; padding: 20px; background: #f8fafc; border-radius: 16px;">
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+                <div>
+                    <label style="color: var(--gray-color);">Ngày Nhập</label>
+                    <p style="font-size: 1.2rem; font-weight: 600;" th:text="${#temporals.format(phieuNhap.ngayNhap, 'dd/MM/yyyy')}"></p>
+                </div>
+                <div>
+                    <label style="color: var(--gray-color);">Nhà Cung Cấp</label>
+                    <p style="font-size: 1.2rem; font-weight: 600;" th:text="${phieuNhap.nhaCungCap} ?: '--'"></p>
+                </div>
+                <div>
+                    <label style="color: var(--gray-color);">Ghi Chú</label>
+                    <p style="font-size: 1rem;" th:text="${phieuNhap.ghiChu} ?: '--'"></p>
+                </div>
+            </div>
+        </div>
+
+        <h3 style="margin-bottom: 20px;"><i class="fas fa-list"></i> Chi Tiết Sách</h3>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Tên Sách</th>
+                        <th>Số Lượng</th>
+                        <th>Đơn Giá (VNĐ)</th>
+                        <th>Thành Tiền (VNĐ)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="ct, iter : ${chiTiets}">
+                        <td th:text="${iter.index + 1}">1</td>
+                        <td th:text="${ct.sach.tenSach}">Tên sách</td>
+                        <td th:text="${ct.soLuong}">1</td>
+                        <td th:text="${#numbers.formatDecimal(ct.donGia, 0, 'COMMA', 0, 'POINT')}">0</td>
+                        <td th:text="${#numbers.formatDecimal(ct.soLuong * ct.donGia, 0, 'COMMA', 0, 'POINT')}">0</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr style="background: #f8fafc; font-weight: 700;">
+                        <td colspan="4" style="text-align: right;">Tổng Tiền:</td>
+                        <td th:text="${#numbers.formatDecimal(tongTien, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">0 VNĐ</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 Quản Lý Thư Viện. All rights reserved.</p>
+    </footer>
+</div>
+</body>
+</html>

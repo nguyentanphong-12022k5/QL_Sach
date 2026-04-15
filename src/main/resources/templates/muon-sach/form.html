@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mượn Sách - Thư Viện</title>
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+<div class="container">
+    <header class="header fade-in">
+        <h1><i class="fas fa-hand-holding"></i> Mượn Sách</h1>
+        <nav class="nav">
+            <a th:href="@{/sach}" class="nav-link"><i class="fas fa-arrow-left"></i> Quay Lại</a>
+            <a th:href="@{/}" class="nav-link"><i class="fas fa-home"></i> Trang Chủ</a>
+        </nav>
+    </header>
+
+    <main class="main fade-in">
+        <div style="display: grid; grid-template-columns: 150px 1fr; gap: 30px; margin-bottom: 30px; padding: 20px; background: #f8fafc; border-radius: 16px;">
+            <div>
+                <img th:src="@{${sach.imageUrl != null ? '/img/sach/' + sach.imageUrl : '/img/default-book.jpg'}}" 
+                     alt="Ảnh sách" style="width: 100%; border-radius: 10px;" />
+            </div>
+            <div>
+                <h2 th:text="${sach.tenSach}" style="margin-bottom: 15px;"></h2>
+                <p><i class="fas fa-user"></i> Tác giả: <span th:text="${sach.tacGia?.tenTacGia}"></span></p>
+                <p><i class="fas fa-building"></i> NXB: <span th:text="${sach.nhaXuatBan?.tenNhaXuatBan}"></span></p>
+                <p><i class="fas fa-box"></i> Số lượng còn: <strong th:text="${sach.soLuong}" style="color: #27ae60; font-size: 1.5rem;"></strong></p>
+            </div>
+        </div>
+
+        <form th:action="@{/muon-sach/submit}" method="post" style="max-width: 500px;">
+            <input type="hidden" name="sachId" th:value="${sach.id}" />
+            
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> Chọn Độc Giả <span style="color: red;">*</span></label>
+                <select name="docGiaId" class="form-control" required>
+                    <option value="">-- Chọn độc giả --</option>
+                    <option th:each="dg : ${docGiaList}" 
+                            th:value="${dg.id}" 
+                            th:text="${dg.hoTen + ' - ' + dg.soDienThoai}"
+                            th:selected="${docGia != null && dg.id == docGia.id}"></option>
+                </select>
+                <small><a th:href="@{/docgia/add}" target="_blank"><i class="fas fa-plus"></i> Thêm độc giả mới</a></small>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-hashtag"></i> Số Lượng Mượn <span style="color: red;">*</span></label>
+                <input type="number" name="soLuong" class="form-control" min="1" th:max="${sach.soLuong}" value="1" required />
+                <small>Tối đa: <span th:text="${sach.soLuong}"></span> cuốn</small>
+            </div>
+
+            <div style="display: flex; gap: 15px; margin-top: 30px;">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-hand-holding"></i> Xác Nhận Mượn</button>
+                <a th:href="@{/sach}" class="btn btn-outline"><i class="fas fa-times"></i> Hủy</a>
+            </div>
+        </form>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 Quản Lý Thư Viện. All rights reserved.</p>
+    </footer>
+</div>
+</body>
+</html>

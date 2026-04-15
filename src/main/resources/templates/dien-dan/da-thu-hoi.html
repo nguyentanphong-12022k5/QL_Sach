@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bình Luận Đã Thu Hồi - Thư Viện</title>
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+.binh-luan-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+    opacity: 0.8;
+}
+.binh-luan-card.thu-hoi {
+    border-left: 4px solid var(--warning-color);
+}
+.badge-thu-hoi {
+    background: var(--warning-color);
+    color: white;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    margin-left: 10px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <header class="header fade-in">
+        <h1><i class="fas fa-history"></i> Bình Luận Đã Thu Hồi</h1>
+        <nav class="nav">
+            <a th:href="@{/dien-dan}" class="nav-link"><i class="fas fa-arrow-left"></i> Diễn Đàn</a>
+            <a th:href="@{/profile}" class="nav-link"><i class="fas fa-user"></i> Hồ Sơ</a>
+        </nav>
+    </header>
+
+    <main class="main fade-in">
+        <div th:if="${binhLuanList == null || binhLuanList.isEmpty()}">
+            <div class="binh-luan-card" style="text-align: center; padding: 40px;">
+                <i class="fas fa-check-circle" style="font-size: 3rem; color: var(--success-color); margin-bottom: 15px;"></i>
+                <p>Bạn chưa thu hồi bình luận nào.</p>
+                <a th:href="@{/dien-dan}" class="btn btn-primary" style="margin-top: 20px;">
+                    <i class="fas fa-comments"></i> Quay lại Diễn Đàn
+                </a>
+            </div>
+        </div>
+
+        <div th:each="bl : ${binhLuanList}" class="binh-luan-card thu-hoi">
+            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                <img th:src="@{${bl.taiKhoan.avatar} ?: 'https://ui-avatars.com/api/?name=' + ${bl.taiKhoan.hoTen} + '&background=1877f2&color=fff&size=50'}"
+                     alt="Avatar" style="width: 50px; height: 50px; border-radius: 50%;">
+                <div style="flex: 1;">
+                    <div>
+                        <span th:text="${bl.taiKhoan.hoTen} ?: ${bl.taiKhoan.username}"></span>
+                        <span class="badge-thu-hoi"><i class="fas fa-undo-alt"></i> Đã thu hồi</span>
+                    </div>
+                    <div style="font-size: 0.85rem; color: var(--gray-color);">
+                        <i class="far fa-clock"></i>
+                        <span th:text="${#temporals.format(bl.ngayDang, 'dd/MM/yyyy HH:mm')}"></span>
+                    </div>
+                </div>
+            </div>
+            <div style="padding-left: 65px; color: var(--gray-color); font-style: italic;">
+                <i class="fas fa-quote-left"></i>
+                <span th:text="${bl.noiDung}"></span>
+            </div>
+            <div style="padding-left: 65px; margin-top: 10px;">
+                <span th:if="${bl.sach != null}">
+                    <i class="fas fa-book"></i> 
+                    <a th:href="@{/sach/{id}(id=${bl.sach.id})}" th:text="${bl.sach.tenSach}"></a>
+                </span>
+                <span th:unless="${bl.sach != null}">
+                    <i class="fas fa-comment"></i> Góp ý chung
+                </span>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

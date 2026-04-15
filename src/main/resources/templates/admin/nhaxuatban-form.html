@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title th:text="${nxb.id != null ? 'Sửa NXB' : 'Thêm NXB'}">Form NXB</title>
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+<div class="container">
+    <header class="header fade-in">
+        <h1><i class="fas fa-building"></i> <span th:text="${nxb.id != null ? 'Sửa Nhà Xuất Bản' : 'Thêm Nhà Xuất Bản'}"></span></h1>
+        <nav class="nav">
+            <a th:href="@{/admin/nhaxuatban}" class="nav-link"><i class="fas fa-arrow-left"></i> Quay Lại</a>
+        </nav>
+    </header>
+
+    <main class="main fade-in">
+        <form th:action="@{/admin/nhaxuatban/save}" method="post" th:object="${nxb}">
+            <input type="hidden" th:field="*{id}" />
+            
+            <div class="form-group">
+                <label><i class="fas fa-building"></i> Tên NXB <span style="color: red;">*</span></label>
+                <input type="text" th:field="*{tenNhaXuatBan}" class="form-control" placeholder="Nhập tên NXB" required />
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-map-marker-alt"></i> Địa Chỉ</label>
+                <input type="text" th:field="*{diaChi}" class="form-control" placeholder="Nhập địa chỉ" />
+            </div>
+            
+            <div class="form-group">
+                <label><i class="fas fa-phone"></i> Số Điện Thoại</label>
+                <input type="text" th:field="*{sdt}" class="form-control" placeholder="Nhập số điện thoại" />
+            </div>
+            
+            <div style="display: flex; gap: 15px; margin-top: 30px;">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Lưu</button>
+                <a th:href="@{/admin/nhaxuatban}" class="btn btn-outline"><i class="fas fa-times"></i> Hủy</a>
+            </div>
+        </form>
+    </main>
+</div>
+</body>
+</html>

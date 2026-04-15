@@ -1,0 +1,140 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Thư Viện Sách - Trang Chủ</title>
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+	<div class="container">
+		<!-- Header -->
+		<header class="header fade-in">
+			<h1>
+				<i class="fas fa-book-open"></i> Quản Lý Thư Viện
+			</h1>
+			<nav class="nav">
+				<a th:href="@{/sach}" class="nav-link"> <i class="fas fa-book"></i>
+					Sách
+				</a> <a th:href="@{/docgia}" class="nav-link"> <i
+					class="fas fa-users"></i> Độc Giả
+				</a> <a th:href="@{/phieumuon}" class="nav-link"> <i
+					class="fas fa-hand-holding"></i> Phiếu Mượn
+				</a> <a th:href="@{/phieunhap}" class="nav-link"> <i
+					class="fas fa-truck"></i> Phiếu Nhập
+				</a> <a th:href="@{/thongke}" class="nav-link"> <i
+					class="fas fa-chart-bar"></i> Thống Kê <a th:href="@{/dien-dan}"
+					class="nav-link"><i class="fas fa-comments"></i> Diễn Đàn</a>
+					<div class="user-menu">
+						<div class="avatar-dropdown">
+
+							<img
+								src="https://ui-avatars.com/api/?name=User&background=1877f2&color=fff&size=40&bold=true"
+								alt="Avatar" class="avatar-small" onclick="toggleDropdown()"
+								onerror="this.src='https://ui-avatars.com/api/?name=User&background=3498db&color=fff&size=40'">
+							<div class="dropdown-content" id="userDropdown">
+								<a th:href="@{/profile}"><i class="fas fa-user"></i> Hồ sơ</a> <a
+									th:href="@{/profile/settings}"><i class="fas fa-cog"></i>
+									Cài đặt</a> <a th:href="@{/dien-dan/da-thu-hoi}"><i
+									class="fas fa-history"></i> Bình luận đã thu hồi</a>
+								<hr>
+								<form th:action="@{/logout}" method="post">
+									<button type="submit" class="logout-btn">
+										<i class="fas fa-sign-out-alt"></i> Đăng xuất
+									</button>
+								</form>
+							</div>
+						</div>
+					</div>
+			</nav>
+		</header>
+
+		<!-- Main Content -->
+		<main class="main fade-in">
+			<div class="welcome">
+				<div class="welcome-icon">
+					<i class="fas fa-library"></i>
+				</div>
+				<h2>Chào Mừng Đến Với Thư Viện</h2>
+				<p>Hệ thống quản lý thư viện hiện đại - Tra cứu sách, quản lý
+					độc giả và theo dõi mượn trả dễ dàng.</p>
+			</div>
+
+			<!-- Quick Stats -->
+			<div class="stats-grid">
+				<div class="stat-card">
+					<div class="stat-icon">
+						<i class="fas fa-book"></i>
+					</div>
+					<h3>1,234</h3>
+					<p>Tổng Sách</p>
+				</div>
+				<div class="stat-card">
+					<div class="stat-icon">
+						<i class="fas fa-users"></i>
+					</div>
+					<h3>567</h3>
+					<p>Độc Giả</p>
+				</div>
+				<div class="stat-card">
+					<div class="stat-icon">
+						<i class="fas fa-hand-holding-heart"></i>
+					</div>
+					<h3>89</h3>
+					<p>Đang Mượn</p>
+				</div>
+				<div class="stat-card">
+					<div class="stat-icon">
+						<i class="fas fa-clock"></i>
+					</div>
+					<h3>12</h3>
+					<p>Quá Hạn</p>
+				</div>
+			</div>
+
+			<!-- Features -->
+			<div
+				style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 40px;">
+				<div style="text-align: center; padding: 20px">
+					<i class="fas fa-search"
+						style="font-size: 2.5rem; color: var(--primary-color); margin-bottom: 15px;"></i>
+					<h3 style="margin-bottom: 10px">Tìm Kiếm Nhanh</h3>
+					<p style="color: var(--gray-color)">Tra cứu sách theo tên, tác
+						giả, thể loại</p>
+				</div>
+				<div style="text-align: center; padding: 20px">
+					<i class="fas fa-qrcode"
+						style="font-size: 2.5rem; color: var(--primary-color); margin-bottom: 15px;"></i>
+					<h3 style="margin-bottom: 10px">Quét Mã QR</h3>
+					<p style="color: var(--gray-color)">Mượn trả sách nhanh chóng
+						với mã QR</p>
+				</div>
+				<div style="text-align: center; padding: 20px">
+					<i class="fas fa-bell"
+						style="font-size: 2.5rem; color: var(--primary-color); margin-bottom: 15px;"></i>
+					<h3 style="margin-bottom: 10px">Thông Báo</h3>
+					<p style="color: var(--gray-color)">Nhắc nhở đến hạn trả sách
+						tự động</p>
+				</div>
+				<div style="text-align: center; padding: 20px">
+					<i class="fas fa-chart-line"
+						style="font-size: 2.5rem; color: var(--primary-color); margin-bottom: 15px;"></i>
+					<h3 style="margin-bottom: 10px">Báo Cáo</h3>
+					<p style="color: var(--gray-color)">Thống kê chi tiết hoạt động
+						thư viện</p>
+				</div>
+			</div>
+		</main>
+
+		<!-- Footer -->
+		<footer class="footer">
+			<p>&copy; 2026 Quản Lý Thư Viện. All rights reserved.</p>
+		</footer>
+	</div>
+
+	<!-- THÊM DÒNG NÀY -->
+	<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

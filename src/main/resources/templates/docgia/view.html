@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chi Tiết Độc Giả - Thư Viện</title>
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+.detail-container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+}
+.detail-header {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 40px;
+    padding-bottom: 30px;
+    border-bottom: 2px solid #f0f0f0;
+}
+.detail-avatar {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 3rem;
+}
+.detail-info h1 {
+    font-size: 2rem;
+    color: var(--dark-color);
+    margin-bottom: 10px;
+}
+.detail-info .badge-status {
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+.info-section {
+    margin-bottom: 30px;
+}
+.section-title {
+    font-size: 1.3rem;
+    color: var(--dark-color);
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--primary-color);
+}
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 12px;
+}
+.info-icon {
+    width: 45px;
+    height: 45px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+}
+.info-content {
+    flex: 1;
+}
+.info-label {
+    font-size: 0.85rem;
+    color: var(--gray-color);
+    margin-bottom: 5px;
+}
+.info-value {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--dark-color);
+}
+.table-wrapper {
+    overflow-x: auto;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+th {
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: white;
+}
+td {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+}
+.badge-success {
+    background: #d4edda;
+    color: #155724;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+}
+.badge-warning {
+    background: #fff3cd;
+    color: #856404;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+}
+.badge-danger {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+}
+.action-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <header class="header fade-in">
+        <h1><i class="fas fa-user"></i> Chi Tiết Độc Giả</h1>
+        <nav class="nav">
+            <a th:href="@{/docgia}" class="nav-link"><i class="fas fa-arrow-left"></i> Quay Lại</a>
+            <a th:href="@{/}" class="nav-link"><i class="fas fa-home"></i> Trang Chủ</a>
+        </nav>
+    </header>
+
+    <main class="main fade-in">
+        <div class="detail-container">
+            <!-- Header -->
+            <div class="detail-header">
+                <div class="detail-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="detail-info">
+                    <h1 th:text="${docGia.hoTen}">Tên độc giả</h1>
+                    <p><i class="fas fa-id-card"></i> Mã độc giả: <strong th:text="${docGia.id}"></strong></p>
+                    <span th:if="${docGia.trangThai == 1}" class="badge-status" style="background: #d4edda; color: #155724;">
+                        <i class="fas fa-check-circle"></i> Đang hoạt động
+                    </span>
+                    <span th:unless="${docGia.trangThai == 1}" class="badge-status" style="background: #f8d7da; color: #721c24;">
+                        <i class="fas fa-lock"></i> Đã khóa
+                    </span>
+                </div>
+            </div>
+
+            <!-- Thông tin cá nhân -->
+            <div class="info-section">
+                <h3 class="section-title"><i class="fas fa-info-circle"></i> Thông Tin Cá Nhân</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fas fa-venus-mars"></i></div>
+                        <div class="info-content">
+                            <div class="info-label">Giới tính</div>
+                            <div class="info-value" th:text="${docGia.gioiTinh} ?: 'Chưa cập nhật'"></div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fas fa-phone"></i></div>
+                        <div class="info-content">
+                            <div class="info-label">Số điện thoại</div>
+                            <div class="info-value" th:text="${docGia.soDienThoai} ?: 'Chưa cập nhật'"></div>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
+                        <div class="info-content">
+                            <div class="info-label">Địa chỉ</div>
+                            <div class="info-value" th:text="${docGia.diaChi} ?: 'Chưa cập nhật'"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lịch sử mượn sách -->
+            <div class="info-section">
+                <h3 class="section-title"><i class="fas fa-history"></i> Lịch Sử Mượn Sách</h3>
+                
+                <div th:if="${phieuMuonList == null || phieuMuonList.isEmpty()}">
+                    <div style="text-align: center; padding: 40px; background: #f8f9fa; border-radius: 12px;">
+                        <i class="fas fa-book-open" style="font-size: 3rem; color: var(--gray-color); margin-bottom: 15px;"></i>
+                        <p>Chưa có lịch sử mượn sách.</p>
+                    </div>
+                </div>
+
+                <div th:if="${phieuMuonList != null && !phieuMuonList.isEmpty()}" class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Mã PM</th>
+                                <th>Ngày Mượn</th>
+                                <th>Ngày Trả</th>
+                                <th>Trạng Thái</th>
+                                <th>Thao Tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="pm : ${phieuMuonList}">
+                                <td th:text="${pm.id}">#1</td>
+                                <td th:text="${#temporals.format(pm.ngayMuon, 'dd/MM/yyyy')}"></td>
+                                <td th:text="${pm.ngayTra != null ? #temporals.format(pm.ngayTra, 'dd/MM/yyyy') : '--'}"></td>
+                                <td>
+                                    <span th:if="${pm.ngayTra != null}" class="badge-success">
+                                        <i class="fas fa-check"></i> Đã trả
+                                    </span>
+                                    <span th:if="${pm.ngayTra == null && pm.ngayMuon.plusDays(7) >= #temporals.createNow().toLocalDate()}" class="badge-warning">
+                                        <i class="fas fa-hourglass-half"></i> Đang mượn
+                                    </span>
+                                    <span th:if="${pm.ngayTra == null && pm.ngayMuon.plusDays(7) < #temporals.createNow().toLocalDate()}" class="badge-danger">
+                                        <i class="fas fa-exclamation-circle"></i> Quá hạn
+                                    </span>
+                                </td>
+                                <td>
+                                    <a th:href="@{/phieumuon/view/{id}(id=${pm.id})}" class="btn btn-outline btn-sm">
+                                        <i class="fas fa-eye"></i> Xem
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a th:href="@{/docgia/edit/{id}(id=${docGia.id})}" class="btn btn-warning">
+                    <i class="fas fa-edit"></i> Chỉnh Sửa
+                </a>
+                <a th:href="@{/phieumuon/add}" class="btn btn-primary">
+                    <i class="fas fa-hand-holding"></i> Tạo Phiếu Mượn
+                </a>
+                <a th:href="@{/docgia}" class="btn btn-outline">
+                    <i class="fas fa-list"></i> Danh Sách
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 Quản Lý Thư Viện. All rights reserved.</p>
+    </footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chỉnh Sửa Bình Luận - Thư Viện</title>
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+.edit-container {
+    max-width: 700px;
+    margin: 40px auto;
+    background: white;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+}
+.edit-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f0f0f0;
+}
+.edit-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+.edit-info {
+    flex: 1;
+}
+.edit-name {
+    font-weight: 600;
+    color: var(--dark-color);
+}
+.edit-time {
+    font-size: 0.85rem;
+    color: var(--gray-color);
+}
+.edit-content-old {
+    background: #f8fafc;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    color: var(--gray-color);
+}
+.edit-content-old i {
+    margin-right: 10px;
+    color: var(--primary-color);
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <header class="header fade-in">
+        <h1><i class="fas fa-edit"></i> Chỉnh Sửa Bình Luận</h1>
+        <nav class="nav">
+            <a th:href="@{/dien-dan}" class="nav-link"><i class="fas fa-arrow-left"></i> Quay Lại</a>
+        </nav>
+    </header>
+
+    <main class="main fade-in">
+        <div th:if="${error}" class="alert alert-error">
+            <i class="fas fa-exclamation-circle"></i> <span th:text="${error}"></span>
+        </div>
+
+        <div class="edit-container">
+            <div class="edit-header">
+                <img th:src="@{${binhLuan.taiKhoan.avatar} ?: 'https://ui-avatars.com/api/?name=' + ${binhLuan.taiKhoan.hoTen} + '&background=1877f2&color=fff&size=50'}"
+                     alt="Avatar" class="edit-avatar">
+                <div class="edit-info">
+                    <div class="edit-name" th:text="${binhLuan.taiKhoan.hoTen} ?: ${binhLuan.taiKhoan.username}"></div>
+                    <div class="edit-time">
+                        <i class="far fa-clock"></i>
+                        <span th:text="${#temporals.format(binhLuan.ngayDang, 'dd/MM/yyyy HH:mm')}"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="edit-content-old">
+                <i class="fas fa-quote-left"></i>
+                <span th:text="${binhLuan.noiDung}"></span>
+            </div>
+
+            <form th:action="@{/dien-dan/cap-nhat/{id}(id=${binhLuan.id})}" method="post">
+                <div class="form-group">
+                    <label><i class="fas fa-pen"></i> Chỉnh sửa nội dung</label>
+                    <textarea name="noiDung" class="form-control" rows="5" required th:text="${binhLuan.noiDung}"></textarea>
+                </div>
+
+                <div style="display: flex; gap: 15px; margin-top: 20px;">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Cập Nhật
+                    </button>
+                    <a th:href="@{/dien-dan}" class="btn btn-outline">
+                        <i class="fas fa-times"></i> Hủy
+                    </a>
+                </div>
+            </form>
+        </div>
+    </main>
+</div>
+</body>
+</html>

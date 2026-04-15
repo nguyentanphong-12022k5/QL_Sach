@@ -1,0 +1,124 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Thống Kê - Thư Viện</title>
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+	<div class="container">
+		<header class="header fade-in">
+			<h1>
+				<i class="fas fa-chart-pie"></i> Thống Kê Thư Viện
+			</h1>
+			<nav class="nav">
+				<a th:href="@{/}" class="nav-link"> <i class="fas fa-home"></i>
+					Trang Chủ
+				</a> <a th:href="@{/sach}" class="nav-link"> <i class="fas fa-book"></i>
+					Sách
+				</a> <a th:href="@{/docgia}" class="nav-link"> <i
+					class="fas fa-users"></i> Độc Giả
+				</a> <a th:href="@{/phieumuon}" class="nav-link"> <i
+					class="fas fa-hand-holding"></i> Phiếu Mượn
+				<a th:href="@{/dien-dan}" class="nav-link"><i class="fas fa-comments"></i> Diễn Đàn</a>
+		</header>
+
+		<main class="main fade-in">
+			<h2 style="color: var(--dark-color); margin-bottom: 30px">
+				<i class="fas fa-chart-bar"></i> Tổng Quan
+			</h2>
+
+			<div class="stats-grid">
+				<div class="stat-card">
+					<div class="stat-icon"
+						style="background: linear-gradient(135deg, #4361ee, #4cc9f0)">
+						<i class="fas fa-book"></i>
+					</div>
+					<h3 th:text="${summary.totalBooks}">0</h3>
+					<p>Tổng Sách</p>
+				</div>
+				<div class="stat-card">
+					<div class="stat-icon"
+						style="background: linear-gradient(135deg, #06d6a0, #05c793)">
+						<i class="fas fa-users"></i>
+					</div>
+					<h3 th:text="${summary.totalReaders}">0</h3>
+					<p>Tổng Độc Giả</p>
+				</div>
+				<div class="stat-card">
+					<div class="stat-icon"
+						style="background: linear-gradient(135deg, #ffd166, #ffba08)">
+						<i class="fas fa-hand-holding-heart"></i>
+					</div>
+					<h3 th:text="${summary.totalLoans}">0</h3>
+					<p>Tổng Phiếu Mượn</p>
+				</div>
+				<div class="stat-card">
+					<div class="stat-icon"
+						style="background: linear-gradient(135deg, #ef476f, #e63950)">
+						<i class="fas fa-clock"></i>
+					</div>
+					<h3>0</h3>
+					<p>Quá Hạn</p>
+				</div>
+			</div>
+
+			<!-- Chart Section -->
+			<div
+				style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px;">
+				<div
+					style="background: white; padding: 20px; border-radius: var(--border-radius); box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);">
+					<h3 style="margin-bottom: 20px; color: var(--dark-color)">
+						<i class="fas fa-chart-line" style="color: var(--primary-color)"></i>
+						Sách Mượn Nhiều Nhất
+					</h3>
+					<div
+						style="min-height: 200px; display: flex; align-items: center; justify-content: center; color: var(--gray-color);">
+						<i class="fas fa-chart-bar" style="font-size: 3rem; opacity: 0.3"></i>
+					</div>
+				</div>
+				<div
+					style="background: white; padding: 20px; border-radius: var(--border-radius); box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);">
+					<h3 style="margin-bottom: 20px; color: var(--dark-color)">
+						<i class="fas fa-calendar-alt" style="color: var(--success-color)"></i>
+						Hoạt Động Gần Đây
+					</h3>
+					<div style="min-height: 200px">
+						<div
+							style="display: flex; align-items: center; gap: 15px; padding: 10px 0; border-bottom: 1px solid #eee;">
+							<div
+								style="width: 40px; height: 40px; background: rgba(6, 214, 160, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--success-color);">
+								<i class="fas fa-book"></i>
+							</div>
+							<div>
+								<strong>Nguyễn Văn A</strong> đã mượn "Truyện Kiều"
+								<div style="font-size: 0.85rem; color: var(--gray-color)">
+									Cách đây 2 giờ</div>
+							</div>
+						</div>
+						<div
+							style="display: flex; align-items: center; gap: 15px; padding: 10px 0; border-bottom: 1px solid #eee;">
+							<div
+								style="width: 40px; height: 40px; background: rgba(255, 209, 102, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--warning-color);">
+								<i class="fas fa-undo"></i>
+							</div>
+							<div>
+								<strong>Trần Thị B</strong> đã trả "Romeo và Juliet"
+								<div style="font-size: 0.85rem; color: var(--gray-color)">
+									Cách đây 5 giờ</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+
+		<footer class="footer">
+			<p>&copy; 2026 Quản Lý Thư Viện. All rights reserved.</p>
+		</footer>
+	</div>
+</body>
+</html>
