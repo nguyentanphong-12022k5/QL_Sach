@@ -20,6 +20,9 @@ public class ChiTietPhieuMuon {
     @Column(name = "so_luong", nullable = false)
     private int soLuong;
 
+    @Column(name = "gia_muon")
+    private Double giaMuon;
+
     // Constructors
     public ChiTietPhieuMuon() {
     }
@@ -28,6 +31,7 @@ public class ChiTietPhieuMuon {
         this.phieuMuon = phieuMuon;
         this.sach = sach;
         this.soLuong = soLuong;
+        this.giaMuon = sach.getGiaMuon();
     }
 
     // Getters and Setters
@@ -61,5 +65,13 @@ public class ChiTietPhieuMuon {
 
     public void setSoLuong(int soLuong) {
         this.soLuong = soLuong;
+    }
+
+    public Double getGiaMuon() {
+        return giaMuon;
+    }
+
+    public void setGiaMuon(Double giaMuon) {
+        this.giaMuon = giaMuon;
     }
 }

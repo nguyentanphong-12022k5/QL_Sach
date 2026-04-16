@@ -33,6 +33,7 @@
                         <th>NXB</th>
                         <th>Loại</th>
                         <th>Số Lượng</th>
+                        <th>Giá Mượn/Ngày</th>
                         <th>Trạng Thái</th>
                         <th>Thao Tác</th>
                     </tr>
@@ -45,6 +46,12 @@
                         <td th:text="${s.nhaXuatBan?.tenNhaXuatBan}">NXB</td>
                         <td th:text="${s.loaiSach?.tenLoaiSach}">Loại</td>
                         <td th:text="${s.soLuong}">10</td>
+                        <td>
+                            <span th:if="${s.giaMuon != null and s.giaMuon > 0}"
+                                  th:text="${#numbers.formatDecimal(s.giaMuon, 0, 'COMMA', 0, 'POINT')} + ' đ'"
+                                  style="color: #4e73df; font-weight: 600;"></span>
+                            <span th:unless="${s.giaMuon != null and s.giaMuon > 0}" style="color: #aaa;">Miễn phí</span>
+                        </td>
                         <td>
                             <span th:if="${s.trangThai == '1'}" class="badge badge-success">Còn sách</span>
                             <span th:unless="${s.trangThai == '1'}" class="badge badge-danger">Hết sách</span>

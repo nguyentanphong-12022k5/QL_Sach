@@ -172,8 +172,31 @@
                     <span class="info-value" th:text="${#temporals.format(ngayTraThucTe, 'dd/MM/yyyy')}"></span>
                 </div>
                 <div class="info-row">
+                    <span class="info-label">Số ngày mượn thực tế:</span>
+                    <span class="info-value" th:text="${soNgayMuon} + ' ngày'"></span>
+                </div>
+                <div class="info-row">
                     <span class="info-label">Số sách mượn:</span>
                     <span class="info-value" th:text="${tongSach}"></span>
+                </div>
+            </div>
+
+            <!-- Phí mượn sách -->
+            <div class="info-box" style="border-left: 4px solid #4e73df;">
+                <h3 style="margin-bottom: 15px; color: #4e73df;"><i class="fas fa-book-open"></i> Chi tiết phí mượn sách</h3>
+                <div th:each="ct : ${phieuMuon.chiTietPhieuMuons}">
+                    <div class="info-row">
+                        <span class="info-label" th:text="${ct.sach.tenSach}"></span>
+                        <span class="info-value">
+                            <span th:if="${ct.giaMuon != null and ct.giaMuon > 0}"
+                                  th:text="${#numbers.formatDecimal(ct.giaMuon, 0, 'COMMA', 0, 'POINT')} + ' đ/ngày × ' + ct.soLuong + ' quyển × ' + soNgayMuon + ' ngày'"></span>
+                            <span th:unless="${ct.giaMuon != null and ct.giaMuon > 0}" class="text-muted">Miễn phí</span>
+                        </span>
+                    </div>
+                </div>
+                <div class="info-row" style="font-weight: 700; font-size: 1.1rem; color: #4e73df;">
+                    <span>Tổng phí mượn:</span>
+                    <span th:text="${#numbers.formatDecimal(tongPhiMuon, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span>
                 </div>
             </div>
 
@@ -192,17 +215,36 @@
                         <span>Số sách mượn:</span>
                         <span th:text="${tongSach}"></span>
                     </div>
-                    <div class="total-amount">
-                        <span th:text="${#numbers.formatDecimal(tongTienPhat, 0, 'COMMA', 0, 'POINT')}"></span> VNĐ
+                    <div class="info-row" style="color: #856404; font-weight: 700;">
+                        <span>Tổng phí phạt:</span>
+                        <span th:text="${#numbers.formatDecimal(tongTienPhat, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span>
                     </div>
                 </div>
+            </div>
 
-                <!-- Phương thức thanh toán -->
+            <!-- Tổng cộng -->
+            <div class="info-box" style="border-left: 4px solid #e74c3c; background: #fff8f8;">
+                <div class="info-row">
+                    <span class="info-label" style="font-size: 1rem;">Phí mượn sách:</span>
+                    <span class="info-value" th:text="${#numbers.formatDecimal(tongPhiMuon, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span>
+                </div>
+                <div class="info-row" th:if="${soNgayQuaHan > 0}">
+                    <span class="info-label" style="font-size: 1rem;">Phí phạt quá hạn:</span>
+                    <span class="info-value" style="color: #e74c3c;" th:text="${#numbers.formatDecimal(tongTienPhat, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span>
+                </div>
+                <div style="text-align: center; margin-top: 10px;">
+                    <div style="font-size: 0.9rem; color: #666; margin-bottom: 5px;">TỔNG TIỀN PHẢI THANH TOÁN</div>
+                    <div class="total-amount" th:text="${#numbers.formatDecimal(tongCong, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></div>
+                </div>
+            </div>
+
+            <!-- Phương thức thanh toán -->
+            <div th:if="${tongCong > 0}">
                 <div class="payment-methods">
                     <h3 style="margin-bottom: 15px;"><i class="fas fa-credit-card"></i> Chọn phương thức thanh toán</h3>
                     
                     <form th:action="@{/phieumuon/thanh-toan/{id}(id=${phieuMuon.id})}" method="post" id="paymentForm">
-                        <input type="hidden" name="soTien" th:value="${tongTienPhat}" />
+                        <input type="hidden" name="soTien" th:value="${tongCong}" />
                         
                         <label class="method-item" onclick="selectMethod('TIEN_MAT')">
                             <input type="radio" name="phuongThuc" value="TIEN_MAT" checked />
@@ -234,10 +276,10 @@
                 </div>
             </div>
 
-            <!-- Không có phí phạt -->
-            <div th:unless="${soNgayQuaHan > 0}">
+            <!-- Không mất phí -->
+            <div th:unless="${tongCong > 0}">
                 <div class="free-badge">
-                    <i class="fas fa-check-circle"></i> Không có phí phạt - Trả sách đúng hạn!
+                    <i class="fas fa-check-circle"></i> Không có phí - Trả sách đúng hạn và miễn phí mượn!
                 </div>
                 <form th:action="@{/phieumuon/return/{id}(id=${phieuMuon.id})}" method="get" style="margin-top: 20px;">
                     <button type="submit" class="btn-pay" style="background: var(--primary-color);">

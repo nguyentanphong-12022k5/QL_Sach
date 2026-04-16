@@ -255,32 +255,39 @@ td {
 					<i class="fas fa-book"></i> Danh Sách Sách Mượn
 				</h3>
 				<div class="table-wrapper">
-					<table>
-						<thead>
-							<tr>
-								<th>STT</th>
-								<th>Tên Sách</th>
-								<th>Tác Giả</th>
-								<th>Số Lượng</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr th:each="ct, iter : ${chiTiets}">
-								<td th:text="${iter.index + 1}">1</td>
-								<td th:text="${ct.sach.tenSach}">Tên sách</td>
-								<td th:text="${ct.sach.tacGia?.tenTacGia} ?: '--'">Tác giả</td>
-								<td th:text="${ct.soLuong}">1</td>
-							</tr>
-						</tbody>
-						<tfoot>
-							<tr class="total-row">
-								<td colspan="3" style="text-align: right;"><strong>Tổng
-										số sách:</strong></td>
-								<td><strong th:text="${#lists.size(chiTiets)}"></strong></td>
-							</tr>
-						</tfoot>
-					</table>
-				</div>
+				<table>
+					<thead>
+						<tr>
+							<th>STT</th>
+							<th>Tên Sách</th>
+							<th>Tác Giả</th>
+							<th>Số Lượng</th>
+							<th>Giá Mượn/Ngày</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="ct, iter : ${chiTiets}">
+							<td th:text="${iter.index + 1}">1</td>
+							<td th:text="${ct.sach.tenSach}">Tên sách</td>
+							<td th:text="${ct.sach.tacGia?.tenTacGia} ?: '--'">Tác giả</td>
+							<td th:text="${ct.soLuong}">1</td>
+							<td>
+								<span th:if="${ct.giaMuon != null and ct.giaMuon > 0}"
+								      th:text="${#numbers.formatDecimal(ct.giaMuon, 0, 'COMMA', 0, 'POINT')} + ' đ'"
+								      style="color: #4e73df; font-weight: 600;"></span>
+								<span th:unless="${ct.giaMuon != null and ct.giaMuon > 0}" style="color: #aaa;">Miễn phí</span>
+							</td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr class="total-row">
+							<td colspan="4" style="text-align: right;"><strong>Tổng
+									số sách:</strong></td>
+							<td><strong th:text="${#lists.size(chiTiets)}"></strong></td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
 
 				<!-- Action Buttons -->
 				<div class="action-buttons">

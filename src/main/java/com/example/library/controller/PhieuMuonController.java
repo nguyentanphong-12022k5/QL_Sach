@@ -86,6 +86,7 @@ public class PhieuMuonController {
                 chiTiet.setPhieuMuon(saved);
                 chiTiet.setSach(sach);
                 chiTiet.setSoLuong(soLuong);
+                chiTiet.setGiaMuon(sach.getGiaMuon() != null ? sach.getGiaMuon() : 0.0);
                 chiTiets.add(chiTiet);
             }
             chiTietPhieuMuonRepository.saveAll(chiTiets);
@@ -141,10 +142,14 @@ public class PhieuMuonController {
         PhieuMuon phieuMuon = phieuMuonRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy phiếu mượn"));
 
-        // Tính số ngày quá hạn
+        // Tính số ngày mượn thực tế
         LocalDate ngayMuon = phieuMuon.getNgayMuon();
         LocalDate ngayTraDuKien = ngayMuon.plusDays(7);
         LocalDate ngayTraThucTe = LocalDate.now();
+
+        long soNgayMuon = java.time.temporal.ChronoUnit.DAYS.between(ngayMuon, ngayTraThucTe);
+        if (soNgayMuon < 1) soNgayMuon = 1;
+        final long soNgayMuonFinal = soNgayMuon;
 
         long soNgayQuaHan = 0;
         double tienPhat = 0;
@@ -159,11 +164,23 @@ public class PhieuMuonController {
                 .mapToInt(ChiTietPhieuMuon::getSoLuong).sum();
         double tongTienPhat = tienPhat * tongSach;
 
+        // Tính phí mượn = giá mượn * số lượng * số ngày mượn
+        double tongPhiMuon = phieuMuon.getChiTietPhieuMuons().stream()
+                .mapToDouble(ct -> {
+                    double gia = ct.getGiaMuon() != null ? ct.getGiaMuon() : 0.0;
+                    return gia * ct.getSoLuong() * soNgayMuonFinal;
+                }).sum();
+
+        double tongCong = tongPhiMuon + tongTienPhat;
+
         model.addAttribute("phieuMuon", phieuMuon);
         model.addAttribute("soNgayQuaHan", soNgayQuaHan);
+        model.addAttribute("soNgayMuon", soNgayMuon);
         model.addAttribute("tongSach", tongSach);
         model.addAttribute("tienPhatMoiSach", tienPhat);
         model.addAttribute("tongTienPhat", tongTienPhat);
+        model.addAttribute("tongPhiMuon", tongPhiMuon);
+        model.addAttribute("tongCong", tongCong);
         model.addAttribute("ngayTraDuKien", ngayTraDuKien);
         model.addAttribute("ngayTraThucTe", ngayTraThucTe);
 

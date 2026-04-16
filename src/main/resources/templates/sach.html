@@ -134,14 +134,34 @@
 									trí</span>
 							</div>
 						</div>
-						<div style="margin-top: 15px; display: flex; gap: 10px">
-							<a th:href="@{'/sach/' + ${sach.id}}" class="btn btn-outline"
-								style="flex: 1"> <i class="fas fa-eye"></i> Chi tiết
-							</a> <a th:href="@{'/muon-sach/' + ${sach.id}}"
-								class="btn btn-primary" style="flex: 1"> <i
-								class="fas fa-hand-holding"></i> Mượn
-							</a>
-						</div>
+						<div style="margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+					<span th:if="${sach.soLuong != null and sach.soLuong > 0}" 
+					      class="badge badge-success">Còn <span th:text="${sach.soLuong}"></span> quyển</span>
+					<span th:if="${sach.soLuong == null or sach.soLuong <= 0}" 
+					      class="badge badge-danger">Hết sách</span>
+					<span th:if="${sach.giaMuon != null and sach.giaMuon > 0}" 
+					      style="color: #4e73df; font-weight: 600; font-size: 0.9rem;">
+						<i class="fas fa-tag"></i> <span th:text="${#numbers.formatDecimal(sach.giaMuon, 0, 'COMMA', 0, 'POINT')} + ' đ/ngày'"></span>
+					</span>
+					<span th:unless="${sach.giaMuon != null and sach.giaMuon > 0}" 
+					      style="color: #27ae60; font-weight: 600; font-size: 0.9rem;">
+						<i class="fas fa-gift"></i> Miễn phí
+					</span>
+				</div>
+				<div style="margin-top: 15px; display: flex; gap: 10px">
+					<a th:href="@{'/sach/' + ${sach.id}}" class="btn btn-outline"
+						style="flex: 1"> <i class="fas fa-eye"></i> Chi tiết
+					</a>
+					<a th:if="${sach.soLuong != null and sach.soLuong > 0}" 
+					   th:href="@{'/muon-sach/' + ${sach.id}}"
+						class="btn btn-primary" style="flex: 1"> <i
+						class="fas fa-hand-holding"></i> Mượn
+					</a>
+					<span th:unless="${sach.soLuong != null and sach.soLuong > 0}"
+					      class="btn btn-outline" style="flex: 1; opacity: 0.5; cursor: not-allowed;">
+						<i class="fas fa-ban"></i> Hết sách
+					</span>
+				</div>
 					</div>
 				</div>
 			</div>

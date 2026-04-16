@@ -17,7 +17,6 @@
             <a th:href="@{/docgia}" class="nav-link"><i class="fas fa-users"></i> Độc Giả</a>
             <a th:href="@{/thongke}" class="nav-link"><i class="fas fa-chart-bar"></i> Thống Kê</a>
             <a th:href="@{/dien-dan}" class="nav-link"><i class="fas fa-comments"></i> Diễn Đàn</a>
-</a>
         </nav>
     </header>
 
@@ -66,9 +65,9 @@
                             <span th:if="${pm.ngayTra == null && pm.ngayMuon.plusDays(7) < today}" class="badge badge-danger">Quá hạn</span>
                         </td>
                         <td>
-                            <a th:href="@{/phieumuon/view/{id}(id=${pm.id})}" class="btn btn-outline btn-sm"><i class="fas fa-eye"></i></a>
-                            <a th:if="${pm.ngayTra == null}" th:href="@{/phieumuon/return/{id}(id=${pm.id})}" class="btn btn-success btn-sm" onclick="return confirm('Xác nhận trả sách?')"><i class="fas fa-check"></i></a>
-                            <a th:href="@{/phieumuon/delete/{id}(id=${pm.id})}" class="btn btn-danger btn-sm" onclick="return confirm('Xóa phiếu mượn?')"><i class="fas fa-trash"></i></a>
+                            <a th:href="@{/phieumuon/view/{id}(id=${pm.id})}" class="btn btn-outline btn-sm" title="Xem chi tiết"><i class="fas fa-eye"></i></a>
+                            <a th:if="${pm.ngayTra == null}" th:href="@{/phieumuon/thanh-toan/{id}(id=${pm.id})}" class="btn btn-warning btn-sm" title="Thanh toán &amp; trả sách"><i class="fas fa-credit-card"></i></a>
+                            <a th:href="@{/phieumuon/delete/{id}(id=${pm.id})}" class="btn btn-danger btn-sm" onclick="return confirm('Xóa phiếu mượn?')" title="Xóa"><i class="fas fa-trash"></i></a>
                         </td>
                     </tr>
                 </tbody>

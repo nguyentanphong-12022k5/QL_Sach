@@ -69,7 +69,11 @@ public class SachService {
                 nhaXuatBan,
                 loaiSach,
                 keSach,
-                imageUrl
+                imageUrl,
+                sach.getSoLuong(),
+                sach.getGiaMuon(),
+                sach.getNamXB(),
+                sach.getTrangThai()
         );
     }
 }

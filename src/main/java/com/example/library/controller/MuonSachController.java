@@ -79,6 +79,7 @@ public class MuonSachController {
             chiTiet.setPhieuMuon(saved);
             chiTiet.setSach(sach);
             chiTiet.setSoLuong(soLuong);
+            chiTiet.setGiaMuon(sach.getGiaMuon() != null ? sach.getGiaMuon() : 0.0);
             chiTietPhieuMuonRepository.save(chiTiet);
             
             sach.setSoLuong(sach.getSoLuong() - soLuong);

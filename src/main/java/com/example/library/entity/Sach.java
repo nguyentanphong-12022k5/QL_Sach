@@ -51,6 +51,9 @@ public class Sach {
     @Column(name = "TrangThai")
     private String trangThai;
 
+    @Column(name = "GiaMuon")
+    private Double giaMuon;
+
     @OneToMany(mappedBy = "sach")
     private List<ChiTietPhieuMuon> chiTietPhieuMuons;
 
@@ -152,6 +155,14 @@ public class Sach {
 
     public void setTrangThai(String trangThai) {
         this.trangThai = trangThai;
+    }
+
+    public Double getGiaMuon() {
+        return giaMuon;
+    }
+
+    public void setGiaMuon(Double giaMuon) {
+        this.giaMuon = giaMuon;
     }
 
     public List<ChiTietPhieuMuon> getChiTietPhieuMuons() {

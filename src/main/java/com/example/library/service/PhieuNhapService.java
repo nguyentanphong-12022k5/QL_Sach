@@ -38,7 +38,11 @@ public class PhieuNhapService {
                             chiTiet.getSach().getNhaXuatBan() != null ? chiTiet.getSach().getNhaXuatBan().getTenNhaXuatBan() : null,
                             chiTiet.getSach().getLoaiSach() != null ? chiTiet.getSach().getLoaiSach().getTenLoaiSach() : null,
                             chiTiet.getSach().getKeSach() != null ? chiTiet.getSach().getKeSach().getViTri() : null,
-                            chiTiet.getSach().getImageUrl()
+                            chiTiet.getSach().getImageUrl(),
+                            chiTiet.getSach().getSoLuong(),
+                            chiTiet.getSach().getGiaMuon(),
+                            chiTiet.getSach().getNamXB(),
+                            chiTiet.getSach().getTrangThai()
                     );
                     return new ChiTietPhieuNhapDTO(chiTiet.getId(), sachDTO, chiTiet.getSoLuong(), chiTiet.getDonGia());
                 })
