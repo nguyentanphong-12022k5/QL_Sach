@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thanh Toán Phí Phạt - Thư Viện</title>
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+.payment-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+}
+.payment-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #f0f0f0;
+}
+.payment-header i {
+    font-size: 3rem;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+.info-box {
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+.info-row:last-child {
+    border-bottom: none;
+}
+.info-label {
+    font-weight: 500;
+    color: var(--gray-color);
+}
+.info-value {
+    font-weight: 600;
+    color: var(--dark-color);
+}
+.penalty-box {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+.penalty-title {
+    color: #856404;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+.penalty-amount {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--danger-color);
+    text-align: center;
+}
+.total-amount {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--danger-color);
+    text-align: center;
+    margin: 20px 0;
+}
+.payment-methods {
+    margin: 25px 0;
+}
+.method-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.method-item:hover {
+    border-color: var(--primary-color);
+    background: #f8fafc;
+}
+.method-item.selected {
+    border-color: var(--primary-color);
+    background: #e8f0fe;
+}
+.method-item input[type="radio"] {
+    margin-right: 15px;
+    transform: scale(1.2);
+}
+.method-icon {
+    font-size: 1.5rem;
+    margin-right: 15px;
+    color: var(--primary-color);
+}
+.method-name {
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+.method-desc {
+    font-size: 0.9rem;
+    color: var(--gray-color);
+}
+.btn-pay {
+    width: 100%;
+    padding: 18px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, var(--success-color), #05c793);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+.btn-pay:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(16, 185, 129, 0.3);
+}
+.free-badge {
+    background: var(--success-color);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 50px;
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <header class="header fade-in">
+        <h1><i class="fas fa-credit-card"></i> Thanh Toán Phí Phạt</h1>
+        <nav class="nav">
+            <a th:href="@{/phieumuon}" class="nav-link"><i class="fas fa-arrow-left"></i> Quay Lại</a>
+        </nav>
+    </header>
+
+    <main class="main fade-in">
+        <div class="payment-container">
+            <div class="payment-header">
+                <i class="fas fa-hand-holding-usd"></i>
+                <h2>Thanh Toán Phiếu Mượn #<span th:text="${phieuMuon.id}"></span></h2>
+                <p>Độc giả: <strong th:text="${phieuMuon.docGia.hoTen}"></strong></p>
+            </div>
+
+            <!-- Thông tin mượn -->
+            <div class="info-box">
+                <h3 style="margin-bottom: 15px;"><i class="fas fa-info-circle"></i> Thông tin mượn</h3>
+                <div class="info-row">
+                    <span class="info-label">Ngày mượn:</span>
+                    <span class="info-value" th:text="${#temporals.format(phieuMuon.ngayMuon, 'dd/MM/yyyy')}"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Hạn trả:</span>
+                    <span class="info-value" th:text="${#temporals.format(ngayTraDuKien, 'dd/MM/yyyy')}"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Ngày trả thực tế:</span>
+                    <span class="info-value" th:text="${#temporals.format(ngayTraThucTe, 'dd/MM/yyyy')}"></span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Số sách mượn:</span>
+                    <span class="info-value" th:text="${tongSach}"></span>
+                </div>
+            </div>
+
+            <!-- Thông tin phí phạt -->
+            <div th:if="${soNgayQuaHan > 0}">
+                <div class="penalty-box">
+                    <div class="penalty-title">
+                        <i class="fas fa-exclamation-triangle"></i> 
+                        Quá hạn <span th:text="${soNgayQuaHan}"></span> ngày
+                    </div>
+                    <div class="info-row">
+                        <span>Phí phạt mỗi sách (5,000 VNĐ/ngày):</span>
+                        <span th:text="${#numbers.formatDecimal(tienPhatMoiSach, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span>
+                    </div>
+                    <div class="info-row">
+                        <span>Số sách mượn:</span>
+                        <span th:text="${tongSach}"></span>
+                    </div>
+                    <div class="total-amount">
+                        <span th:text="${#numbers.formatDecimal(tongTienPhat, 0, 'COMMA', 0, 'POINT')}"></span> VNĐ
+                    </div>
+                </div>
+
+                <!-- Phương thức thanh toán -->
+                <div class="payment-methods">
+                    <h3 style="margin-bottom: 15px;"><i class="fas fa-credit-card"></i> Chọn phương thức thanh toán</h3>
+                    
+                    <form th:action="@{/phieumuon/thanh-toan/{id}(id=${phieuMuon.id})}" method="post" id="paymentForm">
+                        <input type="hidden" name="soTien" th:value="${tongTienPhat}" />
+                        
+                        <label class="method-item" onclick="selectMethod('TIEN_MAT')">
+                            <input type="radio" name="phuongThuc" value="TIEN_MAT" checked />
+                            <div class="method-icon"><i class="fas fa-money-bill-wave"></i></div>
+                            <div>
+                                <div class="method-name">Tiền mặt</div>
+                                <div class="method-desc">Thanh toán trực tiếp tại quầy</div>
+                            </div>
+                        </label>
+                        
+                        <label class="method-item" onclick="selectMethod('CHUYEN_KHOAN')">
+                            <input type="radio" name="phuongThuc" value="CHUYEN_KHOAN" />
+                            <div class="method-icon"><i class="fas fa-university"></i></div>
+                            <div>
+                                <div class="method-name">Chuyển khoản ngân hàng</div>
+                                <div class="method-desc">Vietcombank - 1234567890 - NGUYEN VAN A</div>
+                            </div>
+                        </label>
+                        
+                        <div class="form-group" style="margin-top: 20px;">
+                            <label><i class="fas fa-pen"></i> Ghi chú (nếu có)</label>
+                            <input type="text" name="ghiChu" class="form-control" placeholder="Nhập ghi chú..." />
+                        </div>
+                        
+                        <button type="submit" class="btn-pay">
+                            <i class="fas fa-check-circle"></i> Xác Nhận Thanh Toán
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Không có phí phạt -->
+            <div th:unless="${soNgayQuaHan > 0}">
+                <div class="free-badge">
+                    <i class="fas fa-check-circle"></i> Không có phí phạt - Trả sách đúng hạn!
+                </div>
+                <form th:action="@{/phieumuon/return/{id}(id=${phieuMuon.id})}" method="get" style="margin-top: 20px;">
+                    <button type="submit" class="btn-pay" style="background: var(--primary-color);">
+                        <i class="fas fa-check"></i> Xác Nhận Trả Sách
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+function selectMethod(method) {
+    document.querySelectorAll('.method-item').forEach(item => {
+        item.classList.remove('selected');
+    });
+    event.currentTarget.classList.add('selected');
+}
+</script>
+</body>
+</html>

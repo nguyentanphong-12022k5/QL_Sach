@@ -187,9 +187,21 @@
 						<div class="username">
 							<i class="fas fa-at"></i> <span th:text="${taiKhoan.username}">username</span>
 						</div>
-						<div class="role" th:switch="${taiKhoan.quyen}">
-							<span th:case="1">Quản trị viên</span> <span th:case="2">Thủ
-								thư</span> <span th:case="3">Nhân viên</span>
+						<!-- === HIỂN THỊ ROLE === -->
+						<div class="role" style="margin-top: 10px;">
+							<span th:if="${taiKhoan.quyen == 1}"
+								style="background: #ef4444; color: white; padding: 5px 15px; border-radius: 20px;">
+								<i class="fas fa-crown"></i> Quản trị viên
+							</span> <span th:if="${taiKhoan.quyen == 2}"
+								style="background: #f59e0b; color: white; padding: 5px 15px; border-radius: 20px;">
+								<i class="fas fa-user-tie"></i> Thủ thư
+							</span> <span th:if="${taiKhoan.quyen == 3}"
+								style="background: #10b981; color: white; padding: 5px 15px; border-radius: 20px;">
+								<i class="fas fa-user"></i> Nhân viên
+							</span> <span th:if="${taiKhoan.quyen == 4}"
+								style="background: #3b82f6; color: white; padding: 5px 15px; border-radius: 20px;">
+								<i class="fas fa-user"></i> Độc giả
+							</span>
 						</div>
 					</div>
 				</div>

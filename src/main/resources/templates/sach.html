@@ -46,7 +46,9 @@
 				</button>
 				<a th:href="@{/sach}" class="btn btn-outline"> <i
 					class="fas fa-sync-alt"></i> Làm Mới
-				</a> <a th:href="@{/admin/sach/add}" class="btn btn-success"> <i
+				</a> <a
+					th:if="${#authorization.expression('hasAnyAuthority(''ROLE_ADMIN'')')}"
+					th:href="@{/admin/sach/add}" class="btn btn-success"> <i
 					class="fas fa-plus"></i> Thêm Sách
 				</a>
 			</div>

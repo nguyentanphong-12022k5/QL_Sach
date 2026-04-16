@@ -1,10 +1,90 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quản Lý Tài Khoản - Admin</title>
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
+	<div class="container">
+		<header class="header fade-in">
+			<h1>
+				<i class="fas fa-users-cog"></i> Quản Lý Tài Khoản
+			</h1>
+			<nav class="nav">
+				<a th:href="@{/admin/dashboard}" class="nav-link"><i
+					class="fas fa-arrow-left"></i> Dashboard</a> <a
+					th:href="@{/admin/taikhoan/add}" class="btn btn-primary"> <i
+					class="fas fa-plus"></i> Thêm Tài Khoản
+				</a>
+			</nav>
+		</header>
 
+		<main class="main fade-in">
+			<!-- Hiển thị thông báo -->
+			<div th:if="${success}" class="alert alert-success">
+				<i class="fas fa-check-circle"></i> <span th:text="${success}"></span>
+			</div>
+			<div th:if="${error}" class="alert alert-error">
+				<i class="fas fa-exclamation-circle"></i> <span th:text="${error}"></span>
+			</div>
+
+			<!-- Debug: Kiểm tra dữ liệu -->
+			<div th:if="${taiKhoanList == null}"
+				style="color: red; padding: 20px;">⚠️ taiKhoanList is NULL</div>
+			<div th:if="${taiKhoanList != null && taiKhoanList.isEmpty()}"
+				style="color: orange; padding: 20px;">ℹ️ Danh sách tài khoản
+				trống</div>
+
+			<div class="table-wrapper"
+				th:if="${taiKhoanList != null && !taiKhoanList.isEmpty()}">
+				<table>
+					<thead>
+						<tr>
+							<th>Mã TK</th>
+							<th>Username</th>
+							<th>Họ Tên</th>
+							<th>Email</th>
+							<th>Quyền</th>
+							<th>Trạng Thái</th>
+							<th>Thao Tác</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="tk : ${taiKhoanList}">
+							<td th:text="${tk.id}">1</td>
+							<td th:text="${tk.username}">admin</td>
+							<td th:text="${tk.hoTen} ?: '--'">Admin</td>
+							<td th:text="${tk.email} ?: '--'">admin@example.com</td>
+							<td><span th:if="${tk.quyen == 1}"
+								class="badge badge-danger">👑 Admin</span> <span
+								th:if="${tk.quyen == 2}" class="badge badge-warning">📚
+									Thủ thư</span> <span th:if="${tk.quyen == 3}" class="badge badge-info">👤
+									Nhân viên</span> <span th:if="${tk.quyen == 4}"
+								class="badge badge-success">📖 Khách hàng</span></td>
+							<td><span th:if="${tk.trangThai == 1}"
+								class="badge badge-success">Hoạt động</span> <span
+								th:unless="${tk.trangThai == 1}" class="badge badge-danger">Khóa</span>
+							</td>
+							<td><a th:href="@{/admin/taikhoan/edit/{id}(id=${tk.id})}"
+								class="btn btn-warning btn-sm"> <i class="fas fa-edit"></i>
+							</a> <a th:href="@{/admin/taikhoan/delete/{id}(id=${tk.id})}"
+								class="btn btn-danger btn-sm"
+								onclick="return confirm('Xóa tài khoản này?')"> <i
+									class="fas fa-trash"></i>
+							</a></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</main>
+
+		<footer class="footer">
+			<p>&copy; 2026 Quản Lý Thư Viện. All rights reserved.</p>
+		</footer>
+	</div>
 </body>
 </html>

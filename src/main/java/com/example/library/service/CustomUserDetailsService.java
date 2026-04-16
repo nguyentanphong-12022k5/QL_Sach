@@ -31,7 +31,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         System.out.println(">>> Tìm thấy tài khoản: " + taiKhoan.getUsername());
         System.out.println(">>> Quyền số: " + taiKhoan.getQuyen());
 
-        // QUAN TRỌNG: Phải có prefix "ROLE_"
+        // Chuyển đổi quyền số thành role
         String role;
         switch (taiKhoan.getQuyen()) {
             case 1:
@@ -40,8 +40,11 @@ public class CustomUserDetailsService implements UserDetailsService {
             case 2:
                 role = "ROLE_THUTHU";
                 break;
+            case 3:
+                role = "ROLE_NHANVIEN";
+                break;
             default:
-                role = "ROLE_USER";
+                role = "ROLE_KHACHHANG";
                 break;
         }
         

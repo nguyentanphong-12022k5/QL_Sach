@@ -32,7 +32,6 @@ public class DienDanController {
     // Trang diễn đàn chính (góp ý chung)
     @GetMapping
     public String index(Model model) {
-        // === THÊM currentUser VÀO MODEL ===
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.isAuthenticated()) {
             String username = auth.getName();
@@ -49,7 +48,6 @@ public class DienDanController {
     // Xem bình luận của một sách
     @GetMapping("/sach/{sachId}")
     public String binhLuanSach(@PathVariable Long sachId, Model model) {
-        // === THÊM currentUser VÀO MODEL ===
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.isAuthenticated()) {
             String username = auth.getName();
@@ -141,7 +139,10 @@ public class DienDanController {
             TaiKhoan currentUser = taiKhoanRepository.findByUsername(username).orElse(null);
             model.addAttribute("currentUser", currentUser);
         }
-        model.addAttribute("binhLuanList", binhLuanRepository.findAll());
+        
+        // ✅ SỬA LỖI: Gọi method từ Repository và gán vào model
+        model.addAttribute("binhLuanList", binhLuanRepository.findAllOrderByNgayDangDesc());
+        
         return "dien-dan/admin";
     }
 

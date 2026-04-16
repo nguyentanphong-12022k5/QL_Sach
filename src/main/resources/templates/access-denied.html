@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Truy Cập Bị Từ Chối - Thư Viện</title>
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+.access-denied-container {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+.access-denied-card {
+    background: white;
+    padding: 50px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    max-width: 500px;
+}
+.access-denied-icon {
+    font-size: 5rem;
+    color: var(--danger-color);
+    margin-bottom: 20px;
+}
+.access-denied-card h1 {
+    font-size: 2rem;
+    color: var(--dark-color);
+    margin-bottom: 15px;
+}
+.access-denied-card p {
+    color: var(--gray-color);
+    margin-bottom: 30px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <header class="header fade-in">
+        <h1><i class="fas fa-shield-alt"></i> Truy Cập Bị Từ Chối</h1>
+        <nav class="nav">
+            <a th:href="@{/}" class="nav-link"><i class="fas fa-home"></i> Trang Chủ</a>
+        </nav>
+    </header>
+
+    <main class="main fade-in">
+        <div class="access-denied-container">
+            <div class="access-denied-card">
+                <div class="access-denied-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h1>403 - Truy cập bị từ chối</h1>
+                <p>Bạn không có quyền truy cập vào trang này.</p>
+                <p>Vui lòng liên hệ quản trị viên nếu bạn cần quyền truy cập.</p>
+                <a th:href="@{/}" class="btn btn-primary" style="margin-top: 20px;">
+                    <i class="fas fa-home"></i> Về Trang Chủ
+                </a>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>

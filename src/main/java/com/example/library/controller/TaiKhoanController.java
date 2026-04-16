@@ -76,34 +76,33 @@ public class TaiKhoanController {
 
 	@PostMapping("/change-password")
 	public String changePassword(@RequestParam("oldPassword") String oldPassword,
-			@RequestParam("newPassword") String newPassword, @RequestParam("confirmPassword") String confirmPassword,
-			RedirectAttributes redirect) {
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		String username = auth.getName();
-
-		TaiKhoan taiKhoan = taiKhoanRepository.findByUsername(username)
-				.orElseThrow(() -> new RuntimeException("Không tìm thấy tài khoản"));
-
-		// Kiểm tra mật khẩu cũ (so sánh trực tiếp)
-		if (!oldPassword.equals(taiKhoan.getPassword())) {
-			redirect.addFlashAttribute("error", "Mật khẩu cũ không đúng!");
-			return "redirect:/profile/settings";
-		}
-
-		// Kiểm tra mật khẩu mới khớp
-		if (!newPassword.equals(confirmPassword)) {
-			redirect.addFlashAttribute("error", "Mật khẩu xác nhận không khớp!");
-			return "redirect:/profile/settings";
-		}
-
-		// KHÔNG MÃ HÓA - lưu thẳng
-		taiKhoan.setPassword(newPassword);
-		taiKhoanRepository.save(taiKhoan);
-
-		redirect.addFlashAttribute("success", "Đổi mật khẩu thành công!");
-		return "redirect:/profile";
+	                             @RequestParam("newPassword") String newPassword,
+	                             @RequestParam("confirmPassword") String confirmPassword,
+	                             RedirectAttributes redirect) {
+	    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+	    String username = auth.getName();
+	    
+	    TaiKhoan taiKhoan = taiKhoanRepository.findByUsername(username)
+	            .orElseThrow(() -> new RuntimeException("Không tìm thấy tài khoản"));
+	    
+	    // So sánh trực tiếp - không dùng passwordEncoder.matches()
+	    if (!oldPassword.equals(taiKhoan.getPassword())) {
+	        redirect.addFlashAttribute("error", "Mật khẩu cũ không đúng!");
+	        return "redirect:/profile/settings";
+	    }
+	    
+	    if (!newPassword.equals(confirmPassword)) {
+	        redirect.addFlashAttribute("error", "Mật khẩu xác nhận không khớp!");
+	        return "redirect:/profile/settings";
+	    }
+	    
+	    // Lưu thẳng - không mã hóa
+	    taiKhoan.setPassword(newPassword);
+	    taiKhoanRepository.save(taiKhoan);
+	    
+	    redirect.addFlashAttribute("success", "Đổi mật khẩu thành công!");
+	    return "redirect:/profile";
 	}
-
 	@PostMapping("/upload-avatar")
 	public String uploadAvatar(@RequestParam("avatar") MultipartFile file, RedirectAttributes redirect) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();

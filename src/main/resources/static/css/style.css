@@ -631,3 +631,10 @@ tbody tr:last-child td {
 .fade-in {
 	animation: fadeIn 0.5s ease-out;
 }
+.stat-card.highlight {
+    background: linear-gradient(135deg, #f8fafc 0%, #e8f0fe 100%);
+    border: 2px solid var(--primary-color);
+}
+.stat-card.highlight .stat-icon {
+    background: linear-gradient(135deg, #10b981, #059669);
+}

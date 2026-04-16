@@ -5,257 +5,303 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Chi Tiết Phiếu Mượn - Thư Viện</title>
 <link rel="stylesheet" th:href="@{/css/style.css}">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
 .detail-container {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 30px;
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+	max-width: 900px;
+	margin: 40px auto;
+	padding: 30px;
+	background: white;
+	border-radius: 20px;
+	box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
 }
+
 .detail-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30px;
-    padding-bottom: 20px;
-    border-bottom: 2px solid #f0f0f0;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 30px;
+	padding-bottom: 20px;
+	border-bottom: 2px solid #f0f0f0;
 }
+
 .detail-header h2 {
-    color: var(--dark-color);
+	color: var(--dark-color);
 }
+
 .info-section {
-    margin-bottom: 30px;
-    padding: 20px;
-    background: #f8fafc;
-    border-radius: 12px;
+	margin-bottom: 30px;
+	padding: 20px;
+	background: #f8fafc;
+	border-radius: 12px;
 }
+
 .info-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 20px;
 }
+
 .info-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+	display: flex;
+	align-items: center;
+	gap: 10px;
 }
+
 .info-icon {
-    width: 40px;
-    height: 40px;
-    background: var(--primary-color);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: white;
+	width: 40px;
+	height: 40px;
+	background: var(--primary-color);
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: white;
 }
+
 .info-content {
-    flex: 1;
+	flex: 1;
 }
+
 .info-label {
-    font-size: 0.85rem;
-    color: var(--gray-color);
+	font-size: 0.85rem;
+	color: var(--gray-color);
 }
+
 .info-value {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--dark-color);
+	font-size: 1.1rem;
+	font-weight: 600;
+	color: var(--dark-color);
 }
+
 .table-wrapper {
-    overflow-x: auto;
-    border-radius: 12px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-    margin-top: 20px;
+	overflow-x: auto;
+	border-radius: 12px;
+	box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+	margin-top: 20px;
 }
+
 table {
-    width: 100%;
-    border-collapse: collapse;
-    background: white;
+	width: 100%;
+	border-collapse: collapse;
+	background: white;
 }
+
 th {
-    padding: 15px;
-    text-align: left;
-    font-weight: 600;
-    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
-    color: white;
+	padding: 15px;
+	text-align: left;
+	font-weight: 600;
+	background: linear-gradient(135deg, var(--primary-color),
+		var(--primary-dark));
+	color: white;
 }
+
 td {
-    padding: 15px;
-    border-bottom: 1px solid #eee;
+	padding: 15px;
+	border-bottom: 1px solid #eee;
 }
+
 .badge-success {
-    background: #d4edda;
-    color: #155724;
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 0.85rem;
+	background: #d4edda;
+	color: #155724;
+	padding: 5px 12px;
+	border-radius: 20px;
+	font-size: 0.85rem;
 }
+
 .badge-warning {
-    background: #fff3cd;
-    color: #856404;
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 0.85rem;
+	background: #fff3cd;
+	color: #856404;
+	padding: 5px 12px;
+	border-radius: 20px;
+	font-size: 0.85rem;
 }
+
 .badge-danger {
-    background: #f8d7da;
-    color: #721c24;
-    padding: 5px 12px;
-    border-radius: 20px;
-    font-size: 0.85rem;
+	background: #f8d7da;
+	color: #721c24;
+	padding: 5px 12px;
+	border-radius: 20px;
+	font-size: 0.85rem;
 }
+
 .action-buttons {
-    display: flex;
-    gap: 15px;
-    margin-top: 30px;
+	display: flex;
+	gap: 15px;
+	margin-top: 30px;
 }
+
 .total-row {
-    text-align: right;
-    font-weight: 600;
-    background: #f8fafc;
+	text-align: right;
+	font-weight: 600;
+	background: #f8fafc;
 }
 </style>
 </head>
 <body>
-<div class="container">
-    <header class="header fade-in">
-        <h1><i class="fas fa-hand-holding"></i> Chi Tiết Phiếu Mượn</h1>
-        <nav class="nav">
-            <a th:href="@{/phieumuon}" class="nav-link"><i class="fas fa-arrow-left"></i> Quay Lại</a>
-            <a th:href="@{/}" class="nav-link"><i class="fas fa-home"></i> Trang Chủ</a>
-        </nav>
-    </header>
+	<div class="container">
+		<header class="header fade-in">
+			<h1>
+				<i class="fas fa-hand-holding"></i> Chi Tiết Phiếu Mượn
+			</h1>
+			<nav class="nav">
+				<a th:href="@{/phieumuon}" class="nav-link"><i
+					class="fas fa-arrow-left"></i> Quay Lại</a> <a th:href="@{/}"
+					class="nav-link"><i class="fas fa-home"></i> Trang Chủ</a>
+			</nav>
+		</header>
 
-    <main class="main fade-in">
-        <div class="detail-container">
-            <div class="detail-header">
-                <h2>Phiếu Mượn #<span th:text="${phieuMuon.id}"></span></h2>
-                <div>
-                    <span th:if="${phieuMuon.ngayTra != null}" class="badge-success">
-                        <i class="fas fa-check-circle"></i> Đã trả
-                    </span>
-                    <span th:if="${phieuMuon.ngayTra == null && phieuMuon.ngayMuon.plusDays(7) >= #temporals.createNow().toLocalDate()}" 
-                          class="badge-warning">
-                        <i class="fas fa-hourglass-half"></i> Đang mượn
-                    </span>
-                    <span th:if="${phieuMuon.ngayTra == null && phieuMuon.ngayMuon.plusDays(7) < #temporals.createNow().toLocalDate()}" 
-                          class="badge-danger">
-                        <i class="fas fa-exclamation-circle"></i> Quá hạn
-                    </span>
-                </div>
-            </div>
+		<main class="main fade-in">
+			<div class="detail-container">
+				<div class="detail-header">
+					<h2>
+						Phiếu Mượn #<span th:text="${phieuMuon.id}"></span>
+					</h2>
+					<div>
+						<span th:if="${phieuMuon.ngayTra != null}" class="badge-success">
+							<i class="fas fa-check-circle"></i> Đã trả
+						</span> <span
+							th:if="${phieuMuon.ngayTra == null && phieuMuon.ngayMuon.plusDays(7) >= #temporals.createNow().toLocalDate()}"
+							class="badge-warning"> <i class="fas fa-hourglass-half"></i>
+							Đang mượn
+						</span> <span
+							th:if="${phieuMuon.ngayTra == null && phieuMuon.ngayMuon.plusDays(7) < #temporals.createNow().toLocalDate()}"
+							class="badge-danger"> <i class="fas fa-exclamation-circle"></i>
+							Quá hạn
+						</span>
+					</div>
+				</div>
 
-            <!-- Thông tin độc giả -->
-            <div class="info-section">
-                <h3 style="margin-bottom: 20px;"><i class="fas fa-user"></i> Thông Tin Độc Giả</h3>
-                <div class="info-row">
-                    <div class="info-item">
-                        <div class="info-icon"><i class="fas fa-user"></i></div>
-                        <div class="info-content">
-                            <div class="info-label">Họ tên</div>
-                            <div class="info-value" th:text="${phieuMuon.docGia.hoTen}"></div>
-                        </div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-icon"><i class="fas fa-phone"></i></div>
-                        <div class="info-content">
-                            <div class="info-label">Số điện thoại</div>
-                            <div class="info-value" th:text="${phieuMuon.docGia.soDienThoai} ?: '--'"></div>
-                        </div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
-                        <div class="info-content">
-                            <div class="info-label">Địa chỉ</div>
-                            <div class="info-value" th:text="${phieuMuon.docGia.diaChi} ?: '--'"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+				<!-- Thông tin độc giả -->
+				<div class="info-section">
+					<h3 style="margin-bottom: 20px;">
+						<i class="fas fa-user"></i> Thông Tin Độc Giả
+					</h3>
+					<div class="info-row">
+						<div class="info-item">
+							<div class="info-icon">
+								<i class="fas fa-user"></i>
+							</div>
+							<div class="info-content">
+								<div class="info-label">Họ tên</div>
+								<div class="info-value" th:text="${phieuMuon.docGia.hoTen}"></div>
+							</div>
+						</div>
+						<div class="info-item">
+							<div class="info-icon">
+								<i class="fas fa-phone"></i>
+							</div>
+							<div class="info-content">
+								<div class="info-label">Số điện thoại</div>
+								<div class="info-value"
+									th:text="${phieuMuon.docGia.soDienThoai} ?: '--'"></div>
+							</div>
+						</div>
+						<div class="info-item">
+							<div class="info-icon">
+								<i class="fas fa-map-marker-alt"></i>
+							</div>
+							<div class="info-content">
+								<div class="info-label">Địa chỉ</div>
+								<div class="info-value"
+									th:text="${phieuMuon.docGia.diaChi} ?: '--'"></div>
+							</div>
+						</div>
+					</div>
+				</div>
 
-            <!-- Thông tin mượn -->
-            <div class="info-section">
-                <h3 style="margin-bottom: 20px;"><i class="fas fa-calendar"></i> Thông Tin Mượn</h3>
-                <div class="info-row">
-                    <div class="info-item">
-                        <div class="info-icon"><i class="fas fa-calendar-plus"></i></div>
-                        <div class="info-content">
-                            <div class="info-label">Ngày mượn</div>
-                            <div class="info-value" th:text="${#temporals.format(phieuMuon.ngayMuon, 'dd/MM/yyyy')}"></div>
-                        </div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-icon"><i class="fas fa-calendar-check"></i></div>
-                        <div class="info-content">
-                            <div class="info-label">Ngày trả</div>
-                            <div class="info-value" th:text="${phieuMuon.ngayTra != null ? #temporals.format(phieuMuon.ngayTra, 'dd/MM/yyyy') : 'Chưa trả'}"></div>
-                        </div>
-                    </div>
-                    <div class="info-item">
-                        <div class="info-icon"><i class="fas fa-clock"></i></div>
-                        <div class="info-content">
-                            <div class="info-label">Hạn trả dự kiến</div>
-                            <div class="info-value" th:text="${#temporals.format(phieuMuon.ngayMuon.plusDays(7), 'dd/MM/yyyy')}"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+				<!-- Thông tin mượn -->
+				<div class="info-section">
+					<h3 style="margin-bottom: 20px;">
+						<i class="fas fa-calendar"></i> Thông Tin Mượn
+					</h3>
+					<div class="info-row">
+						<div class="info-item">
+							<div class="info-icon">
+								<i class="fas fa-calendar-plus"></i>
+							</div>
+							<div class="info-content">
+								<div class="info-label">Ngày mượn</div>
+								<div class="info-value"
+									th:text="${#temporals.format(phieuMuon.ngayMuon, 'dd/MM/yyyy')}"></div>
+							</div>
+						</div>
+						<div class="info-item">
+							<div class="info-icon">
+								<i class="fas fa-calendar-check"></i>
+							</div>
+							<div class="info-content">
+								<div class="info-label">Ngày trả</div>
+								<div class="info-value"
+									th:text="${phieuMuon.ngayTra != null ? #temporals.format(phieuMuon.ngayTra, 'dd/MM/yyyy') : 'Chưa trả'}"></div>
+							</div>
+						</div>
+						<div class="info-item">
+							<div class="info-icon">
+								<i class="fas fa-clock"></i>
+							</div>
+							<div class="info-content">
+								<div class="info-label">Hạn trả dự kiến</div>
+								<div class="info-value"
+									th:text="${#temporals.format(phieuMuon.ngayMuon.plusDays(7), 'dd/MM/yyyy')}"></div>
+							</div>
+						</div>
+					</div>
+				</div>
 
-            <!-- Danh sách sách mượn -->
-            <h3 style="margin-bottom: 15px;"><i class="fas fa-book"></i> Danh Sách Sách Mượn</h3>
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>STT</th>
-                            <th>Tên Sách</th>
-                            <th>Tác Giả</th>
-                            <th>Số Lượng</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="ct, iter : ${chiTiets}">
-                            <td th:text="${iter.index + 1}">1</td>
-                            <td th:text="${ct.sach.tenSach}">Tên sách</td>
-                            <td th:text="${ct.sach.tacGia?.tenTacGia} ?: '--'">Tác giả</td>
-                            <td th:text="${ct.soLuong}">1</td>
-                        </tr>
-                    </tbody>
-                    <tfoot>
-                        <tr class="total-row">
-                            <td colspan="3" style="text-align: right;"><strong>Tổng số sách:</strong></td>
-                            <td><strong th:text="${#lists.size(chiTiets)}"></strong></td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
+				<!-- Danh sách sách mượn -->
+				<h3 style="margin-bottom: 15px;">
+					<i class="fas fa-book"></i> Danh Sách Sách Mượn
+				</h3>
+				<div class="table-wrapper">
+					<table>
+						<thead>
+							<tr>
+								<th>STT</th>
+								<th>Tên Sách</th>
+								<th>Tác Giả</th>
+								<th>Số Lượng</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="ct, iter : ${chiTiets}">
+								<td th:text="${iter.index + 1}">1</td>
+								<td th:text="${ct.sach.tenSach}">Tên sách</td>
+								<td th:text="${ct.sach.tacGia?.tenTacGia} ?: '--'">Tác giả</td>
+								<td th:text="${ct.soLuong}">1</td>
+							</tr>
+						</tbody>
+						<tfoot>
+							<tr class="total-row">
+								<td colspan="3" style="text-align: right;"><strong>Tổng
+										số sách:</strong></td>
+								<td><strong th:text="${#lists.size(chiTiets)}"></strong></td>
+							</tr>
+						</tfoot>
+					</table>
+				</div>
 
-            <!-- Action Buttons -->
-            <div class="action-buttons">
-                <a th:href="@{/phieumuon}" class="btn btn-outline">
-                    <i class="fas fa-list"></i> Danh Sách
-                </a>
-                <a th:if="${phieuMuon.ngayTra == null}" 
-                   th:href="@{/phieumuon/return/{id}(id=${phieuMuon.id})}" 
-                   class="btn btn-success"
-                   onclick="return confirm('Xác nhận trả sách?')">
-                    <i class="fas fa-check-circle"></i> Xác Nhận Trả Sách
-                </a>
-                <a th:href="@{/phieumuon/delete/{id}(id=${phieuMuon.id})}" 
-                   class="btn btn-danger"
-                   onclick="return confirm('Xóa phiếu mượn này?')">
-                    <i class="fas fa-trash"></i> Xóa Phiếu Mượn
-                </a>
-            </div>
-        </div>
-    </main>
+				<!-- Action Buttons -->
+				<div class="action-buttons">
+					<a th:href="@{/phieumuon}" class="btn btn-outline"> <i
+						class="fas fa-list"></i> Danh Sách
+					</a> <a th:if="${phieuMuon.ngayTra == null}"
+						th:href="@{/phieumuon/thanh-toan/{id}(id=${phieuMuon.id})}"
+						class="btn btn-success"> <i class="fas fa-credit-card"></i>
+						Thanh Toán & Trả Sách
+					</a> <a th:href="@{/phieumuon/delete/{id}(id=${phieuMuon.id})}"
+						class="btn btn-danger"
+						onclick="return confirm('Xóa phiếu mượn này?')"> <i
+						class="fas fa-trash"></i> Xóa Phiếu Mượn
+					</a>
+				</div>
+			</div>
+		</main>
 
-    <footer class="footer">
-        <p>&copy; 2026 Quản Lý Thư Viện. All rights reserved.</p>
-    </footer>
-</div>
+		<footer class="footer">
+			<p>&copy; 2026 Quản Lý Thư Viện. All rights reserved.</p>
+		</footer>
+	</div>
 </body>
 </html>

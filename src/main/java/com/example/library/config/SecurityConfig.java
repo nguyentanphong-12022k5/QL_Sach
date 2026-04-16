@@ -12,34 +12,35 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-	    http
-	        .authorizeHttpRequests(auth -> auth
-	            .requestMatchers("/css/**", "/js/**", "/img/**", "/webjars/**").permitAll()
-	            .requestMatchers("/login", "/register", "/dangky", "/forgot-password", "/reset-password").permitAll()
-	            .anyRequest().authenticated()
-	        )
-	        .formLogin(form -> form
-	            .loginPage("/login")
-	            .loginProcessingUrl("/login")
-	            .defaultSuccessUrl("/", true)
-	            .failureUrl("/login?error=true")
-	            .permitAll()
-	        )
-	        .logout(logout -> logout
-	            .logoutUrl("/logout")
-	            .logoutSuccessUrl("/login?logout=true")
-	            .permitAll()
-	        )
-	        .csrf(csrf -> csrf.disable());
-	    
-	    return http.build();
-	}
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/css/**", "/js/**", "/img/**", "/webjars/**").permitAll()
+                .requestMatchers("/login", "/register", "/dangky", "/forgot-password", "/reset-password").permitAll()
+                .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                .anyRequest().authenticated()
+            )
+            .formLogin(form -> form
+                .loginPage("/login")
+                .loginProcessingUrl("/login")
+                .defaultSuccessUrl("/", true)
+                .failureUrl("/login?error=true")
+                .permitAll()
+            )
+            .logout(logout -> logout
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login?logout=true")
+                .permitAll()
+            )
+            .csrf(csrf -> csrf.disable());
+
+        return http.build();
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        // KHÔNG MÃ HÓA - Mật khẩu lưu thẳng trong database
+        // KHÔNG MÃ HÓA - Mật khẩu plain text
         return NoOpPasswordEncoder.getInstance();
     }
 }

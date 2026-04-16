@@ -7,10 +7,209 @@
 <link rel="stylesheet" th:href="@{/css/style.css}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
+:root {
+    --primary-color: #1877f2;
+    --secondary-color: #42b72a;
+    --dark-color: #1c1e21;
+    --gray-color: #65676b;
+    --light-gray: #f0f2f5;
+    --danger-color: #dc3545;
+    --warning-color: #ffc107;
+    --success-color: #28a745;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--light-gray);
+    color: var(--dark-color);
+    line-height: 1.5;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.header {
+    background: white;
+    padding: 15px 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.header h1 {
+    color: var(--primary-color);
+    font-size: 1.8rem;
+}
+
+.nav {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.nav-link {
+    color: var(--dark-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.nav-link:hover {
+    color: var(--primary-color);
+}
+
+/* User Menu Dropdown */
+.user-menu {
+    position: relative;
+    display: inline-block;
+}
+
+.avatar-small {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+    border: 2px solid var(--primary-color);
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: white;
+    min-width: 200px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    z-index: 1000;
+    margin-top: 10px;
+}
+
+.dropdown-content.show {
+    display: block;
+}
+
+.dropdown-content a {
+    color: var(--dark-color);
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    transition: background-color 0.2s;
+}
+
+.dropdown-content a:hover {
+    background-color: var(--light-gray);
+}
+
+.dropdown-content hr {
+    margin: 5px 0;
+    border: none;
+    border-top: 1px solid #eee;
+}
+
+.logout-btn {
+    width: 100%;
+    padding: 12px 16px;
+    background: none;
+    border: none;
+    text-align: left;
+    color: var(--danger-color);
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.logout-btn:hover {
+    background-color: var(--light-gray);
+}
+
+/* Badge */
+.badge {
+    display: inline-block;
+    padding: 3px 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 4px;
+    margin-left: 8px;
+}
+
+.badge-danger {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.badge-warning {
+    background-color: var(--warning-color);
+    color: var(--dark-color);
+}
+
+.badge-success {
+    background-color: var(--success-color);
+    color: white;
+}
+
+/* Alert */
+.alert {
+    padding: 15px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Button */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #166fe5;
+}
+
+/* Diễn đàn */
 .dien-dan-container {
     max-width: 1000px;
     margin: 40px auto;
 }
+
 .binh-luan-card {
     background: white;
     border-radius: 16px;
@@ -18,33 +217,54 @@
     margin-bottom: 20px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
 }
+
 .binh-luan-header {
     display: flex;
     align-items: center;
     gap: 15px;
     margin-bottom: 15px;
 }
+
 .binh-luan-avatar {
     width: 50px;
     height: 50px;
     border-radius: 50%;
     object-fit: cover;
 }
+
 .binh-luan-info {
     flex: 1;
 }
+
 .binh-luan-name {
     font-weight: 600;
     color: var(--dark-color);
 }
+
 .binh-luan-time {
     font-size: 0.85rem;
     color: var(--gray-color);
 }
+
 .binh-luan-content {
     padding: 10px 0 10px 65px;
     line-height: 1.6;
 }
+
+.binh-luan-sach {
+    padding: 10px 0 0 65px;
+    color: var(--primary-color);
+}
+
+.binh-luan-sach a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.binh-luan-sach a:hover {
+    text-decoration: underline;
+}
+
 .form-binh-luan {
     background: white;
     border-radius: 16px;
@@ -52,6 +272,7 @@
     margin-bottom: 30px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
 }
+
 .form-binh-luan textarea {
     width: 100%;
     padding: 15px;
@@ -61,16 +282,19 @@
     min-height: 100px;
     font-size: 1rem;
 }
+
 .form-binh-luan textarea:focus {
     border-color: var(--primary-color);
     outline: none;
 }
+
 .sidebar {
     background: white;
     border-radius: 16px;
     padding: 20px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
 }
+
 .sidebar-title {
     font-size: 1.2rem;
     font-weight: 600;
@@ -78,6 +302,7 @@
     padding-bottom: 10px;
     border-bottom: 2px solid var(--primary-color);
 }
+
 .sidebar-item {
     display: flex;
     align-items: center;
@@ -85,16 +310,37 @@
     padding: 10px 0;
     border-bottom: 1px solid #eee;
 }
+
 .sidebar-item:last-child {
     border-bottom: none;
 }
+
 .btn-action {
     opacity: 0.6;
     transition: opacity 0.2s;
     margin-left: 8px;
+    text-decoration: none;
+    font-size: 1.1rem;
 }
+
 .btn-action:hover {
     opacity: 1;
+}
+
+.footer {
+    text-align: center;
+    padding: 30px 0;
+    color: var(--gray-color);
+    margin-top: 50px;
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 </style>
 </head>
@@ -106,14 +352,23 @@
             <a th:href="@{/}" class="nav-link"><i class="fas fa-home"></i> Trang Chủ</a>
             <a th:href="@{/sach}" class="nav-link"><i class="fas fa-book"></i> Sách</a>
             <a th:href="@{/dien-dan}" class="nav-link"><i class="fas fa-comments"></i> Diễn Đàn</a>
-            <a th:if="${currentUser?.quyen == 1}" th:href="@{/dien-dan/admin}" class="nav-link">
+            
+            <!-- Admin link -->
+            <a th:if="${currentUser != null && currentUser.quyen == 1}" 
+               th:href="@{/dien-dan/admin}" 
+               class="nav-link">
                 <i class="fas fa-cog"></i> Quản Lý
             </a>
-            <!-- Avatar dropdown -->
-            <div class="user-menu">
+            
+            <!-- User menu - Chỉ hiển thị khi đã đăng nhập -->
+            <div class="user-menu" th:if="${currentUser != null}">
                 <div class="avatar-dropdown">
-                    <img th:src="@{${currentUser?.avatar} ?: 'https://ui-avatars.com/api/?name=User&background=1877f2&color=fff&size=40'}"
-                         alt="Avatar" class="avatar-small" onclick="toggleDropdown()">
+                    <img th:src="@{${currentUser.avatar != null && !currentUser.avatar.isEmpty()} ? ${currentUser.avatar} : 'https://ui-avatars.com/api/?name=' + ${currentUser.hoTen != null ? currentUser.hoTen : 'User'} + '&background=1877f2&color=fff&size=40'}"
+                         alt="Avatar" 
+                         class="avatar-small" 
+                         onclick="toggleDropdown()"
+                         onerror="this.src='https://ui-avatars.com/api/?name=' + encodeURIComponent(this.getAttribute('data-name')) + '&background=1877f2&color=fff&size=40'"
+                         th:attr="data-name=${currentUser.hoTen != null ? currentUser.hoTen : 'User'}">
                     <div class="dropdown-content" id="userDropdown">
                         <a th:href="@{/profile}"><i class="fas fa-user"></i> Hồ sơ</a>
                         <a th:href="@{/profile/settings}"><i class="fas fa-cog"></i> Cài đặt</a>
@@ -127,6 +382,11 @@
                     </div>
                 </div>
             </div>
+            
+            <!-- Login link khi chưa đăng nhập -->
+            <a th:unless="${currentUser != null}" th:href="@{/login}" class="nav-link">
+                <i class="fas fa-sign-in-alt"></i> Đăng nhập
+            </a>
         </nav>
     </header>
 
@@ -143,7 +403,7 @@
                 <!-- Cột chính -->
                 <div>
                     <!-- Form đăng bình luận -->
-                    <div class="form-binh-luan">
+                    <div class="form-binh-luan" th:if="${currentUser != null}">
                         <h3 style="margin-bottom: 15px;">
                             <i class="fas fa-pen"></i> Đóng góp ý kiến
                         </h3>
@@ -155,6 +415,17 @@
                                 </button>
                             </div>
                         </form>
+                    </div>
+                    
+                    <!-- Thông báo khi chưa đăng nhập -->
+                    <div class="form-binh-luan" th:unless="${currentUser != null}">
+                        <h3 style="margin-bottom: 15px;">
+                            <i class="fas fa-pen"></i> Đóng góp ý kiến
+                        </h3>
+                        <p style="text-align: center; padding: 20px;">
+                            <a th:href="@{/login}" style="color: var(--primary-color);">Đăng nhập</a> 
+                            để đóng góp ý kiến
+                        </p>
                     </div>
 
                     <!-- Danh sách bình luận -->
@@ -169,12 +440,16 @@
                         </div>
                     </div>
 
-                    <!-- VÒNG LẶP BÌNH LUẬN - CÁC NÚT ĐÃ ĐƯỢC ĐƯA VÀO ĐÂY -->
+                    <!-- Vòng lặp bình luận -->
                     <div th:each="bl : ${binhLuanList}" class="binh-luan-card">
                         <div class="binh-luan-header">
-                            <img th:src="@{${bl.taiKhoan.avatar} ?: 'https://ui-avatars.com/api/?name=' + ${bl.taiKhoan.hoTen} + '&background=1877f2&color=fff&size=50'}"
-                                 alt="Avatar" class="binh-luan-avatar"
-                                 onerror="this.src='https://ui-avatars.com/api/?name=User&background=1877f2&color=fff&size=50'">
+                            <!-- Avatar người dùng -->
+                            <img th:src="@{${bl.taiKhoan.avatar != null && !bl.taiKhoan.avatar.isEmpty()} ? ${bl.taiKhoan.avatar} : 'https://ui-avatars.com/api/?name=' + ${bl.taiKhoan.hoTen != null ? bl.taiKhoan.hoTen : 'User'} + '&background=1877f2&color=fff&size=50'}"
+                                 alt="Avatar" 
+                                 class="binh-luan-avatar"
+                                 onerror="this.src='https://ui-avatars.com/api/?name=' + encodeURIComponent(this.getAttribute('data-name')) + '&background=1877f2&color=fff&size=50'"
+                                 th:attr="data-name=${bl.taiKhoan.hoTen != null ? bl.taiKhoan.hoTen : 'User'}">
+                            
                             <div class="binh-luan-info">
                                 <div class="binh-luan-name">
                                     <span th:text="${bl.taiKhoan.hoTen} ?: ${bl.taiKhoan.username}">User</span>
@@ -189,11 +464,14 @@
                                     </span>
                                 </div>
                             </div>
-                            <div style="display: flex; gap: 8px;">
+                            
+                            <!-- Action buttons cho bình luận hiển thị -->
+                            <div style="display: flex; gap: 8px;" th:if="${bl.trangThai == 1}">
                                 <!-- Nút chỉnh sửa -->
                                 <a th:if="${currentUser != null && (currentUser.id == bl.taiKhoan.id || currentUser.quyen == 1)}"
                                    th:href="@{/dien-dan/sua/{id}(id=${bl.id})}" 
-                                   class="btn-action" style="color: var(--primary-color);"
+                                   class="btn-action" 
+                                   style="color: var(--primary-color);"
                                    title="Chỉnh sửa">
                                     <i class="fas fa-edit"></i>
                                 </a>
@@ -201,7 +479,8 @@
                                 <!-- Nút thu hồi -->
                                 <a th:if="${currentUser != null && (currentUser.id == bl.taiKhoan.id || currentUser.quyen == 1)}"
                                    th:href="@{/dien-dan/thu-hoi/{id}(id=${bl.id})}" 
-                                   class="btn-action" style="color: var(--warning-color);"
+                                   class="btn-action" 
+                                   style="color: var(--warning-color);"
                                    onclick="return confirm('Thu hồi bình luận này?')"
                                    title="Thu hồi">
                                     <i class="fas fa-undo-alt"></i>
@@ -210,14 +489,38 @@
                                 <!-- Nút xóa vĩnh viễn -->
                                 <a th:if="${currentUser != null && currentUser.quyen == 1}"
                                    th:href="@{/dien-dan/xoa-vinh-vien/{id}(id=${bl.id})}" 
-                                   class="btn-action" style="color: var(--danger-color);"
+                                   class="btn-action" 
+                                   style="color: var(--danger-color);"
+                                   onclick="return confirm('Xóa vĩnh viễn bình luận này?')"
+                                   title="Xóa vĩnh viễn">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
+                            
+                            <!-- Nút khôi phục cho bình luận đã thu hồi -->
+                            <div th:if="${bl.trangThai == 2 && currentUser != null && currentUser.quyen == 1}">
+                                <a th:href="@{/dien-dan/khoi-phuc/{id}(id=${bl.id})}" 
+                                   class="btn-action" 
+                                   style="color: var(--success-color);"
+                                   title="Khôi phục">
+                                    <i class="fas fa-check-circle"></i>
+                                </a>
+                            </div>
+                            
+                            <!-- Nút xóa vĩnh viễn cho bình luận đã thu hồi (Admin) -->
+                            <div th:if="${bl.trangThai == 2 && currentUser != null && currentUser.quyen == 1}" style="display: inline-block; margin-left: 8px;">
+                                <a th:href="@{/dien-dan/xoa-vinh-vien/{id}(id=${bl.id})}" 
+                                   class="btn-action" 
+                                   style="color: var(--danger-color);"
                                    onclick="return confirm('Xóa vĩnh viễn bình luận này?')"
                                    title="Xóa vĩnh viễn">
                                     <i class="fas fa-trash"></i>
                                 </a>
                             </div>
                         </div>
+                        
                         <div class="binh-luan-content" th:text="${bl.noiDung}"></div>
+                        
                         <div th:if="${bl.sach != null}" class="binh-luan-sach">
                             <i class="fas fa-book"></i> 
                             <a th:href="@{/sach/{id}(id=${bl.sach.id})}" th:text="${bl.sach.tenSach}"></a>
@@ -231,8 +534,9 @@
                         <h4 class="sidebar-title"><i class="fas fa-fire"></i> Bình luận mới nhất</h4>
                         <div th:each="bl : ${binhLuanMoiNhat}">
                             <div class="sidebar-item">
-                                <img th:src="@{${bl.taiKhoan.avatar} ?: 'https://ui-avatars.com/api/?name=' + ${bl.taiKhoan.hoTen} + '&background=1877f2&color=fff&size=40'}"
-                                     alt="Avatar" style="width: 35px; height: 35px; border-radius: 50%;"
+                                <img th:src="@{${bl.taiKhoan.avatar != null && !bl.taiKhoan.avatar.isEmpty()} ? ${bl.taiKhoan.avatar} : 'https://ui-avatars.com/api/?name=' + ${bl.taiKhoan.hoTen != null ? bl.taiKhoan.hoTen : 'User'} + '&background=1877f2&color=fff&size=40'}"
+                                     alt="Avatar" 
+                                     style="width: 35px; height: 35px; border-radius: 50%; object-fit: cover;"
                                      onerror="this.src='https://ui-avatars.com/api/?name=User&background=1877f2&color=fff&size=40'">
                                 <div style="flex: 1;">
                                     <div style="font-weight: 500; font-size: 0.9rem;"
@@ -242,11 +546,17 @@
                                     <div style="font-size: 0.75rem; color: var(--gray-color);"
                                         th:text="${#temporals.format(bl.ngayDang, 'dd/MM HH:mm')}"></div>
                                 </div>
-                                <a th:if="${bl.sach != null}" th:href="@{/dien-dan/sach/{id}(id=${bl.sach.id})}"
+                                <a th:if="${bl.sach != null}" 
+                                   th:href="@{/dien-dan/sach/{id}(id=${bl.sach.id})}"
                                    style="color: var(--primary-color);">
                                     <i class="fas fa-book"></i>
                                 </a>
                             </div>
+                        </div>
+                        <div th:if="${binhLuanMoiNhat == null || binhLuanMoiNhat.isEmpty()}">
+                            <p style="color: var(--gray-color); text-align: center; padding: 20px;">
+                                Chưa có bình luận nào
+                            </p>
                         </div>
                     </div>
 
@@ -275,6 +585,7 @@
     function toggleDropdown() {
         document.getElementById("userDropdown").classList.toggle("show");
     }
+    
     window.onclick = function(event) {
         if (!event.target.matches('.avatar-small')) {
             var dropdowns = document.getElementsByClassName("dropdown-content");
