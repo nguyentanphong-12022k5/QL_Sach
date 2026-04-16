@@ -49,6 +49,15 @@ public class DataLoader {
             PasswordEncoder passwordEncoder) {
 
         return args -> {
+            // ===== ĐẢM BẢO THƯ MỤC AVATAR TỒN TẠI =====
+            String avatarDirPath = System.getProperty("user.dir") + "/src/main/resources/static/img/avatar/";
+            java.io.File avatarDir = new java.io.File(avatarDirPath);
+            if (!avatarDir.exists()) {
+                if (avatarDir.mkdirs()) {
+                    System.out.println("✅ Đã tạo thư mục avatar tại: " + avatarDirPath);
+                }
+            }
+
             // ===== TẠO TÀI KHOẢN MẪU =====
             if (taiKhoanRepository.count() == 0) {
                 System.out.println(">>> Đang tạo tài khoản mẫu...");
@@ -89,6 +98,14 @@ public class DataLoader {
                 System.out.println("ℹ️ Tài khoản đã tồn tại, bỏ qua tạo tài khoản mẫu.");
             }
 
+            // ===== KHỞI TẠO THỂ LOẠI SÁCH (LUÔN CHẠY) =====
+            String[] categories = {"Văn học", "Khoa học", "Thiếu nhi", "Văn học thiếu nhi", "Kinh tế", "Ngoại ngữ", "Kỹ năng sống", "Công nghệ thông tin", "Pháp luật", "Y học"};
+            for (String catName : categories) {
+                if (loaiSachRepository.findByTenLoaiSachContainingIgnoreCase(catName).isEmpty()) {
+                    loaiSachRepository.save(new LoaiSach(catName));
+                }
+            }
+
             // ===== TẠO DỮ LIỆU MẪU KHÁC =====
             if (sachRepository.count() == 0) {
                 System.out.println(">>> Đang tạo dữ liệu mẫu...");
@@ -105,11 +122,7 @@ public class DataLoader {
                 nhaXuatBanRepository.save(nxb1);
                 nhaXuatBanRepository.save(nxb2);
 
-                // Tạo loại sách
-                LoaiSach loai1 = new LoaiSach("Văn học");
-                LoaiSach loai2 = new LoaiSach("Khoa học");
-                loaiSachRepository.save(loai1);
-                loaiSachRepository.save(loai2);
+                LoaiSach loaiVanHoc = loaiSachRepository.findByTenLoaiSachContainingIgnoreCase("Văn học").get(0);
 
                 // Tạo kệ sách
                 KeSach ke1 = new KeSach("Kệ A1", 100);
@@ -118,8 +131,8 @@ public class DataLoader {
                 keSachRepository.save(ke2);
 
                 // Tạo sách
-                Sach sach1 = new Sach("Truyện Kiều", tacGia1, nxb1, loai1, ke1, "truyen-kieu.jpg");
-                Sach sach2 = new Sach("Romeo và Juliet", tacGia2, nxb2, loai1, ke2, "romeo-juliet.jpg");
+                Sach sach1 = new Sach("Truyện Kiều", tacGia1, nxb1, loaiVanHoc, ke1, "truyen-kieu.jpg");
+                Sach sach2 = new Sach("Romeo và Juliet", tacGia2, nxb2, loaiVanHoc, ke2, "romeo-juliet.jpg");
                 sachRepository.save(sach1);
                 sachRepository.save(sach2);
 

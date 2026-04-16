@@ -43,6 +43,21 @@ public class SachService {
                 .collect(Collectors.toList());
     }
 
+    public List<SachDTO> findWithFilters(String keyword, Long loaiSachId, String filter) {
+        List<Sach> baseList;
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            baseList = sachRepository.searchByKeyword(keyword.trim());
+        } else {
+            baseList = sachRepository.findAll();
+        }
+
+        return baseList.stream()
+                .filter(s -> loaiSachId == null || (s.getLoaiSach() != null && s.getLoaiSach().getId().equals(loaiSachId)))
+                .filter(s -> !"available".equals(filter) || s.getSoLuong() > 0)
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
     public List<SachDTO> findByTacGia(Long tacGiaId) {
         return sachRepository.findByTacGiaId(tacGiaId).stream()
                 .map(this::convertToDTO)

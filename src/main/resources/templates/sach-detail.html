@@ -187,11 +187,19 @@
 							alt="Ảnh bìa sách" onerror="this.src='/img/bookicon.png'">
 
 						<div class="book-actions">
-							<button class="btn btn-primary btn-large">
+							<!-- Nút Mượn Sách -->
+							<a th:if="${sach.soLuong != null and sach.soLuong > 0}" 
+							   th:href="@{'/muon-sach/' + ${sach.id}}" class="btn btn-primary btn-large" style="text-decoration: none;">
 								<i class="fas fa-hand-holding"></i> Mượn Sách
+							</a>
+							<button th:unless="${sach.soLuong != null and sach.soLuong > 0}" 
+							   class="btn btn-primary btn-large" style="opacity: 0.5; cursor: not-allowed;" title="Đã hết sách">
+								<i class="fas fa-ban"></i> Hết Sách
 							</button>
-							<button class="btn btn-outline btn-large">
-								<i class="fas fa-bookmark"></i> Yêu Thích
+
+							<!-- Nút Yêu Thích -->
+							<button id="btnFavorite" class="btn btn-outline btn-large" onclick="toggleFavorite()">
+								<i class="fas fa-bookmark" id="iconFavorite"></i> <span id="textFavorite">Yêu Thích</span>
 							</button>
 						</div>
 					</div>
@@ -269,5 +277,27 @@
 			<p>&copy; 2026 Quản Lý Thư Viện. All rights reserved.</p>
 		</footer>
 	</div>
+
+	<script>
+		// Script xử lý Yêu Thích phía front-end
+		function toggleFavorite() {
+			var btn = document.getElementById("btnFavorite");
+			var icon = document.getElementById("iconFavorite");
+			var text = document.getElementById("textFavorite");
+			
+			if (btn.classList.contains("btn-outline")) {
+				btn.classList.remove("btn-outline");
+				btn.classList.add("btn-primary"); // Chuyển sang xanh đặc
+				icon.style.color = "gold";
+				text.innerText = "Đã Yêu Thích";
+				// alert("Đã lưu sách vào danh sách yêu thích cá nhân!");
+			} else {
+				btn.classList.remove("btn-primary");
+				btn.classList.add("btn-outline");
+				icon.style.color = "";
+				text.innerText = "Yêu Thích";
+			}
+		}
+	</script>
 </body>
 </html>

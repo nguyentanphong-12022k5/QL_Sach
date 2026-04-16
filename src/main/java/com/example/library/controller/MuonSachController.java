@@ -59,19 +59,34 @@ public class MuonSachController {
     public String submitMuonSach(@RequestParam("sachId") Long sachId,
                                   @RequestParam("docGiaId") Long docGiaId,
                                   @RequestParam("soLuong") int soLuong,
+                                  @RequestParam(value = "ngayMuon", required = false) String ngayMuonStr,
+                                  @RequestParam(value = "ngayTraDuKien", required = false) String ngayTraDuKienStr,
+                                  @RequestParam(value = "tienPhat", required = false) Double tienPhat,
+                                  @RequestParam(value = "giaMuon", required = false) Double giaMuon,
                                   RedirectAttributes redirect) {
         try {
             Sach sach = sachRepository.findById(sachId).orElseThrow();
             DocGia docGia = docGiaRepository.findById(docGiaId).orElseThrow();
             
+            if (soLuong <= 0) {
+                redirect.addFlashAttribute("error", "Số lượng mượn phải lớn hơn 0!");
+                return "redirect:/sach";
+            }
             if (sach.getSoLuong() == null || sach.getSoLuong() < soLuong) {
                 redirect.addFlashAttribute("error", "Sách không đủ số lượng!");
                 return "redirect:/sach";
             }
             
+            LocalDate parsedNgayMuon = (ngayMuonStr != null && !ngayMuonStr.isEmpty()) ? LocalDate.parse(ngayMuonStr) : LocalDate.now();
+            LocalDate parsedNgayTraDuKien = (ngayTraDuKienStr != null && !ngayTraDuKienStr.isEmpty()) ? LocalDate.parse(ngayTraDuKienStr) : parsedNgayMuon.plusDays(7);
+            Double finalTienPhat = (tienPhat != null) ? tienPhat : 5000.0;
+            Double finalGiaMuon = (giaMuon != null) ? giaMuon : (sach.getGiaMuon() != null ? sach.getGiaMuon() : 0.0);
+
             PhieuMuon phieuMuon = new PhieuMuon();
             phieuMuon.setDocGia(docGia);
-            phieuMuon.setNgayMuon(LocalDate.now());
+            phieuMuon.setNgayMuon(parsedNgayMuon);
+            phieuMuon.setNgayTraDuKien(parsedNgayTraDuKien);
+            phieuMuon.setTienPhat(finalTienPhat);
             phieuMuon.setNgayTra(null);
             PhieuMuon saved = phieuMuonRepository.save(phieuMuon);
             
@@ -79,7 +94,7 @@ public class MuonSachController {
             chiTiet.setPhieuMuon(saved);
             chiTiet.setSach(sach);
             chiTiet.setSoLuong(soLuong);
-            chiTiet.setGiaMuon(sach.getGiaMuon() != null ? sach.getGiaMuon() : 0.0);
+            chiTiet.setGiaMuon(finalGiaMuon);
             chiTietPhieuMuonRepository.save(chiTiet);
             
             sach.setSoLuong(sach.getSoLuong() - soLuong);

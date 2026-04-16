@@ -19,8 +19,8 @@
 				<a th:href="@{/sach}" class="nav-link"> <i class="fas fa-book"></i> Sách </a>
 				<a th:href="@{/docgia}" class="nav-link"> <i class="fas fa-users"></i> Độc Giả </a>
 				<a th:href="@{/phieumuon}" class="nav-link"> <i class="fas fa-hand-holding"></i> Phiếu Mượn </a>
-				<a th:href="@{/phieunhap}" class="nav-link"> <i class="fas fa-truck"></i> Phiếu Nhập </a>
-				<a th:href="@{/thongke}" class="nav-link"> <i class="fas fa-chart-bar"></i> Thống Kê </a>
+				<a sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')" th:href="@{/phieunhap}" class="nav-link"> <i class="fas fa-truck"></i> Phiếu Nhập </a>
+				<a sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')" th:href="@{/thongke}" class="nav-link"> <i class="fas fa-chart-bar"></i> Thống Kê </a>
 				<a th:href="@{/dien-dan}" class="nav-link"><i class="fas fa-comments"></i> Diễn Đàn</a>
 				
 				<!-- === MENU ADMIN - CHỈ HIỂN THỊ VỚI ADMIN === -->
@@ -31,9 +31,10 @@
 				
 				<div class="user-menu">
 					<div class="avatar-dropdown">
-						<img th:src="@{${currentUser?.avatar} ?: 'https://ui-avatars.com/api/?name=' + ${currentUser?.hoTen} + '&background=1877f2&color=fff&size=40&bold=true'}"
+						<img th:src="${currentUser?.avatar != null && !currentUser.avatar.empty} ? @{${currentUser.avatar}} : 'https://ui-avatars.com/api/?name=' + ${currentUser?.hoTen != null ? currentUser.hoTen : 'User'} + '&background=1877f2&color=fff&size=40&bold=true'"
 							alt="Avatar" class="avatar-small" onclick="toggleDropdown()"
-							onerror="this.src='https://ui-avatars.com/api/?name=User&background=3498db&color=fff&size=40'">
+							th:attr="data-name=${currentUser?.hoTen != null ? currentUser.hoTen : 'User'}"
+							onerror="this.src='https://ui-avatars.com/api/?name=' + encodeURIComponent(this.getAttribute('data-name')) + '&background=1877f2&color=fff&size=40'">
 						<div class="dropdown-content" id="userDropdown">
 							<a th:href="@{/profile}"><i class="fas fa-user"></i> Hồ sơ</a>
 							<a th:href="@{/profile/settings}"><i class="fas fa-cog"></i> Cài đặt</a>

@@ -178,9 +178,10 @@
 				<div class="profile-header">
 					<div class="avatar-wrapper">
 						<img
-							th:src="@{${taiKhoan.avatar} ?: '/img/avatar/default-avatar.png'}"
+							th:src="${taiKhoan.avatar != null && !taiKhoan.avatar.empty} ? @{${taiKhoan.avatar}} : 'https://ui-avatars.com/api/?name=' + ${taiKhoan.hoTen != null ? taiKhoan.hoTen : 'User'} + '&background=1877f2&color=fff&size=120'"
 							alt="Avatar" class="avatar"
-							onerror="this.src='/img/avatar/default-avatar.png'">
+							th:attr="data-name=${taiKhoan.hoTen != null ? taiKhoan.hoTen : 'User'}"
+							onerror="this.src='https://ui-avatars.com/api/?name=' + encodeURIComponent(this.getAttribute('data-name')) + '&background=1877f2&color=fff&size=120'">
 					</div>
 					<div class="profile-info">
 						<h1 th:text="${taiKhoan.hoTen} ?: 'Chưa cập nhật'">Họ tên</h1>

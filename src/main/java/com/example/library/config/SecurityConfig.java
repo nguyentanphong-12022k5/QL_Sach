@@ -19,6 +19,12 @@ public class SecurityConfig {
                 .requestMatchers("/css/**", "/js/**", "/img/**", "/webjars/**").permitAll()
                 .requestMatchers("/login", "/register", "/dangky", "/forgot-password", "/reset-password").permitAll()
                 .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                
+                // Cấm khách hàng thao tác Xóa, Sửa, Thêm các dữ liệu quan trọng
+                .requestMatchers("/docgia/add", "/docgia/edit/**", "/docgia/delete/**", "/docgia/save").hasAnyAuthority("ROLE_ADMIN", "ROLE_THUTHU", "ROLE_NHANVIEN")
+                .requestMatchers("/phieumuon/add", "/phieumuon/edit/**", "/phieumuon/delete/**", "/phieumuon/save", "/phieumuon/thanh-toan/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_THUTHU", "ROLE_NHANVIEN")
+                .requestMatchers("/phieunhap/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_THUTHU", "ROLE_NHANVIEN")
+                
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form

@@ -36,7 +36,7 @@
             </div>
             <button class="btn btn-primary" onclick="searchDocGia()"><i class="fas fa-search"></i> Tìm</button>
             <a th:href="@{/docgia}" class="btn btn-outline"><i class="fas fa-sync-alt"></i> Làm Mới</a>
-            <a th:href="@{/docgia/add}" class="btn btn-success"><i class="fas fa-plus"></i> Thêm Độc Giả</a>
+            <a sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')" th:href="@{/docgia/add}" class="btn btn-success"><i class="fas fa-plus"></i> Thêm Độc Giả</a>
         </div>
 
         <!-- Search Result -->
@@ -72,8 +72,8 @@
                         </td>
                         <td>
                             <a th:href="@{/docgia/view/{id}(id=${dg.id})}" class="btn btn-outline btn-sm"><i class="fas fa-eye"></i></a>
-                            <a th:href="@{/docgia/edit/{id}(id=${dg.id})}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
-                            <a th:href="@{/docgia/delete/{id}(id=${dg.id})}" class="btn btn-danger btn-sm" onclick="return confirm('Xóa độc giả này?')"><i class="fas fa-trash"></i></a>
+                            <a sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')" th:href="@{/docgia/edit/{id}(id=${dg.id})}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i></a>
+                            <a sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')" th:href="@{/docgia/delete/{id}(id=${dg.id})}" class="btn btn-danger btn-sm" onclick="return confirm('Xóa độc giả này?')"><i class="fas fa-trash"></i></a>
                         </td>
                     </tr>
                 </tbody>

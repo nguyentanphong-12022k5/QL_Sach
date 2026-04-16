@@ -110,9 +110,10 @@
                 <h3 class="section-title"><i class="fas fa-camera"></i> Ảnh Đại Diện</h3>
                 <form th:action="@{/profile/upload-avatar}" method="post" enctype="multipart/form-data">
                     <div class="avatar-upload">
-                        <img th:src="@{${taiKhoan.avatar} ?: 'https://ui-avatars.com/api/?name=' + ${taiKhoan.hoTen} + '&background=1877f2&color=fff&size=100'}"
+                        <img th:src="${taiKhoan.avatar != null && !taiKhoan.avatar.empty} ? @{${taiKhoan.avatar}} : 'https://ui-avatars.com/api/?name=' + ${taiKhoan.hoTen != null ? taiKhoan.hoTen : 'User'} + '&background=1877f2&color=fff&size=100'"
                              alt="Avatar" class="avatar-preview"
-                             onerror="this.src='https://ui-avatars.com/api/?name=User&background=1877f2&color=fff&size=100'">
+                             th:attr="data-name=${taiKhoan.hoTen != null ? taiKhoan.hoTen : 'User'}"
+                             onerror="this.src='https://ui-avatars.com/api/?name=' + encodeURIComponent(this.getAttribute('data-name')) + '&background=1877f2&color=fff&size=100'">
                         <div style="flex: 1;">
                             <input type="file" name="avatar" accept="image/*" class="form-control" required>
                             <button type="submit" class="btn btn-primary" style="margin-top: 15px;">

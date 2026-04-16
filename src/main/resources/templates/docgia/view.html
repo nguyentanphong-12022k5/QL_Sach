@@ -250,7 +250,7 @@ td {
 
             <!-- Action Buttons -->
             <div class="action-buttons">
-                <a th:href="@{/docgia/edit/{id}(id=${docGia.id})}" class="btn btn-warning">
+                <a sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')" th:href="@{/docgia/edit/{id}(id=${docGia.id})}" class="btn btn-warning">
                     <i class="fas fa-edit"></i> Chỉnh Sửa
                 </a>
                 <a th:href="@{/phieumuon/add}" class="btn btn-primary">

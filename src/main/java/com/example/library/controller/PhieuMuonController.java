@@ -144,7 +144,7 @@ public class PhieuMuonController {
 
         // Tính số ngày mượn thực tế
         LocalDate ngayMuon = phieuMuon.getNgayMuon();
-        LocalDate ngayTraDuKien = ngayMuon.plusDays(7);
+        LocalDate ngayTraDuKien = phieuMuon.getNgayTraDuKien() != null ? phieuMuon.getNgayTraDuKien() : ngayMuon.plusDays(7);
         LocalDate ngayTraThucTe = LocalDate.now();
 
         long soNgayMuon = java.time.temporal.ChronoUnit.DAYS.between(ngayMuon, ngayTraThucTe);
@@ -153,10 +153,11 @@ public class PhieuMuonController {
 
         long soNgayQuaHan = 0;
         double tienPhat = 0;
+        double phatMoiNgay = phieuMuon.getTienPhat() != null ? phieuMuon.getTienPhat() : 5000.0;
 
         if (ngayTraThucTe.isAfter(ngayTraDuKien)) {
             soNgayQuaHan = java.time.temporal.ChronoUnit.DAYS.between(ngayTraDuKien, ngayTraThucTe);
-            tienPhat = soNgayQuaHan * 5000; // 5,000 VND/ngày
+            tienPhat = soNgayQuaHan * phatMoiNgay;
         }
 
         // Tổng số sách mượn
@@ -200,6 +201,12 @@ public class PhieuMuonController {
 
             PhieuMuon phieuMuon = phieuMuonRepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("Không tìm thấy phiếu mượn"));
+
+            // Ngăn chặn lỗi trả sách nhiều lần gian lận (Real-time debug fix)
+            if (phieuMuon.getNgayTra() != null) {
+                redirect.addFlashAttribute("error", "Phiếu mượn này đã được thanh toán và trả sách trước đó!");
+                return "redirect:/phieumuon";
+            }
 
             // Tạo thanh toán
             ThanhToan thanhToan = new ThanhToan();

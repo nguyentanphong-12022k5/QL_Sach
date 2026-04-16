@@ -34,9 +34,9 @@
         <form th:action="@{/muon-sach/submit}" method="post" style="max-width: 500px;">
             <input type="hidden" name="sachId" th:value="${sach.id}" />
             
-            <div class="form-group">
+            <div class="form-group" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')">
                 <label><i class="fas fa-user"></i> Chọn Độc Giả <span style="color: red;">*</span></label>
-                <select name="docGiaId" class="form-control" required>
+                <select name="docGiaId" class="form-control">
                     <option value="">-- Chọn độc giả --</option>
                     <option th:each="dg : ${docGiaList}" 
                             th:value="${dg.id}" 
@@ -46,10 +46,42 @@
                 <small><a th:href="@{/docgia/add}" target="_blank"><i class="fas fa-plus"></i> Thêm độc giả mới</a></small>
             </div>
 
+            <div class="form-group" sec:authorize="!hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')">
+                <label><i class="fas fa-user"></i> Độc Giả</label>
+                <input type="text" class="form-control" th:value="${docGia != null ? docGia.hoTen : ''}" readonly style="background: #e9ecef; cursor: not-allowed;" />
+                <input type="hidden" name="docGiaId" th:value="${docGia != null ? docGia.id : ''}" />
+            </div>
+
             <div class="form-group">
                 <label><i class="fas fa-hashtag"></i> Số Lượng Mượn <span style="color: red;">*</span></label>
                 <input type="number" name="soLuong" class="form-control" min="1" th:max="${sach.soLuong}" value="1" required />
                 <small>Tối đa: <span th:text="${sach.soLuong}"></span> cuốn</small>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-calendar"></i> Ngày Mượn</label>
+                <input type="date" name="ngayMuon" class="form-control" th:value="${today}" required />
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-calendar-check"></i> Hạn Trả Dự Kiến</label>
+                <input type="date" name="ngayTraDuKien" class="form-control" th:value="${today.plusDays(7)}" required />
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-money-bill"></i> Giá Phạt Quá Hạn (VND/Ngày)</label>
+                <input type="number" name="tienPhat" class="form-control" value="5000" min="0" step="1000"
+                       sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')" />
+                <input type="number" class="form-control" value="5000" readonly style="background: #e9ecef; cursor: not-allowed;" 
+                       sec:authorize="!hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')" />
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-tag"></i> Giá Mượn Sách (VND/Ngày)</label>
+                <input type="number" name="giaMuon" class="form-control" th:value="${sach.giaMuon != null ? sach.giaMuon : 0}" min="0" step="1000"
+                       sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')" />
+                <input type="number" class="form-control" th:value="${sach.giaMuon != null ? sach.giaMuon : 0}" readonly style="background: #e9ecef; cursor: not-allowed;" 
+                       sec:authorize="!hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')" />
             </div>
 
             <div style="display: flex; gap: 15px; margin-top: 30px;">

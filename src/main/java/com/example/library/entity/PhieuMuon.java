@@ -21,6 +21,12 @@ public class PhieuMuon {
     @Column(name = "ngay_tra")
     private LocalDate ngayTra;
 
+    @Column(name = "ngay_tra_du_kien")
+    private LocalDate ngayTraDuKien;
+
+    @Column(name = "tien_phat")
+    private Double tienPhat;
+
     @OneToMany(mappedBy = "phieuMuon", cascade = CascadeType.ALL)
     private List<ChiTietPhieuMuon> chiTietPhieuMuons;
 
@@ -73,5 +79,21 @@ public class PhieuMuon {
 
     public void setChiTietPhieuMuons(List<ChiTietPhieuMuon> chiTietPhieuMuons) {
         this.chiTietPhieuMuons = chiTietPhieuMuons;
+    }
+
+    public LocalDate getNgayTraDuKien() {
+        return ngayTraDuKien;
+    }
+
+    public void setNgayTraDuKien(LocalDate ngayTraDuKien) {
+        this.ngayTraDuKien = ngayTraDuKien;
+    }
+
+    public Double getTienPhat() {
+        return tienPhat;
+    }
+
+    public void setTienPhat(Double tienPhat) {
+        this.tienPhat = tienPhat;
     }
 }

@@ -119,35 +119,39 @@ public class TaiKhoanController {
 		try {
 			// Tạo tên file unique
 			String originalFilename = file.getOriginalFilename();
-			String extension = "";
+			String extension = ".jpg"; // Mặc định
 			if (originalFilename != null && originalFilename.contains(".")) {
 				extension = originalFilename.substring(originalFilename.lastIndexOf("."));
 			}
 			String fileName = UUID.randomUUID().toString() + extension;
+			System.out.println(">>> Bắt đầu upload avatar: " + fileName + " (" + file.getSize() + " bytes)");
 
 			// === QUAN TRỌNG: Lưu vào cả 2 thư mục ===
+			String userDir = System.getProperty("user.dir");
+			
 			// 1. Lưu vào src
-			String srcDir = System.getProperty("user.dir") + "/src/main/resources/static/img/avatar/";
-			File srcDirFile = new File(srcDir);
-			if (!srcDirFile.exists())
-				srcDirFile.mkdirs();
-			Files.write(Paths.get(srcDir + fileName), file.getBytes());
+			String srcPath = userDir + "/src/main/resources/static/img/avatar/" + fileName;
+			File srcFile = new File(srcPath);
+			srcFile.getParentFile().mkdirs();
+			file.transferTo(srcFile);
+			System.out.println("✅ Đã lưu vào src: " + srcPath);
 
 			// 2. Lưu vào target (để hiển thị ngay)
-			String targetDir = System.getProperty("user.dir") + "/target/classes/static/img/avatar/";
-			File targetDirFile = new File(targetDir);
-			if (!targetDirFile.exists())
-				targetDirFile.mkdirs();
-			Files.write(Paths.get(targetDir + fileName), file.getBytes());
+			String targetPath = userDir + "/target/classes/static/img/avatar/" + fileName;
+			File targetFile = new File(targetPath);
+			targetFile.getParentFile().mkdirs();
+			Files.copy(srcFile.toPath(), targetFile.toPath());
+			System.out.println("✅ Đã lưu vào target: " + targetPath);
 
 			// Xóa ảnh cũ nếu có
 			if (taiKhoan.getAvatar() != null && !taiKhoan.getAvatar().contains("ui-avatars.com")) {
 				try {
-					String oldAvatar = taiKhoan.getAvatar().replace("/img/avatar/", "");
-					Files.deleteIfExists(Paths.get(srcDir + oldAvatar));
-					Files.deleteIfExists(Paths.get(targetDir + oldAvatar));
+					String oldAvatarName = taiKhoan.getAvatar().replace("/img/avatar/", "");
+					Files.deleteIfExists(Paths.get(userDir + "/src/main/resources/static/img/avatar/" + oldAvatarName));
+					Files.deleteIfExists(Paths.get(userDir + "/target/classes/static/img/avatar/" + oldAvatarName));
+					System.out.println("🗑️ Đã xóa ảnh cũ: " + oldAvatarName);
 				} catch (IOException e) {
-					// Bỏ qua lỗi xóa file cũ
+					System.err.println("⚠️ Lỗi xóa ảnh cũ: " + e.getMessage());
 				}
 			}
 
@@ -157,8 +161,9 @@ public class TaiKhoanController {
 
 			redirect.addFlashAttribute("success", "Cập nhật ảnh đại diện thành công!");
 		} catch (IOException e) {
-			redirect.addFlashAttribute("error", "Lỗi upload ảnh: " + e.getMessage());
+			System.err.println("❌ Lỗi upload ảnh: " + e.getMessage());
 			e.printStackTrace();
+			redirect.addFlashAttribute("error", "Lỗi upload ảnh: " + e.getMessage());
 		}
 
 		return "redirect:/profile/settings";

@@ -293,11 +293,11 @@ td {
 				<div class="action-buttons">
 					<a th:href="@{/phieumuon}" class="btn btn-outline"> <i
 						class="fas fa-list"></i> Danh Sách
-					</a> <a th:if="${phieuMuon.ngayTra == null}"
+					</a> <a sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')" th:if="${phieuMuon.ngayTra == null}"
 						th:href="@{/phieumuon/thanh-toan/{id}(id=${phieuMuon.id})}"
 						class="btn btn-success"> <i class="fas fa-credit-card"></i>
 						Thanh Toán & Trả Sách
-					</a> <a th:href="@{/phieumuon/delete/{id}(id=${phieuMuon.id})}"
+					</a> <a sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')" th:href="@{/phieumuon/delete/{id}(id=${phieuMuon.id})}"
 						class="btn btn-danger"
 						onclick="return confirm('Xóa phiếu mượn này?')"> <i
 						class="fas fa-trash"></i> Xóa Phiếu Mượn
