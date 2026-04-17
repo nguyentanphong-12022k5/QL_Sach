@@ -37,12 +37,42 @@
 	object-fit: cover;
 }
 
-.book-actions {
-	margin-top: 20px;
+.book-actions-detail {
+	margin-top: 30px;
 	display: flex;
+	flex-direction: column;
 	gap: 15px;
-	justify-content: center;
+	width: 100%;
+	max-width: 300px;
+	margin-left: auto;
+	margin-right: auto;
 }
+
+.btn-block-large {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	padding: 15px 25px;
+	font-size: 1.1rem;
+	font-weight: 600;
+	border-radius: 50px;
+	text-decoration: none;
+	width: 100%;
+	transition: all 0.3s ease;
+}
+
+.btn-block-large:hover {
+	transform: translateY(-3px);
+	box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white !important;
+    border: none;
+}
+
 
 .book-info h1 {
 	font-size: 2.5rem;
@@ -186,24 +216,24 @@
 						<img th:src="@{'/img/sach/' + ${sach.imageUrl}}"
 							alt="Ảnh bìa sách" onerror="this.src='/img/bookicon.png'">
 
-						<div class="book-actions">
+						<div class="book-actions-detail">
 							<!-- Nút Mượn Sách -->
 							<a th:if="${sach.soLuong != null and sach.soLuong > 0}" 
-							   th:href="@{'/muon-sach/' + ${sach.id}}" class="btn btn-primary btn-large" style="text-decoration: none;">
+							   th:href="@{'/muon-sach/' + ${sach.id}}" class="btn btn-primary btn-block-large">
 								<i class="fas fa-hand-holding"></i> Mượn Sách
 							</a>
 							<button th:unless="${sach.soLuong != null and sach.soLuong > 0}" 
-							   class="btn btn-primary btn-large" style="opacity: 0.5; cursor: not-allowed;" title="Đã hết sách">
+							   class="btn btn-primary btn-block-large" style="opacity: 0.5; cursor: not-allowed;" title="Đã hết sách">
 								<i class="fas fa-ban"></i> Hết Sách
 							</button>
 
 							<!-- Nút Đặt trước -->
-							<a th:href="@{'/dat-truoc/' + ${sach.id}}" class="btn btn-warning btn-large" style="text-decoration: none; color: white;">
+							<a th:href="@{'/dat-truoc/' + ${sach.id}}" class="btn btn-warning btn-block-large">
 								<i class="fas fa-calendar-check"></i> Đặt Trước
 							</a>
 
 							<!-- Nút Yêu Thích -->
-							<button id="btnFavorite" class="btn btn-outline btn-large" onclick="toggleFavorite()">
+							<button id="btnFavorite" class="btn btn-outline btn-block-large" onclick="toggleFavorite()">
 								<i class="fas fa-bookmark" id="iconFavorite"></i> <span id="textFavorite">Yêu Thích</span>
 							</button>
 						</div>

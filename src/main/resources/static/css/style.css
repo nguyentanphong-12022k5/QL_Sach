@@ -205,22 +205,29 @@ tbody tr:last-child td {
 
 /* ===== BOOK CARD ACTIONS ===== */
 .book-actions {
-	display: flex;
-	flex-wrap: wrap;
+	display: grid;
+	grid-template-columns: 1fr 1fr;
 	gap: 10px;
 	margin-top: 15px;
 }
 
+/* Nút chi tiết chiếm toàn bộ hàng đầu tiên */
+.book-actions .btn-details {
+	grid-column: 1 / span 2;
+}
+
 .book-actions .btn {
-	flex: 1;
-	min-width: 100px; /* Thấp nhất 100px để không bị quá nhỏ */
 	padding: 10px 15px;
 	font-size: 0.9rem;
+	border-radius: 12px; /* Bo gọn hơn */
 }
 
 .book-actions .btn-warning {
+	background: linear-gradient(135deg, #f59e0b, #d97706);
 	color: white !important;
+	border: none;
 }
+
 
 .book-meta i {
 	width: 20px;
