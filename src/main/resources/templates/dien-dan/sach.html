@@ -55,6 +55,39 @@
     border-radius: 12px;
     resize: vertical;
     min-height: 100px;
+    margin-bottom: 15px;
+}
+.star-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 5px;
+    justify-content: flex-end;
+}
+.star-rating input {
+    display: none;
+}
+.star-rating label {
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: #ddd;
+    transition: color 0.2s;
+}
+.star-rating label:hover,
+.star-rating label:hover ~ label,
+.star-rating input:checked ~ label {
+    color: #ffc107;
+}
+.stars-display {
+    color: #ffc107;
+    font-size: 0.9rem;
+}
+.stars-display .far {
+    color: #ddd;
+}
+.book-rating-large {
+    color: #ffc107;
+    font-size: 1.2rem;
+    margin-top: 5px;
 }
 </style>
 </head>
@@ -80,7 +113,15 @@
             <div>
                 <h2 th:text="${sach.tenSach}" style="margin-bottom: 10px;"></h2>
                 <p><i class="fas fa-user"></i> <span th:text="${sach.tacGia?.tenTacGia}"></span></p>
-                <p><i class="fas fa-comment"></i> <span th:text="${soBinhLuan}"></span> bình luận</p>
+                <div class="book-rating-large" th:if="${sach.ratingCount > 0}">
+                    <span th:each="i : ${#numbers.sequence(1, 5)}">
+                        <i th:class="${i <= sach.averageRating ? 'fas fa-star' : (i - 0.5 <= sach.averageRating ? 'fas fa-star-half-alt' : 'far fa-star')}"></i>
+                    </span>
+                    <span style="color: var(--gray-color); font-size: 0.9rem; margin-left: 10px;" 
+                          th:text="${#numbers.formatDecimal(sach.averageRating, 1, 1)} + ' (' + ${sach.ratingCount} + ' đánh giá)'"></span>
+                </div>
+                <p th:if="${sach.ratingCount == 0}" style="color: var(--gray-color); font-size: 0.9rem; margin-top: 5px;">Chưa có đánh giá</p>
+                <p style="margin-top: 5px;"><i class="fas fa-comment"></i> <span th:text="${soBinhLuan}"></span> bình luận</p>
             </div>
         </div>
 
@@ -90,9 +131,19 @@
             <form th:action="@{/dien-dan/dang}" method="post">
                 <input type="hidden" name="sachId" th:value="${sach.id}" />
                 <textarea name="noiDung" placeholder="Chia sẻ cảm nhận của bạn về cuốn sách này..." required></textarea>
-                <div style="display: flex; justify-content: flex-end; margin-top: 15px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <span style="font-weight: 500;">Đánh giá của bạn:</span>
+                        <div class="star-rating">
+                            <input type="radio" id="star5" name="soSao" value="5" /><label for="star5" title="5 sao"><i class="fas fa-star"></i></label>
+                            <input type="radio" id="star4" name="soSao" value="4" /><label for="star4" title="4 sao"><i class="fas fa-star"></i></label>
+                            <input type="radio" id="star3" name="soSao" value="3" /><label for="star3" title="3 sao"><i class="fas fa-star"></i></label>
+                            <input type="radio" id="star2" name="soSao" value="2" /><label for="star2" title="2 sao"><i class="fas fa-star"></i></label>
+                            <input type="radio" id="star1" name="soSao" value="1" required /><label for="star1" title="1 sao"><i class="fas fa-star"></i></label>
+                        </div>
+                    </div>
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-paper-plane"></i> Gửi bình luận
+                        <i class="fas fa-paper-plane"></i> Gửi bình luận & Đánh giá
                     </button>
                 </div>
             </form>
@@ -121,6 +172,11 @@
                     <div class="binh-luan-time">
                         <i class="far fa-clock"></i>
                         <span th:text="${#temporals.format(bl.ngayDang, 'dd/MM/yyyy HH:mm')}"></span>
+                        <span th:if="${bl.soSao != null}" style="margin-left: 10px;" class="stars-display">
+                            <span th:each="i : ${#numbers.sequence(1, 5)}">
+                                <i th:class="${i <= bl.soSao ? 'fas fa-star' : 'far fa-star'}"></i>
+                            </span>
+                        </span>
                     </div>
                 </div>
                 <a th:if="${currentUser?.id == bl.taiKhoan.id || currentUser?.quyen == 1}"

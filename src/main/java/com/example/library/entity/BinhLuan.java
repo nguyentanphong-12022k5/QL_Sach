@@ -31,6 +31,9 @@ public class BinhLuan {
     @Column(name = "loai")
     private String loai = "GOP_Y"; // GOP_Y: Góp ý chung, SACH: Bình luận sách
     
+    @Column(name = "so_sao")
+    private Integer soSao; // 1-5 sao
+    
     // Constructors
     public BinhLuan() {
         this.ngayDang = LocalDateTime.now();
@@ -57,4 +60,7 @@ public class BinhLuan {
     
     public String getLoai() { return loai; }
     public void setLoai(String loai) { this.loai = loai; }
+
+    public Integer getSoSao() { return soSao; }
+    public void setSoSao(Integer soSao) { this.soSao = soSao; }
 }

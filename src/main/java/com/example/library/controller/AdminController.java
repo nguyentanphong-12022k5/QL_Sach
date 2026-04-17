@@ -36,9 +36,10 @@ public class AdminController {
 	@Autowired
 	private TaiKhoanRepository taiKhoanRepository;
 	@Autowired
-	private PasswordEncoder passwordEncoder;
-	@Autowired
 	private ThanhToanRepository thanhToanRepository; // ← THÊM DÒNG NÀY
+
+	@org.springframework.beans.factory.annotation.Value("${app.upload.dir}")
+	private String uploadDir;
 
 	// ===== DASHBOARD =====
 	@GetMapping("/dashboard")
@@ -93,49 +94,38 @@ public class AdminController {
 	public String saveSach(@ModelAttribute Sach sach,
 			@RequestParam(value = "imageFile", required = false) MultipartFile imageFile, RedirectAttributes redirect) {
 		try {
-			System.out.println("=== DEBUG UPLOAD ===");
-			System.out.println("Sach ID: " + sach.getId());
-			System.out.println("Ten sach: " + sach.getTenSach());
-			System.out.println("ImageFile: " + (imageFile != null ? imageFile.getOriginalFilename() : "NULL"));
-			System.out.println("ImageFile size: " + (imageFile != null ? imageFile.getSize() : 0));
-
 			if (imageFile != null && !imageFile.isEmpty()) {
 				String fileName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
-				System.out.println("New filename: " + fileName);
-
-				// Thư mục lưu ảnh trong src
-				String uploadDir = System.getProperty("user.dir") + "/src/main/resources/static/img/sach/";
-				System.out.println("Upload dir: " + uploadDir);
-
-				File dir = new File(uploadDir);
-				if (!dir.exists()) {
-					dir.mkdirs();
-					System.out.println("Created directory: " + uploadDir);
+				
+				// Thư mục lưu ảnh cấp 1: Trong project root (Cho ResourceHandler)
+				File uploadFolder = new File(uploadDir);
+				if (!uploadFolder.exists()) {
+					uploadFolder.mkdirs();
 				}
 
-				Path path = Paths.get(uploadDir + fileName);
+				Path path = Paths.get(uploadFolder.getAbsolutePath() + File.separator + fileName);
 				Files.write(path, imageFile.getBytes());
-				System.out.println("✅ File written to src: " + path.toString());
+				System.out.println("✅ Image uploaded to: " + path);
 
-				// Lưu vào thư mục target để hiển thị ngay
-				String targetDir = System.getProperty("user.dir") + "/target/classes/static/img/sach/";
-				File targetDirFile = new File(targetDir);
-				if (!targetDirFile.exists()) {
-					targetDirFile.mkdirs();
+				// Thư mục lưu ảnh cấp 2: Trong src (Để lưu lại source code - Optional)
+				try {
+					String srcDir = System.getProperty("user.dir") + "/src/main/resources/static/img/sach/";
+					File srcFolder = new File(srcDir);
+					if (srcFolder.exists()) {
+						Path srcPath = Paths.get(srcFolder.getAbsolutePath() + File.separator + fileName);
+						Files.write(srcPath, imageFile.getBytes());
+						System.out.println("✅ Image copied to src: " + srcPath);
+					}
+				} catch (Exception e) {
+					System.out.println("⚠️ Could not copy to src (not critical): " + e.getMessage());
 				}
-				Path targetPath = Paths.get(targetDir + fileName);
-				Files.write(targetPath, imageFile.getBytes());
-				System.out.println("✅ File written to target: " + targetPath.toString());
 
 				sach.setImageUrl(fileName);
-				System.out.println("✅ ImageUrl set to: " + fileName);
 			} else {
-				System.out.println("❌ No file uploaded - keeping old image");
 				if (sach.getId() != null) {
 					Sach existing = sachRepository.findById(sach.getId()).orElse(null);
 					if (existing != null && existing.getImageUrl() != null) {
 						sach.setImageUrl(existing.getImageUrl());
-						System.out.println("Keeping old image: " + existing.getImageUrl());
 					}
 				}
 			}
@@ -146,15 +136,12 @@ public class AdminController {
 				sach.setTrangThai("1");
 
 			sachRepository.save(sach);
-			System.out.println("✅ Sach saved to database");
 			redirect.addFlashAttribute("success", "Lưu sách thành công!");
 
 		} catch (IOException e) {
-			System.out.println("❌ IOException: " + e.getMessage());
 			e.printStackTrace();
 			redirect.addFlashAttribute("error", "Lỗi upload ảnh: " + e.getMessage());
 		} catch (Exception e) {
-			System.out.println("❌ Exception: " + e.getMessage());
 			e.printStackTrace();
 			redirect.addFlashAttribute("error", "Lỗi: " + e.getMessage());
 		}

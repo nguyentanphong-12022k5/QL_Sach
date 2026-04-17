@@ -68,7 +68,9 @@ public class PhieuMuonService {
                             chiTiet.getSach().getSoLuong(),
                             chiTiet.getSach().getGiaMuon(),
                             chiTiet.getSach().getNamXB(),
-                            chiTiet.getSach().getTrangThai()
+                            chiTiet.getSach().getTrangThai(),
+                            chiTiet.getSach().getAverageRating(),
+                            chiTiet.getSach().getRatingCount()
                     );
                     return new ChiTietPhieuMuonDTO(chiTiet.getId(), sachDTO, chiTiet.getSoLuong());
                 })

@@ -22,4 +22,11 @@ public interface PhieuMuonRepository extends JpaRepository<PhieuMuon, Long> {
     
     @Query("SELECT COUNT(p) FROM PhieuMuon p WHERE p.ngayTra IS NULL AND p.ngayMuon < :date")
     long countQuaHan(@Param("date") LocalDate date);
+
+    @Query(value = "SELECT MONTH(ngay_muon) as month, COUNT(*) as count " +
+                   "FROM phieu_muon " +
+                   "WHERE ngay_muon >= DATE_SUB(CURRENT_DATE, INTERVAL 6 MONTH) " +
+                   "GROUP BY MONTH(ngay_muon) " +
+                   "ORDER BY month", nativeQuery = true)
+    List<Object[]> getMonthlyBorrowCount();
 }

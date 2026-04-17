@@ -66,6 +66,13 @@
                 <h3 th:text="${totalTaiKhoan}">0</h3>
                 <p>Quản Lý Tài Khoản</p>
             </a>
+
+            <!-- Quản lý đặt trước -->
+            <a th:href="@{/admin/dat-truoc}" class="stat-card" style="text-decoration: none;">
+                <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+                <h3 th:text="${totalDatTruoc != null ? totalDatTruoc : '...'}">...</h3>
+                <p>Quản Lý Đặt Trước</p>
+            </a>
             
             <!-- Tổng doanh thu -->
             <a th:href="@{/admin/thanh-toan}" class="stat-card highlight" style="text-decoration: none;">

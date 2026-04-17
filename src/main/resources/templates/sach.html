@@ -143,6 +143,15 @@
 									trí</span>
 							</div>
 						</div>
+						<div class="stars-display" th:if="${sach.ratingCount > 0}" style="margin-top: 5px; color: #ffc107;">
+							<span th:each="i : ${#numbers.sequence(1, 5)}">
+								<i th:class="${i <= sach.averageRating ? 'fas fa-star' : (i - 0.5 <= sach.averageRating ? 'fas fa-star-half-alt' : 'far fa-star')}"></i>
+							</span>
+							<span style="color: var(--gray-color); font-size: 0.85rem;" th:text="'(' + ${sach.ratingCount} + ')'"></span>
+						</div>
+						<div style="color: var(--gray-color); font-size: 0.85rem; margin-top: 5px;" th:if="${sach.ratingCount == 0}">
+							Chưa có đánh giá
+						</div>
 						<div style="margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
 					<span th:if="${sach.soLuong != null and sach.soLuong > 0}" 
 					      class="badge badge-success">Còn <span th:text="${sach.soLuong}"></span> quyển</span>
@@ -157,17 +166,21 @@
 						<i class="fas fa-gift"></i> Miễn phí
 					</span>
 				</div>
-				<div style="margin-top: 15px; display: flex; gap: 10px">
-					<a th:href="@{'/sach/' + ${sach.id}}" class="btn btn-outline"
-						style="flex: 1"> <i class="fas fa-eye"></i> Chi tiết
+				<div class="book-actions">
+					<a th:href="@{'/sach/' + ${sach.id}}" class="btn btn-outline"> 
+						<i class="fas fa-eye"></i> Chi tiết
 					</a>
 					<a th:if="${sach.soLuong != null and sach.soLuong > 0}" 
 					   th:href="@{'/muon-sach/' + ${sach.id}}"
-						class="btn btn-primary" style="flex: 1"> <i
-						class="fas fa-hand-holding"></i> Mượn
+						class="btn btn-primary"> 
+						<i class="fas fa-hand-holding"></i> Mượn
+					</a>
+					<a th:href="@{'/dat-truoc/' + ${sach.id}}"
+						class="btn btn-warning"> 
+						<i class="fas fa-calendar-check"></i> Đặt trước
 					</a>
 					<span th:unless="${sach.soLuong != null and sach.soLuong > 0}"
-					      class="btn btn-outline" style="flex: 1; opacity: 0.5; cursor: not-allowed;">
+					      class="btn btn-outline" style="opacity: 0.5; cursor: not-allowed;">
 						<i class="fas fa-ban"></i> Hết sách
 					</span>
 				</div>

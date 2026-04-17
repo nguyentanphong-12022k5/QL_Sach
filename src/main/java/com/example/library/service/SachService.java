@@ -88,7 +88,17 @@ public class SachService {
                 sach.getSoLuong(),
                 sach.getGiaMuon(),
                 sach.getNamXB(),
-                sach.getTrangThai()
+                sach.getTrangThai(),
+                sach.getAverageRating(),
+                sach.getRatingCount()
         );
+    }
+
+    public void updateSachRating(Long sachId, Double averageRating, Integer ratingCount) {
+        sachRepository.findById(sachId).ifPresent(sach -> {
+            sach.setAverageRating(averageRating);
+            sach.setRatingCount(ratingCount);
+            sachRepository.save(sach);
+        });
     }
 }

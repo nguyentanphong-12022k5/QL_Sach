@@ -418,6 +418,7 @@
                 <a th:href="@{/profile/settings}"
                   ><i class="fas fa-cog"></i> Cài đặt</a
                 >
+                <a th:href="@{/dat-truoc/lich-su}"><i class="fas fa-calendar-check"></i> Sách đã đặt trước</a>
                 <a th:href="@{/dien-dan/da-thu-hoi}"
                   ><i class="fas fa-history"></i> Bình luận đã thu hồi</a
                 >
@@ -682,8 +683,13 @@
                       ></div>
                       <div
                         style="font-size: 0.75rem; color: var(--gray-color)"
-                        th:text="${#temporals.format(bl.ngayDang, 'dd/MM HH:mm')}"
-                      ></div>
+                      >
+                        <span th:text="${#temporals.format(bl.ngayDang, 'dd/MM HH:mm')}"></span>
+                        <span th:if="${bl.soSao != null}" style="color: #ffc107; margin-left: 5px;">
+                            <i class="fas fa-star" style="font-size: 0.7rem;"></i>
+                            <span th:text="${bl.soSao}" style="font-weight: 600;"></span>
+                        </span>
+                      </div>
                     </div>
                     <a
                       th:if="${bl.sach != null}"

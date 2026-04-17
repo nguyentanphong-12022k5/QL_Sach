@@ -18,6 +18,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/css/**", "/js/**", "/img/**", "/webjars/**").permitAll()
                 .requestMatchers("/login", "/register", "/dangky", "/forgot-password", "/reset-password").permitAll()
+                .requestMatchers("/admin/dat-truoc/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_THUTHU", "ROLE_NHANVIEN")
                 .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                 
                 // Cấm khách hàng thao tác Xóa, Sửa, Thêm các dữ liệu quan trọng

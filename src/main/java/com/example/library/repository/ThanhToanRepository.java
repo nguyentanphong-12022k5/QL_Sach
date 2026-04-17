@@ -28,4 +28,11 @@ public interface ThanhToanRepository extends JpaRepository<ThanhToan, Long> {
     
     @Query("SELECT t FROM ThanhToan t WHERE t.trangThai = 1 ORDER BY t.ngayThanhToan DESC")
     List<ThanhToan> findRecentPayments();
+
+    @Query(value = "SELECT MONTH(ngay_thanh_toan) as month, SUM(so_tien) as total " +
+                   "FROM thanh_toan " +
+                   "WHERE trang_thai = 1 AND ngay_thanh_toan >= DATE_SUB(CURRENT_DATE, INTERVAL 6 MONTH) " +
+                   "GROUP BY MONTH(ngay_thanh_toan) " +
+                   "ORDER BY month", nativeQuery = true)
+    List<Object[]> getMonthlyRevenue();
 }

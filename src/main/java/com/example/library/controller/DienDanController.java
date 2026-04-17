@@ -96,6 +96,13 @@ public class DienDanController {
             redirect.addFlashAttribute("success", "Đăng bình luận thành công!");
             
             if (sachId != null) {
+                Sach sach = sachRepository.findById(sachId).orElse(null);
+                binhLuan.setSach(sach);
+                binhLuan.setLoai("SACH");
+                
+                // Cập nhật rating nếu có
+                calculateAndSaveBookRating(sachId);
+                
                 return "redirect:/dien-dan/sach/" + sachId;
             }
         } catch (Exception e) {
@@ -103,6 +110,19 @@ public class DienDanController {
         }
         
         return "redirect:/dien-dan";
+    }
+
+    private void calculateAndSaveBookRating(Long sachId) {
+        if (sachId == null) return;
+        Double avg = binhLuanRepository.findAverageRatingBySachId(sachId);
+        Integer count = binhLuanRepository.countRatingsBySachId(sachId);
+        
+        Sach sach = sachRepository.findById(sachId).orElse(null);
+        if (sach != null) {
+            sach.setAverageRating(avg != null ? avg : 0.0);
+            sach.setRatingCount(count != null ? count : 0);
+            sachRepository.save(sach);
+        }
     }
 
     // Xóa bình luận (chỉ admin hoặc chủ bình luận)
@@ -115,9 +135,11 @@ public class DienDanController {
             
             BinhLuan binhLuan = binhLuanRepository.findById(id).orElse(null);
             if (binhLuan != null) {
+                Long sachId = (binhLuan.getSach() != null) ? binhLuan.getSach().getId() : null;
                 if (taiKhoan != null && (taiKhoan.getQuyen() == 1 || 
                     binhLuan.getTaiKhoan().getId().equals(taiKhoan.getId()))) {
                     binhLuanRepository.delete(binhLuan);
+                    if (sachId != null) calculateAndSaveBookRating(sachId);
                     redirect.addFlashAttribute("success", "Xóa bình luận thành công!");
                 } else {
                     redirect.addFlashAttribute("error", "Bạn không có quyền xóa bình luận này!");
@@ -153,6 +175,7 @@ public class DienDanController {
         if (binhLuan != null) {
             binhLuan.setTrangThai(binhLuan.getTrangThai() == 1 ? 0 : 1);
             binhLuanRepository.save(binhLuan);
+            if (binhLuan.getSach() != null) calculateAndSaveBookRating(binhLuan.getSach().getId());
             redirect.addFlashAttribute("success", "Cập nhật trạng thái thành công!");
         }
         return "redirect:/dien-dan/admin";
@@ -180,16 +203,13 @@ public class DienDanController {
         model.addAttribute("currentUser", taiKhoan);
         model.addAttribute("binhLuan", binhLuan);
         
-        if (binhLuan.getSach() != null) {
-            return "dien-dan/sua-sach";
-        }
         return "dien-dan/sua";
     }
     
-    // Cập nhật bình luận
     @PostMapping("/cap-nhat/{id}")
     public String capNhatBinhLuan(@PathVariable Long id,
                                   @RequestParam("noiDung") String noiDung,
+                                  @RequestParam(value = "soSao", required = false) Integer soSao,
                                   RedirectAttributes redirect) {
         try {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -215,11 +235,15 @@ public class DienDanController {
             
             binhLuan.setNoiDung(noiDung.trim());
             binhLuan.setNgayDang(LocalDateTime.now());
+            if (soSao != null) {
+                binhLuan.setSoSao(soSao);
+            }
             binhLuanRepository.save(binhLuan);
             
             redirect.addFlashAttribute("success", "Cập nhật bình luận thành công!");
             
             if (binhLuan.getSach() != null) {
+                calculateAndSaveBookRating(binhLuan.getSach().getId());
                 return "redirect:/dien-dan/sach/" + binhLuan.getSach().getId();
             }
         } catch (Exception e) {
@@ -255,6 +279,7 @@ public class DienDanController {
             redirect.addFlashAttribute("success", "Đã thu hồi bình luận!");
             
             if (binhLuan.getSach() != null) {
+                calculateAndSaveBookRating(binhLuan.getSach().getId());
                 return "redirect:/dien-dan/sach/" + binhLuan.getSach().getId();
             }
         } catch (Exception e) {
@@ -281,6 +306,7 @@ public class DienDanController {
             if (binhLuan != null) {
                 binhLuan.setTrangThai(1);
                 binhLuanRepository.save(binhLuan);
+                if (binhLuan.getSach() != null) calculateAndSaveBookRating(binhLuan.getSach().getId());
                 redirect.addFlashAttribute("success", "Đã khôi phục bình luận!");
             }
         } catch (Exception e) {
@@ -303,7 +329,11 @@ public class DienDanController {
                 return "redirect:/dien-dan";
             }
             
+            BinhLuan binhLuan = binhLuanRepository.findById(id).orElse(null);
+            Long sachId = (binhLuan != null && binhLuan.getSach() != null) ? binhLuan.getSach().getId() : null;
+            
             binhLuanRepository.deleteById(id);
+            if (sachId != null) calculateAndSaveBookRating(sachId);
             redirect.addFlashAttribute("success", "Đã xóa vĩnh viễn bình luận!");
         } catch (Exception e) {
             redirect.addFlashAttribute("error", "Lỗi: " + e.getMessage());

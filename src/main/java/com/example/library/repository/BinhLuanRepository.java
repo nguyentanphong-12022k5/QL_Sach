@@ -39,4 +39,10 @@ public interface BinhLuanRepository extends JpaRepository<BinhLuan, Long> {
     @Override
     @EntityGraph(attributePaths = {"taiKhoan", "sach"})
     Optional<BinhLuan> findById(Long id);
+
+    @Query("SELECT AVG(b.soSao) FROM BinhLuan b WHERE b.sach.id = :sachId AND b.trangThai = 1 AND b.soSao IS NOT NULL")
+    Double findAverageRatingBySachId(Long sachId);
+
+    @Query("SELECT COUNT(b) FROM BinhLuan b WHERE b.sach.id = :sachId AND b.trangThai = 1 AND b.soSao IS NOT NULL")
+    Integer countRatingsBySachId(Long sachId);
 }

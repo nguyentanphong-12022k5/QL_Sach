@@ -42,7 +42,9 @@ public class PhieuNhapService {
                             chiTiet.getSach().getSoLuong(),
                             chiTiet.getSach().getGiaMuon(),
                             chiTiet.getSach().getNamXB(),
-                            chiTiet.getSach().getTrangThai()
+                            chiTiet.getSach().getTrangThai(),
+                            chiTiet.getSach().getAverageRating(),
+                            chiTiet.getSach().getRatingCount()
                     );
                     return new ChiTietPhieuNhapDTO(chiTiet.getId(), sachDTO, chiTiet.getSoLuong(), chiTiet.getDonGia());
                 })

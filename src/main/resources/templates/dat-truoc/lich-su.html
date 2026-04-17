@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch Sử Đặt Trước - Thư Viện</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .history-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            display: grid;
+            grid-template-columns: 80px 1fr auto;
+            gap: 20px;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        .history-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        .history-card img {
+            width: 80px;
+            height: 110px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .status-0 { background: #fff3cd; color: #856404; } /* Pending */
+        .status-1 { background: #d1ecf1; color: #0c5460; } /* Approved/Holding */
+        .status-2 { background: #d4edda; color: #155724; } /* Borrowed */
+        .status-3 { background: #f8d7da; color: #721c24; } /* Cancelled */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-history"></i> Lịch Sử Đặt Trước</h1>
+            <nav class="nav">
+                <a th:href="@{/}" class="nav-link"><i class="fas fa-home"></i> Trang Chủ</a>
+                <a th:href="@{/sach}" class="nav-link"><i class="fas fa-book"></i> Tiếp tục chọn sách</a>
+            </nav>
+        </header>
+
+        <main class="main">
+            <div th:if="${success}" class="alert alert-success">
+                <i class="fas fa-check-circle"></i> <span th:text="${success}"></span>
+            </div>
+            <div th:if="${error}" class="alert alert-danger">
+                <i class="fas fa-exclamation-circle"></i> <span th:text="${error}"></span>
+            </div>
+
+            <div th:if="${datTruocList == null || datTruocList.isEmpty()}" class="no-results">
+                <i class="fas fa-calendar-times"></i>
+                <h3>Bạn chưa có yêu cầu đặt trước nào</h3>
+                <a th:href="@{/sach}" class="btn btn-primary" style="margin-top: 20px;">Đi chọn sách ngay</a>
+            </div>
+
+            <div th:each="dt : ${datTruocList}" class="history-card fade-in">
+                <img th:src="@{${dt.sach.imageUrl != null ? '/img/sach/' + dt.sach.imageUrl : '/img/default-book.jpg'}}" alt="Sách">
+                <div>
+                    <h3 th:text="${dt.sach.tenSach}">Tên Sách</h3>
+                    <p style="font-size: 0.9rem; color: #7f8c8d; margin-top: 5px;">
+                        Ngày đặt: <span th:text="${#temporals.format(dt.ngayDat, 'dd/MM/yyyy HH:mm')}"></span>
+                    </p>
+                    <p style="font-size: 0.9rem; color: #2c3e50; margin-top: 5px; font-weight: 600;">
+                        <i class="far fa-calendar-alt"></i> Ngày hẹn lấy: <span th:text="${#temporals.format(dt.ngayHen, 'dd/MM/yyyy')}"></span>
+                    </p>
+                </div>
+                <div style="text-align: right;">
+                    <div th:class="'status-badge status-' + ${dt.trangThai}">
+                        <span th:if="${dt.trangThai == 0}">Chờ duyệt</span>
+                        <span th:if="${dt.trangThai == 1}">Đã duyệt - Đang giữ sách</span>
+                        <span th:if="${dt.trangThai == 2}">Đã nhận sách</span>
+                        <span th:if="${dt.trangThai == 3}">Đã hủy</span>
+                    </div>
+                    <div style="margin-top: 15px;" th:if="${dt.trangThai == 0}">
+                        <a th:href="@{'/dat-truoc/cancel/' + ${dt.id}}" 
+                           class="btn btn-outline" style="color: var(--danger-color); border-color: var(--danger-color);"
+                           onclick="return confirm('Bạn có chắc chắn muốn hủy yêu cầu đặt trước này?')">Hủy yêu cầu</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

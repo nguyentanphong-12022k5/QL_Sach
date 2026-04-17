@@ -30,4 +30,10 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addViewController("/").setViewName("index");
         registry.addViewController("/index").setViewName("index");
     }
+
+    @Override
+    public void addResourceHandlers(org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/img/sach/**")
+                .addResourceLocations("file:uploads/img/sach/", "classpath:/static/img/sach/");
+    }
 }
