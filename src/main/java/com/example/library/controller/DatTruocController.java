@@ -60,6 +60,7 @@ public class DatTruocController {
     public String submitDatTruoc(@RequestParam("sachId") Long sachId,
                                  @RequestParam("docGiaId") Long docGiaId,
                                  @RequestParam("ngayHen") String ngayHenStr,
+                                 @RequestParam(value = "soLuong", defaultValue = "1") Integer soLuong,
                                  @RequestParam(value = "ghiChu", required = false) String ghiChu,
                                  RedirectAttributes redirect) {
         try {
@@ -77,6 +78,7 @@ public class DatTruocController {
             datTruoc.setDocGia(docGia);
             datTruoc.setNgayDat(LocalDateTime.now());
             datTruoc.setNgayHen(ngayHen);
+            datTruoc.setSoLuong(soLuong);
             datTruoc.setGhiChu(ghiChu);
             datTruoc.setTrangThai(0); // Chờ duyệt
             

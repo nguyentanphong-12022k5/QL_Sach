@@ -17,6 +17,7 @@
 			</h1>
 			<nav class="nav">
 				<a th:href="@{/sach}" class="nav-link"> <i class="fas fa-book"></i> Sách </a>
+				<a th:href="@{/about}" class="nav-link"> <i class="fas fa-info-circle"></i> Giới Thiệu </a>
 				<a th:href="@{/docgia}" class="nav-link"> <i class="fas fa-users"></i> Độc Giả </a>
 				<a th:href="@{/phieumuon}" class="nav-link"> <i class="fas fa-hand-holding"></i> Phiếu Mượn </a>
 				<a sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')" th:href="@{/phieunhap}" class="nav-link"> <i class="fas fa-truck"></i> Phiếu Nhập </a>
@@ -29,7 +30,7 @@
 					<i class="fas fa-crown"></i> Quản Trị
 				</a>
 				
-				<div class="user-menu">
+				<div class="user-menu" th:if="${currentUser != null}">
 					<div class="avatar-dropdown">
 						<img th:src="${currentUser?.avatar != null && !currentUser.avatar.empty} ? @{${currentUser.avatar}} : 'https://ui-avatars.com/api/?name=' + ${currentUser?.hoTen != null ? currentUser.hoTen : 'User'} + '&background=1877f2&color=fff&size=40&bold=true'"
 							alt="Avatar" class="avatar-small" onclick="toggleDropdown()"
@@ -57,6 +58,9 @@
 						</div>
 					</div>
 				</div>
+				<a th:unless="${currentUser != null}" th:href="@{/login}" class="nav-link btn-primary" style="color: white; padding: 10px 20px; border-radius: 50px; margin-left: 10px;">
+					<i class="fas fa-sign-in-alt"></i> Đăng Nhập
+				</a>
 			</nav>
 		</header>
 

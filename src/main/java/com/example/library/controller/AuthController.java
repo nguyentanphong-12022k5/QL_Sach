@@ -4,6 +4,8 @@ import com.example.library.entity.TaiKhoan;
 import com.example.library.repository.TaiKhoanRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +27,13 @@ public class AuthController {
 			@RequestParam(value = "logout", required = false) String logout,
 			@RequestParam(value = "registered", required = false) String registered,
 			@RequestParam(value = "reset", required = false) String reset, Model model) {
+		
+		// Redirect if already logged in
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth != null && auth.isAuthenticated() && !auth.getPrincipal().equals("anonymousUser")) {
+			return "redirect:/";
+		}
+
 		if (error != null) {
 			model.addAttribute("error", "Tên đăng nhập hoặc mật khẩu không đúng!");
 		}

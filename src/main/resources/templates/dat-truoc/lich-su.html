@@ -71,6 +71,7 @@
                     <h3 th:text="${dt.sach.tenSach}">Tên Sách</h3>
                     <p style="font-size: 0.9rem; color: #7f8c8d; margin-top: 5px;">
                         Ngày đặt: <span th:text="${#temporals.format(dt.ngayDat, 'dd/MM/yyyy HH:mm')}"></span>
+                        | Số lượng: <strong th:text="${dt.soLuong}"></strong> quyển
                     </p>
                     <p style="font-size: 0.9rem; color: #2c3e50; margin-top: 5px; font-weight: 600;">
                         <i class="far fa-calendar-alt"></i> Ngày hẹn lấy: <span th:text="${#temporals.format(dt.ngayHen, 'dd/MM/yyyy')}"></span>

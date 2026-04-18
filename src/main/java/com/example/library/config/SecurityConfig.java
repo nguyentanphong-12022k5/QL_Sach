@@ -16,16 +16,25 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests(auth -> auth
+                // 1. Static Resources (Public)
                 .requestMatchers("/css/**", "/js/**", "/img/**", "/webjars/**").permitAll()
+                
+                // 2. Public Pages (Access without login)
+                .requestMatchers("/", "/sach/**", "/products/**", "/about", "/error").permitAll()
+                
+                // 3. Unauthenticated Routes (Auth-related pages)
                 .requestMatchers("/login", "/register", "/dangky", "/forgot-password", "/reset-password").permitAll()
+                
+                // 4. Staff & Admin Routes
                 .requestMatchers("/admin/dat-truoc/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_THUTHU", "ROLE_NHANVIEN")
                 .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-                
-                // Cấm khách hàng thao tác Xóa, Sửa, Thêm các dữ liệu quan trọng
-                .requestMatchers("/docgia/add", "/docgia/edit/**", "/docgia/delete/**", "/docgia/save").hasAnyAuthority("ROLE_ADMIN", "ROLE_THUTHU", "ROLE_NHANVIEN")
-                .requestMatchers("/phieumuon/add", "/phieumuon/edit/**", "/phieumuon/delete/**", "/phieumuon/save", "/phieumuon/thanh-toan/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_THUTHU", "ROLE_NHANVIEN")
                 .requestMatchers("/phieunhap/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_THUTHU", "ROLE_NHANVIEN")
                 
+                // 5. Restricted Actions (Staff only)
+                .requestMatchers("/docgia/add", "/docgia/edit/**", "/docgia/delete/**", "/docgia/save").hasAnyAuthority("ROLE_ADMIN", "ROLE_THUTHU", "ROLE_NHANVIEN")
+                .requestMatchers("/phieumuon/add", "/phieumuon/edit/**", "/phieumuon/delete/**", "/phieumuon/save", "/phieumuon/thanh-toan/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_THUTHU", "ROLE_NHANVIEN")
+                
+                // 6. Everything else requires login
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form

@@ -20,7 +20,7 @@ public class SachController {
         this.loaiSachRepository = loaiSachRepository;
     }
 
-    @GetMapping("/sach")
+    @GetMapping({"/sach", "/products"})
     public String getSachPage(@RequestParam(value = "keyword", required = false) String keyword,
                               @RequestParam(value = "loaiSachId", required = false) Long loaiSachId,
                               @RequestParam(value = "filter", required = false) String filter,
