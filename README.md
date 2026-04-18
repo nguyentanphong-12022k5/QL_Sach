@@ -19,6 +19,12 @@
 
 ---
 
+## 🎥 VIDEO DEMO (v1.2.0)
+![Demo toàn bộ tính năng mới](file:///C:/Users/Lenovo/.gemini/antigravity/brain/1339f3c5-d279-49fa-8184-72905f65c917/system_full_test_demo_1776483562001.webp)
+*Video minh họa: Truy cập Public -> Đăng nhập Độc giả -> Đặt trước sách với Số lượng -> Admin duyệt yêu cầu.*
+
+---
+
 ## 📖 GIỚI THIỆU
 Hệ thống Quản lý Thư viện là một ứng dụng web hiện đại được xây dựng bằng **Spring Boot 3** và **Thymeleaf**, cung cấp giải pháp quản lý toàn diện cho thư viện với giao diện Premium và trải nghiệm người dùng tối ưu.
 
