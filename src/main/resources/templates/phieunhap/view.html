@@ -1,5 +1,5 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -18,16 +18,16 @@
 
     <main class="main fade-in">
         <div style="margin-bottom: 30px; padding: 20px; background: #f8fafc; border-radius: 16px;">
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
                 <div>
                     <label style="color: var(--gray-color);">Ngày Nhập</label>
                     <p style="font-size: 1.2rem; font-weight: 600;" th:text="${#temporals.format(phieuNhap.ngayNhap, 'dd/MM/yyyy')}"></p>
                 </div>
-                <div>
+                <div sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')">
                     <label style="color: var(--gray-color);">Nhà Cung Cấp</label>
                     <p style="font-size: 1.2rem; font-weight: 600;" th:text="${phieuNhap.nhaCungCap} ?: '--'"></p>
                 </div>
-                <div>
+                <div sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')">
                     <label style="color: var(--gray-color);">Ghi Chú</label>
                     <p style="font-size: 1rem;" th:text="${phieuNhap.ghiChu} ?: '--'"></p>
                 </div>
@@ -40,11 +40,11 @@
             <table>
                 <thead>
                     <tr>
-                        <th>STT</th>
+                        <th width="80px">STT</th>
                         <th>Tên Sách</th>
-                        <th>Số Lượng</th>
-                        <th>Đơn Giá (VNĐ)</th>
-                        <th>Thành Tiền (VNĐ)</th>
+                        <th width="120px">Số Lượng</th>
+                        <th sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')">Đơn Giá (VNĐ)</th>
+                        <th sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')">Thành Tiền (VNĐ)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -52,11 +52,11 @@
                         <td th:text="${iter.index + 1}">1</td>
                         <td th:text="${ct.sach.tenSach}">Tên sách</td>
                         <td th:text="${ct.soLuong}">1</td>
-                        <td th:text="${#numbers.formatDecimal(ct.donGia, 0, 'COMMA', 0, 'POINT')}">0</td>
-                        <td th:text="${#numbers.formatDecimal(ct.soLuong * ct.donGia, 0, 'COMMA', 0, 'POINT')}">0</td>
+                        <td sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')" th:text="${#numbers.formatDecimal(ct.donGia, 0, 'COMMA', 0, 'POINT')}">0</td>
+                        <td sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')" th:text="${#numbers.formatDecimal(ct.soLuong * ct.donGia, 0, 'COMMA', 0, 'POINT')}">0</td>
                     </tr>
                 </tbody>
-                <tfoot>
+                <tfoot sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')">
                     <tr style="background: #f8fafc; font-weight: 700;">
                         <td colspan="4" style="text-align: right;">Tổng Tiền:</td>
                         <td th:text="${#numbers.formatDecimal(tongTien, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">0 VNĐ</td>

@@ -7,6 +7,24 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
+        .header {
+            background: white;
+            padding: 15px 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1001;
+            border-radius: 0 0 20px 20px;
+        }
+        .nav-link:hover {
+            color: white !important;
+            background: var(--primary-color) !important;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+        }
         .about-hero {
             background: linear-gradient(135deg, var(--primary-color), #2980b9);
             color: white;
@@ -72,7 +90,29 @@
                 <div class="user-menu" th:if="${currentUser != null}">
                     <div class="avatar-dropdown">
                         <img th:src="${currentUser?.avatar != null && !currentUser.avatar.empty} ? @{${currentUser.avatar}} : 'https://ui-avatars.com/api/?name=' + ${currentUser?.hoTen != null ? currentUser.hoTen : 'User'} + '&background=1877f2&color=fff&size=40&bold=true'"
-                            alt="Avatar" class="avatar-small">
+                            alt="Avatar" class="avatar-small" onclick="toggleDropdown()"
+                            th:attr="data-name=${currentUser?.hoTen != null ? currentUser.hoTen : 'User'}"
+                            onerror="this.src='https://ui-avatars.com/api/?name=' + encodeURIComponent(this.getAttribute('data-name')) + '&background=1877f2&color=fff&size=40'">
+                        <div class="dropdown-content" id="userDropdown">
+                            <a th:href="@{/profile}"><i class="fas fa-user"></i> Hồ sơ</a>
+                            <a th:href="@{/profile/settings}"><i class="fas fa-cog"></i> Cài đặt</a>
+                            <a th:href="@{/dat-truoc/lich-su}"><i class="fas fa-calendar-check"></i> Sách đã đặt trước</a>
+                            <a th:href="@{/dien-dan/da-thu-hoi}"><i class="fas fa-history"></i> Bình luận đã thu hồi</a>
+                            
+                            <!-- === MENU ADMIN TRONG DROPDOWN === -->
+                            <div th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">
+                                <hr>
+                                <a th:href="@{/admin/dashboard}"><i class="fas fa-crown"></i> Quản Trị Hệ Thống</a>
+                                <a th:href="@{/admin/dat-truoc}"><i class="fas fa-calendar-check"></i> Duyệt Đặt Trước</a>
+                            </div>
+                            
+                            <hr>
+                            <form th:action="@{/logout}" method="post">
+                                <button type="submit" class="logout-btn">
+                                    <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 </div>
                 <a th:unless="${currentUser != null}" th:href="@{/login}" class="nav-link btn-primary" style="color: white;">
@@ -134,5 +174,22 @@
             <p>&copy; 2026 Quản Lý Thư Viện. All rights reserved.</p>
         </footer>
     </div>
+    <script>
+        function toggleDropdown() {
+            document.getElementById("userDropdown").classList.toggle("show");
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.matches('.avatar-small')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                for (var i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+    </script>
 </body>
 </html>

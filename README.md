@@ -88,16 +88,6 @@ Truy cập: `http://localhost:8080`
 
 ---
 
-## 🔑 TÀI KHOẢN MẶC ĐỊNH
-| Username | Password | Quyền |
-| :--- | :--- | :--- |
-| **admin** | admin123 | Admin (Toàn quyền) |
-| **thuthu** | thuthu123 | Thủ thư (Quản lý sách/mượn) |
-| **nhanvien** | nhanvien123 | Nhân viên (Quản lý mượn/độc giả) |
-| **Tanphong** | Tanphong | Khách hàng (Mượn/Đặt sách) |
-
----
-
 ## 📁 CẤU TRÚC DỰ ÁN
 ```text
 src/
@@ -114,11 +104,359 @@ src/
 
 ---
 
+## 🔑 TÀI KHOẢN MẶC ĐỊNH
+| Username | Password | Quyền |
+| :--- | :--- | :--- |
+| **admin** | admin123 | Admin (Toàn quyền) |
+| **thuthu** | thuthu123 | Thủ thư (Quản lý sách/mượn) |
+| **nhanvien** | nhanvien123 | Nhân viên (Quản lý mượn/độc giả) |
+| **Tanphong** | Tanphong | Khách hàng (Mượn/Đặt sách) |
+
+---
+
+## 🔌 API ENDPOINTS
+*Đang cập nhật chi tiết các API...*
+
+---
+
+## 🗄️ CƠ SỞ DỮ LIỆU
+
+### 📊 Sơ đồ quan hệ (ER Diagram)
+
+```mermaid
+erDiagram
+    TACGIA ||--o{ SACH : "viết"
+    NHAXUATBAN ||--o{ SACH : "xuất bản"
+    LOAI ||--o{ SACH : "thuộc loại"
+    KESACH ||--o{ SACH : "đặt tại"
+    SACH ||--o{ CHI_TIET_PHIEU_MUON : "có trong"
+    SACH ||--o{ CHI_TIET_PHIEU_NHAP : "có trong"
+    SACH ||--o{ BINH_LUAN : "có"
+    DOCGIA ||--o{ PHIEU_MUON : "mượn"
+    PHIEU_MUON ||--o{ CHI_TIET_PHIEU_MUON : "chi tiết"
+    PHIEU_MUON ||--o{ THANH_TOAN : "liên quan"
+    PHIEU_NHAP ||--o{ CHI_TIET_PHIEU_NHAP : "chi tiết"
+    TAIKHOAN ||--o{ BINH_LUAN : "đăng"
+    TAIKHOAN ||--o{ THANH_TOAN : "thực hiện"
+
+    TACGIA {
+        bigint MaTacGia PK
+        nvarchar TenTacGia
+        nvarchar NamSinh
+        nvarchar QueQuan
+        int TrangThai
+    }
+    NHAXUATBAN {
+        bigint MaNXB PK
+        nvarchar TenNXB
+        nvarchar DiaChi
+        nvarchar Sdt
+        int TrangThai
+    }
+    LOAI {
+        bigint MaLoai PK
+        nvarchar TenLoai
+        int TrangThai
+    }
+    KESACH {
+        bigint MaKe PK
+        nvarchar ViTri
+        int TrangThai
+    }
+    SACH {
+        bigint MaSach PK
+        nvarchar TenSach
+        bigint MaTacGia FK
+        bigint MaNXB FK
+        bigint MaLoai FK
+        bigint Make FK
+        nvarchar HinhAnh
+        int NamXB
+        int SoLuong
+        nvarchar TrangThai
+    }
+    DOCGIA {
+        bigint madocgia PK
+        nvarchar tendocgia
+        nvarchar gioitinh
+        nvarchar diachi
+        nvarchar sdt
+        int TrangThai
+    }
+    PHIEU_MUON {
+        bigint id PK
+        bigint doc_gia_id FK
+        date ngay_muon
+        date ngay_tra
+    }
+    CHI_TIET_PHIEU_MUON {
+        bigint id PK
+        bigint phieu_muon_id FK
+        bigint sach_id FK
+        int so_luong
+    }
+    PHIEU_NHAP {
+        bigint id PK
+        date ngay_nhap
+        nvarchar nha_cung_cap
+        nvarchar ghi_chu
+    }
+    CHI_TIET_PHIEU_NHAP {
+        bigint id PK
+        bigint phieu_nhap_id FK
+        bigint sach_id FK
+        int so_luong
+        float don_gia
+    }
+    TAIKHOAN {
+        bigint matk PK
+        nvarchar username
+        nvarchar password
+        nvarchar email
+        nvarchar hoten
+        int quyen
+        int trangthai
+        datetime ngaytao
+        nvarchar avatar
+    }
+    BINH_LUAN {
+        bigint id PK
+        bigint tai_khoan_id FK
+        bigint sach_id FK
+        ntext noi_dung
+        datetime ngay_dang
+        int trang_thai
+        nvarchar loai
+    }
+    THANH_TOAN {
+        bigint id PK
+        bigint phieu_muon_id FK
+        bigint tai_khoan_id FK
+        float so_tien
+        nvarchar ly_do
+        datetime ngay_thanh_toan
+        nvarchar phuong_thuc
+        int trang_thai
+        nvarchar ma_giao_dich
+    }
+    NHAN_VIEN {
+        bigint id PK
+        nvarchar ho_ten
+        nvarchar chuc_vu
+        nvarchar email
+    }
+```
+
+### 📝 Chi tiết các bảng
+
+| Bảng | Mô tả |
+| :--- | :--- |
+| **tacgia** | Lưu thông tin các tác giả sách. |
+| **nhaxuatban** | Lưu thông tin các nhà xuất bản. |
+| **loai** | Phân loại thể loại sách (Văn học, Khoa học...). |
+| **kesach** | Quản lý vị trí kệ để sách trong thư viện. |
+| **sach** | Thông tin chi tiết về các đầu sách và số lượng tồn. |
+| **docgia** | Thông tin người mượn sách. |
+| **phieu_muon** | Quản lý thông tin mượn sách của độc giả. |
+| **chi_tiet_phieu_muon** | Chi tiết các quyển sách trong một phiếu mượn. |
+| **phieu_nhap** | Quản lý việc nhập thêm sách vào kho. |
+| **chi_tiet_phieu_nhap** | Chi tiết các quyển sách và đơn giá khi nhập kho. |
+| **taikhoan** | Quản lý người dùng hệ thống (Admin, Nhân viên, Khách). |
+| **binh_luan** | Lưu các bình luận, góp ý về sách. |
+| **thanh_toan** | Quản lý các giao dịch thanh toán phí phạt. |
+| **nhan_vien** | Thông tin nhân viên thư viện. |
+
+### 💻 Script khởi tạo (SQL)
+
+<details>
+<summary>Nhấn để xem nội dung SQL chi tiết</summary>
+
+```sql
+-- Tạo cơ sở dữ liệu (nếu chưa có)
+CREATE DATABASE qltv;
+GO
+
+USE qltv;
+GO
+
+-- Bảng tacgia
+CREATE TABLE tacgia (
+    MaTacGia bigint NOT NULL IDENTITY(1,1),
+    TenTacGia nvarchar(255) NOT NULL,
+    NamSinh nvarchar(10) NULL,
+    QueQuan nvarchar(255) NULL,
+    TrangThai int DEFAULT 1,
+    PRIMARY KEY (MaTacGia)
+);
+
+-- Bảng nhaxuatban
+CREATE TABLE nhaxuatban (
+    MaNXB bigint NOT NULL IDENTITY(1,1),
+    TenNXB nvarchar(255) NOT NULL,
+    DiaChi nvarchar(255) NULL,
+    Sdt nvarchar(20) NULL,
+    TrangThai int DEFAULT 1,
+    PRIMARY KEY (MaNXB)
+);
+
+-- Bảng loai
+CREATE TABLE loai (
+    MaLoai bigint NOT NULL IDENTITY(1,1),
+    TenLoai nvarchar(255) NOT NULL,
+    TrangThai int DEFAULT 1,
+    PRIMARY KEY (MaLoai)
+);
+
+-- Bảng kesach
+CREATE TABLE kesach (
+    MaKe bigint NOT NULL IDENTITY(1,1),
+    ViTri nvarchar(255) NULL,
+    TrangThai int DEFAULT 1,
+    PRIMARY KEY (MaKe)
+);
+
+-- Bảng sach
+CREATE TABLE sach (
+    MaSach bigint NOT NULL IDENTITY(1,1),
+    TenSach nvarchar(255) NOT NULL,
+    MaTacGia bigint NULL,
+    MaNXB bigint NULL,
+    MaLoai bigint NULL,
+    Make bigint NULL,
+    HinhAnh nvarchar(500) NULL,
+    NamXB int NULL,
+    SoLuong int DEFAULT 10,
+    TrangThai nvarchar(10) DEFAULT '1',
+    PRIMARY KEY (MaSach),
+    FOREIGN KEY (MaTacGia) REFERENCES tacgia(MaTacGia),
+    FOREIGN KEY (MaNXB) REFERENCES nhaxuatban(MaNXB),
+    FOREIGN KEY (MaLoai) REFERENCES loai(MaLoai),
+    FOREIGN KEY (Make) REFERENCES kesach(MaKe)
+);
+
+-- Bảng docgia
+CREATE TABLE docgia (
+    madocgia bigint NOT NULL IDENTITY(1,1),
+    tendocgia nvarchar(255) NOT NULL,
+    gioitinh nvarchar(10) NULL,
+    diachi nvarchar(500) NULL,
+    sdt nvarchar(20) NULL,
+    TrangThai int DEFAULT 1,
+    PRIMARY KEY (madocgia)
+);
+
+-- Bảng phieu_muon
+CREATE TABLE phieu_muon (
+    id bigint NOT NULL IDENTITY(1,1),
+    doc_gia_id bigint NOT NULL,
+    ngay_muon date NOT NULL,
+    ngay_tra date NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (doc_gia_id) REFERENCES docgia(madocgia)
+);
+
+-- Bảng chi_tiet_phieu_muon
+CREATE TABLE chi_tiet_phieu_muon (
+    id bigint NOT NULL IDENTITY(1,1),
+    phieu_muon_id bigint NOT NULL,
+    sach_id bigint NOT NULL,
+    so_luong int NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (phieu_muon_id) REFERENCES phieu_muon(id),
+    FOREIGN KEY (sach_id) REFERENCES sach(MaSach)
+);
+
+-- Bảng phieu_nhap
+CREATE TABLE phieu_nhap (
+    id bigint NOT NULL IDENTITY(1,1),
+    ngay_nhap date NOT NULL,
+    nha_cung_cap nvarchar(255) NULL,
+    ghi_chu nvarchar(500) NULL,
+    PRIMARY KEY (id)
+);
+
+-- Bảng chi_tiet_phieu_nhap
+CREATE TABLE chi_tiet_phieu_nhap (
+    id bigint NOT NULL IDENTITY(1,1),
+    phieu_nhap_id bigint NOT NULL,
+    sach_id bigint NOT NULL,
+    so_luong int NOT NULL,
+    don_gia float NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (phieu_nhap_id) REFERENCES phieu_nhap(id),
+    FOREIGN KEY (sach_id) REFERENCES sach(MaSach)
+);
+
+-- Bảng taikhoan
+CREATE TABLE taikhoan (
+    matk bigint NOT NULL IDENTITY(1,1),
+    username nvarchar(50) NOT NULL,
+    password nvarchar(255) NOT NULL,
+    email nvarchar(100) NULL,
+    hoten nvarchar(100) NULL,
+    quyen int DEFAULT 4,
+    trangthai int DEFAULT 1,
+    ngaytao datetime DEFAULT GETDATE(),
+    reset_token nvarchar(100) NULL,
+    avatar nvarchar(500) NULL,
+    sodienthoai nvarchar(20) NULL,
+    diachi nvarchar(500) NULL,
+    PRIMARY KEY (matk),
+    UNIQUE (username),
+    UNIQUE (email)
+);
+
+-- Bảng binh_luan
+CREATE TABLE binh_luan (
+    id bigint NOT NULL IDENTITY(1,1),
+    tai_khoan_id bigint NOT NULL,
+    sach_id NULL,
+    noi_dung ntext NOT NULL,
+    ngay_dang datetime NULL,
+    trang_thai int DEFAULT 1,
+    loai nvarchar(20) DEFAULT 'GOP_Y',
+    PRIMARY KEY (id),
+    FOREIGN KEY (tai_khoan_id) REFERENCES taikhoan(matk),
+    FOREIGN KEY (sach_id) REFERENCES sach(MaSach)
+);
+
+-- Bảng thanh_toan
+CREATE TABLE thanh_toan (
+    id bigint NOT NULL IDENTITY(1,1),
+    phieu_muon_id bigint NOT NULL,
+    tai_khoan_id bigint NOT NULL,
+    so_tien float NOT NULL,
+    ly_do nvarchar(255) DEFAULT 'Phí phạt trả sách quá hạn',
+    ngay_thanh_toan datetime NULL,
+    phuong_thuc nvarchar(50) DEFAULT 'TIEN_MAT',
+    trang_thai int DEFAULT 1,
+    ma_giao_dich nvarchar(50) NULL,
+    ghi_chu nvarchar(500) NULL,
+    PRIMARY KEY (id),
+    UNIQUE (ma_giao_dich),
+    FOREIGN KEY (phieu_muon_id) REFERENCES phieu_muon(id),
+    FOREIGN KEY (tai_khoan_id) REFERENCES taikhoan(matk)
+);
+
+-- Bảng nhan_vien
+CREATE TABLE nhan_vien (
+    id bigint NOT NULL IDENTITY(1,1),
+    ho_ten nvarchar(255) NOT NULL,
+    chuc_vu nvarchar(100) NULL,
+    email nvarchar(100) NULL,
+    PRIMARY KEY (id)
+);
+```
+
+</details>
+
+---
+
+
 ## 📖 HƯỚNG DẪN SỬ DỤNG
 1. **Dành cho Khách (Chưa Login)**: Có thể xem danh sách sách (`/sach`), xem thông tin thư viện (`/about`) và tìm kiếm sách.
 2. **Dành cho Thành viên**: Đăng nhập để sử dụng tính năng **Đặt trước sách** (được chọn số lượng quyển muốn đặt).
 3. **Dành cho Quản lý**: Đăng nhập tài khoản Admin/Thủ thư để duyệt các yêu cầu đặt trước và quản lý kho sách.
-
 ---
 
 ## 📄 GIẤY PHÉP

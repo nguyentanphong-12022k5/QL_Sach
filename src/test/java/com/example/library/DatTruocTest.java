@@ -33,14 +33,22 @@ class DatTruocTest {
     @InjectMocks
     private DatTruocController datTruocController;
 
-    @Mock private SachRepository sachRepository;
-    @Mock private DocGiaRepository docGiaRepository;
-    @Mock private DatTruocRepository datTruocRepository;
-    @Mock private TaiKhoanRepository taiKhoanRepository;
-    @Mock private Model model;
-    @Mock private RedirectAttributes redirectAttributes;
-    @Mock private Authentication authentication;
-    @Mock private SecurityContext securityContext;
+    @Mock
+    private SachRepository sachRepository;
+    @Mock
+    private DocGiaRepository docGiaRepository;
+    @Mock
+    private DatTruocRepository datTruocRepository;
+    @Mock
+    private TaiKhoanRepository taiKhoanRepository;
+    @Mock
+    private Model model;
+    @Mock
+    private RedirectAttributes redirectAttributes;
+    @Mock
+    private Authentication authentication;
+    @Mock
+    private SecurityContext securityContext;
 
     @BeforeEach
     void setUp() {
@@ -55,7 +63,7 @@ class DatTruocTest {
         Sach sach = new Sach();
         sach.setId(1L);
         sach.setTenSach("Test Book");
-        
+
         TaiKhoan taiKhoan = new TaiKhoan();
         taiKhoan.setUsername("testuser");
         taiKhoan.setHoTen("Test User");
@@ -81,7 +89,7 @@ class DatTruocTest {
         when(docGiaRepository.findById(1L)).thenReturn(Optional.of(docGia));
 
         String dateStr = LocalDate.now().plusDays(1).toString();
-        String viewName = datTruocController.submitDatTruoc(1L, 1L, dateStr, "Ghi chu", redirectAttributes);
+        String viewName = datTruocController.submitDatTruoc(1L, 1L, dateStr, 1, "Ghi chu", redirectAttributes);
 
         assertEquals("redirect:/dat-truoc/lich-su", viewName);
         verify(datTruocRepository).save(any(DatTruoc.class));
@@ -99,7 +107,7 @@ class DatTruocTest {
         when(docGiaRepository.findById(1L)).thenReturn(Optional.of(docGia));
 
         String dateStr = LocalDate.now().minusDays(1).toString();
-        String viewName = datTruocController.submitDatTruoc(1L, 1L, dateStr, "Ghi chu", redirectAttributes);
+        String viewName = datTruocController.submitDatTruoc(1L, 1L, dateStr, 1, "Ghi chu", redirectAttributes);
 
         assertEquals("redirect:/dat-truoc/1", viewName);
         verify(redirectAttributes).addFlashAttribute(eq("error"), contains("quá khứ"));

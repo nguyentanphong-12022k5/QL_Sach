@@ -28,6 +28,9 @@ public class SecurityConfig {
                 // 4. Staff & Admin Routes
                 .requestMatchers("/admin/dat-truoc/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_THUTHU", "ROLE_NHANVIEN")
                 .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+                
+                // Allow Customers to view receipts but not modify
+                .requestMatchers("/phieunhap", "/phieunhap/view/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_THUTHU", "ROLE_NHANVIEN", "ROLE_KHACHHANG")
                 .requestMatchers("/phieunhap/**").hasAnyAuthority("ROLE_ADMIN", "ROLE_THUTHU", "ROLE_NHANVIEN")
                 
                 // 5. Restricted Actions (Staff only)

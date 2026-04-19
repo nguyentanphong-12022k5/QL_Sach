@@ -1,5 +1,5 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -29,7 +29,7 @@
             <i class="fas fa-exclamation-circle"></i> <span th:text="${error}"></span>
         </div>
 
-        <div style="margin-bottom: 20px; text-align: right;">
+        <div sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')" style="margin-bottom: 20px; text-align: right;">
             <a th:href="@{/phieunhap/add}" class="btn btn-success">
                 <i class="fas fa-plus"></i> Tạo Phiếu Nhập
             </a>
@@ -41,8 +41,8 @@
                     <tr>
                         <th>Mã PN</th>
                         <th>Ngày Nhập</th>
-                        <th>Nhà Cung Cấp</th>
-                        <th>Ghi Chú</th>
+                        <th sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')">Nhà Cung Cấp</th>
+                        <th sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')">Ghi Chú</th>
                         <th>Thao Tác</th>
                     </tr>
                 </thead>
@@ -50,14 +50,14 @@
                     <tr th:each="pn : ${phieuNhapList}">
                         <td th:text="${pn.id}">1</td>
                         <td th:text="${#temporals.format(pn.ngayNhap, 'dd/MM/yyyy')}">01/01/2026</td>
-                        <td th:text="${pn.nhaCungCap} ?: '--'">Công ty ABC</td>
-                        <td th:text="${pn.ghiChu} ?: '--'">Nhập sách mới</td>
+                        <td sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')" th:text="${pn.nhaCungCap} ?: '--'">Công ty ABC</td>
+                        <td sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')" th:text="${pn.ghiChu} ?: '--'">Nhập sách mới</td>
                         <td>
-                            <a th:href="@{/phieunhap/view/{id}(id=${pn.id})}" class="btn btn-outline btn-sm">
+                            <a th:href="@{/phieunhap/view/{id}(id=${pn.id})}" class="btn btn-outline btn-sm" title="Xem chi tiết">
                                 <i class="fas fa-eye"></i>
                             </a>
-                            <a th:href="@{/phieunhap/delete/{id}(id=${pn.id})}" class="btn btn-danger btn-sm" 
-                               onclick="return confirm('Xóa phiếu nhập này?')">
+                            <a sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')" th:href="@{/phieunhap/delete/{id}(id=${pn.id})}" class="btn btn-danger btn-sm" 
+                               onclick="return confirm('Xóa phiếu nhập này?')" title="Xóa">
                                 <i class="fas fa-trash"></i>
                             </a>
                         </td>
