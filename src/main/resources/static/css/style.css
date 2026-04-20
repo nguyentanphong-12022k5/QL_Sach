@@ -586,7 +586,29 @@ tbody tr:last-child td {
 	color: white !important;
 }
 
-.btn i {
+
+.btn-primary i, .btn-success i, .btn-warning i, .btn-danger i, .btn-info i {
+	color: white !important;
+}
+
+/* Icons in outline/light buttons should match text color */
+.btn-outline {
+	background: transparent;
+	border: 2px solid var(--primary-color);
+	color: var(--primary-color);
+	background: white;
+}
+
+.btn-outline i {
+	color: var(--primary-color) !important;
+}
+
+.btn-outline:hover {
+	background: var(--primary-color);
+	color: white;
+}
+
+.btn-outline:hover i {
 	color: white !important;
 }
 
@@ -602,6 +624,20 @@ tbody tr:last-child td {
 	margin-right: 5px;
 	color: currentColor !important;
 }
+
+/* --- Global Status Badges (High Contrast) --- */
+.status-badge {
+	padding: 6px 14px;
+	border-radius: 50px;
+	font-size: 0.85rem;
+	font-weight: 700;
+	display: inline-block;
+}
+
+.status-badge.status-0 { background-color: #fff8e1; color: #f57f17; border: 1px solid #ffe082; } /* Pending */
+.status-badge.status-1 { background-color: #e3f2fd; color: #1565c0; border: 1px solid #90caf9; } /* Approved */
+.status-badge.status-2 { background-color: #e8f5e9; color: #2e7d32; border: 1px solid #a5d6a7; } /* Received */
+.status-badge.status-3 { background-color: #ffebee; color: #c62828; border: 1px solid #ef9a9a; } /* Cancelled */
 
 .btn-block {
 	width: 100%;

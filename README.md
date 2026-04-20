@@ -498,6 +498,22 @@ CREATE TABLE nhan_vien (
 2. **Dành cho Thành viên**: Đăng nhập để sử dụng tính năng **Đặt trước sách** (được chọn số lượng quyển muốn đặt).
 3. **Dành cho Quản lý**: Đăng nhập tài khoản Admin/Thủ thư để duyệt các yêu cầu đặt trước và quản lý kho sách.
 
+
+---
+
+## 🛠 LỊCH SỬ SỬA LỖI & BẢO TRÌ (BUG FIX LOG)
+
+Nhật ký ghi lại các vấn đề đã xảy ra và cách khắc phục để phục vụ việc bảo trì hệ thống lâu dài.
+
+| Ngày | Vấn đề (Bug) | Giải pháp (Fix) | Ghi chú kỹ thuật |
+| :--- | :--- | :--- | :--- |
+| 20/04/2026 | **Icon bị tàng hình trong bảng Admin** | Định nghĩa Gradient nền cho `.btn-warning`, `.btn-danger` và đặt `!important` cho icon. | Tránh việc icon white trên nền default white của table. |
+| 20/04/2026 | **Icon biến mất ở nút Chi tiết (Khách)** | Tách quy tắc CSS cho `.btn-outline`. Icon mặc định theo màu chữ, chỉ trắng khi `:hover`. | `.btn i` quá chung chung gây lỗi trên nút không có nền (outline). |
+| 20/04/2026 | **Nhãn trạng thái khó đọc** | Cập nhật bộ màu High-Contrast cho `.status-badge` (background nhạt, text đậm). | Đảm bảo tiêu chuẩn tiếp cận (Accessibility). |
+| 19/04/2026 | **Lỗi 500 khi Upload ảnh > 1MB** | Tăng giới hạn `max-file-size` và `max-request-size` lên 5MB. | Sửa trong `application.properties`. |
+| 18/04/2026 | **Đặt sách không chọn được số lượng** | Cập nhật database và Controller để xử lý trường `soLuong` trong đơn đặt. | Đảm bảo tính năng đồng bộ với quản lý kho. |
+| 17/04/2026 | **Lỗi hiển thị Avatar sau khi Upload** | Cập nhật `ResourceHandler` để Spring Boot nhận diện file tĩnh ngay lập tức. | Thêm `/img/**` vào `WebConfig.java`. |
+
 ---
 
 ## 📄 GIẤY PHÉP
