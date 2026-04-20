@@ -507,6 +507,8 @@ Nhật ký ghi lại các vấn đề đã xảy ra và cách khắc phục đ�
 
 | Ngày | Vấn đề (Bug) | Giải pháp (Fix) | Ghi chú kỹ thuật |
 | :--- | :--- | :--- | :--- |
+| 20/04/2026 | **Lỗi không lường trước (500 Error)** | Triển khai Global Error Logger lưu vào `logs/app-runtime.log`. | Giúp theo dõi lỗi runtime khi ứng dụng đang chạy. |
+| 20/04/2026 | **Hệ thống Log tự động** | Thiết lập quy trình tự động cập nhật Fix Log và Runtime Log. | Đảm bảo tính minh bạch và dễ bảo trì. |
 | 20/04/2026 | **Icon bị tàng hình trong bảng Admin** | Định nghĩa Gradient nền cho `.btn-warning`, `.btn-danger` và đặt `!important` cho icon. | Tránh việc icon white trên nền default white của table. |
 | 20/04/2026 | **Icon biến mất ở nút Chi tiết (Khách)** | Tách quy tắc CSS cho `.btn-outline`. Icon mặc định theo màu chữ, chỉ trắng khi `:hover`. | `.btn i` quá chung chung gây lỗi trên nút không có nền (outline). |
 | 20/04/2026 | **Nhãn trạng thái khó đọc** | Cập nhật bộ màu High-Contrast cho `.status-badge` (background nhạt, text đậm). | Đảm bảo tiêu chuẩn tiếp cận (Accessibility). |
