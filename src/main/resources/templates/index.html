@@ -19,6 +19,7 @@
 				<a th:href="@{/sach}" class="nav-link"> <i class="fas fa-book"></i> Sách </a>
 				<a th:href="@{/about}" class="nav-link"> <i class="fas fa-info-circle"></i> Giới Thiệu </a>
 				<a th:href="@{/docgia}" class="nav-link"> <i class="fas fa-users"></i> Độc Giả </a>
+				<a th:href="@{/docgia/leaderboard}" class="nav-link"> <i class="fas fa-trophy" style="color: #f1c40f;"></i> Bảng Xếp Hạng </a>
 				<a th:href="@{/phieumuon}" class="nav-link"> <i class="fas fa-hand-holding"></i> Phiếu Mượn </a>
 				<a th:href="@{/phieunhap}" class="nav-link"> <i class="fas fa-truck"></i> Phiếu Nhập </a>
 				<a sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')" th:href="@{/thongke}" class="nav-link"> <i class="fas fa-chart-bar"></i> Thống Kê </a>

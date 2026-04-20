@@ -161,6 +161,14 @@ td {
                 </div>
                 <div class="detail-info">
                     <h1 th:text="${docGia.hoTen}">Tên độc giả</h1>
+                    <div style="margin: 10px 0;">
+                        <span class="badge-status" th:text="${docGia.getTenCapBac()}" 
+                              th:style="'background-color: ' + ${docGia.getRankColor()} + '; color: white; padding: 6px 15px; font-weight: 700;'">
+                        </span>
+                        <span style="margin-left: 10px; color: #7f8c8d; font-size: 0.9rem;">
+                            (Đã mượn <strong th:text="${docGia.getTongSachMuon()}">0</strong> quyển)
+                        </span>
+                    </div>
                     <p><i class="fas fa-id-card"></i> Mã độc giả: <strong th:text="${docGia.id}"></strong></p>
                     <span th:if="${docGia.trangThai == 1}" class="badge-status" style="background: #d4edda; color: #155724;">
                         <i class="fas fa-check-circle"></i> Đang hoạt động
@@ -173,7 +181,7 @@ td {
 
             <!-- Thông tin cá nhân -->
             <div class="info-section">
-                <h3 class="section-title"><i class="fas fa-info-circle"></i> Thông Tin Cá Nhân</h3>
+                <h3 class="section-title"><i class="fas fa-info-circle"></i> Thông Tin Chi Tiết</h3>
                 <div class="info-grid">
                     <div class="info-item">
                         <div class="info-icon"><i class="fas fa-venus-mars"></i></div>
@@ -182,18 +190,25 @@ td {
                             <div class="info-value" th:text="${docGia.gioiTinh} ?: 'Chưa cập nhật'"></div>
                         </div>
                     </div>
-                    <div class="info-item">
+                    <div class="info-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')">
                         <div class="info-icon"><i class="fas fa-phone"></i></div>
                         <div class="info-content">
                             <div class="info-label">Số điện thoại</div>
                             <div class="info-value" th:text="${docGia.soDienThoai} ?: 'Chưa cập nhật'"></div>
                         </div>
                     </div>
-                    <div class="info-item">
+                    <div class="info-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')">
                         <div class="info-icon"><i class="fas fa-map-marker-alt"></i></div>
                         <div class="info-content">
                             <div class="info-label">Địa chỉ</div>
                             <div class="info-value" th:text="${docGia.diaChi} ?: 'Chưa cập nhật'"></div>
+                        </div>
+                    </div>
+                    <div class="info-item" sec:authorize="!hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')">
+                        <div class="info-icon"><i class="fas fa-shield-alt"></i></div>
+                        <div class="info-content">
+                            <div class="info-label">Bảo mật</div>
+                            <div class="info-value">**********</div>
                         </div>
                     </div>
                 </div>

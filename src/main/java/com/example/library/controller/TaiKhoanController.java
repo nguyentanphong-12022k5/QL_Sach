@@ -1,7 +1,9 @@
 package com.example.library.controller;
 
 import com.example.library.entity.TaiKhoan;
+import com.example.library.entity.DocGia;
 import com.example.library.repository.TaiKhoanRepository;
+import com.example.library.repository.DocGiaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,6 +19,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -25,6 +28,9 @@ public class TaiKhoanController {
 
 	@Autowired
 	private TaiKhoanRepository taiKhoanRepository;
+
+	@Autowired
+	private DocGiaRepository docGiaRepository;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -39,6 +45,27 @@ public class TaiKhoanController {
 
 		TaiKhoan taiKhoan = taiKhoanRepository.findByUsername(username)
 				.orElseThrow(() -> new RuntimeException("Không tìm thấy tài khoản"));
+
+		// Tìm thông tin Độc giả để lấy Cấp bậc
+		java.util.Optional<DocGia> docGiaOpt = java.util.Optional.empty();
+		
+		// Ưu tiên khớp theo Số điện thoại
+		if (taiKhoan.getSoDienThoai() != null && !taiKhoan.getSoDienThoai().isEmpty()) {
+			docGiaOpt = docGiaRepository.findBySoDienThoai(taiKhoan.getSoDienThoai());
+		}
+		
+		// Fallback: Khớp theo Họ tên (nếu chưa tìm thấy)
+		if (docGiaOpt.isEmpty() && taiKhoan.getHoTen() != null && !taiKhoan.getHoTen().isEmpty()) {
+			List<DocGia> listByHoTen = docGiaRepository.findByHoTenContainingIgnoreCaseOrSoDienThoaiContaining(taiKhoan.getHoTen(), "---NOT-FIND---");
+			if (!listByHoTen.isEmpty()) {
+				// Lấy người đầu tiên trùng tên hoàn toàn (hoặc gần đúng nhất)
+				docGiaOpt = listByHoTen.stream()
+						.filter(d -> d.getHoTen().equalsIgnoreCase(taiKhoan.getHoTen()))
+						.findFirst();
+			}
+		}
+
+		docGiaOpt.ifPresent(dg -> model.addAttribute("docGia", dg));
 
 		model.addAttribute("taiKhoan", taiKhoan);
 		return "profile/index";

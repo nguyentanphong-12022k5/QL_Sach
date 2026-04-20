@@ -107,4 +107,30 @@ public class DocGia {
     public String getEmail() {
         return null;
     }
+
+    // --- Hệ thống Cấp bậc "Tu Tiên" ---
+    public int getTongSachMuon() {
+        if (phieuMuons == null) return 0;
+        return phieuMuons.size();
+    }
+
+    public String getTenCapBac() {
+        int count = getTongSachMuon();
+        if (count == 0) return "Phàm Nhân";
+        if (count <= 5) return "Luyện Khí";
+        if (count <= 15) return "Trúc Cơ";
+        if (count <= 30) return "Kim Đan";
+        if (count <= 50) return "Nguyên Anh";
+        return "Hóa Thần";
+    }
+
+    public String getRankColor() {
+        int count = getTongSachMuon();
+        if (count == 0) return "#7f8c8d"; // Gray
+        if (count <= 5) return "#27ae60"; // Green
+        if (count <= 15) return "#2980b9"; // Blue
+        if (count <= 30) return "#f1c40f"; // Yellow
+        if (count <= 50) return "#e67e22"; // Orange
+        return "#9b59b6"; // Purple
+    }
 }

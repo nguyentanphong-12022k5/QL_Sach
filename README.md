@@ -1,6 +1,6 @@
 # 📚 HỆ THỐNG QUẢN LÝ THƯ VIỆN
 
-![version](https://img.shields.io/badge/version-1.2.0-blue.svg)
+![version](https://img.shields.io/badge/version-1.3.0-blue.svg)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.2-green.svg)
 ![Java](https://img.shields.io/badge/Java-17-orange.svg)
 ![MySQL](https://img.shields.io/badge/MySQL-8.0-blue.svg)
@@ -54,6 +54,12 @@ Hệ thống Quản lý Thư viện là một ứng dụng web hiện đại đ�
 ### 👥 Quản lý Độc giả
 
 - Quản lý thông tin độc giả chi tiết, tự động tạo bản ghi cho khách hàng mới.
+- **Bảo mật Dữ liệu Độc giả (Privacy Protection):** 
+  - Ẩn số điện thoại và địa chỉ của độc giả khác đối với cấp độ Khách hàng. 
+  - Chỉ Admin/Thủ thư/Nhân viên mới thấy thông tin liên hệ đầy đủ.
+- **Hệ thống Xếp hạng Độc giả (Tu Tiên Ranking):**
+  - Tự động xếp hạng dựa trên 6 cấp bậc tu luyện (Phàm Nhân -> Hóa Thần).
+  - **Bảng Xếp Hạng (Leaderboard):** Trang vinh danh những người mượn sách nhiều nhất.
 - Xem lịch sử mượn và đặt trước sách (Hiển thị chi tiết số lượng).
 
 ### 📖 Mượn - Trả Sách
@@ -133,6 +139,21 @@ src/
 
 ---
 
+## 🏆 HỆ THỐNG CẤP BẬC (TU TIÊN)
+
+Dựa trên số lượng sách đã mượn thành công, độc giả sẽ thăng tiến trên con đường "tu tiên":
+
+| Cấp Bậc        | Số Lượng Sách | Ý Nghĩa                                   | Màu Sắc |
+| :------------- | :-----------: | :---------------------------------------- | :------ |
+| **Phàm Nhân**  | 0             | Người mới bắt đầu                         | Xám     |
+| **Luyện Khí**  | 1 - 5         | Bắt đầu cảm nhận linh khí                 | Xanh lá |
+| **Trúc Cơ**    | 6 - 15        | Xây dựng nền tảng vững chắc               | Xanh dương|
+| **Kim Đan**    | 16 - 30       | Kết tinh linh lực                         | Vàng    |
+| **Nguyên Anh** | 31 - 50       | Hình thành nguyên anh, thọ mệnh tăng cao  | Cam     |
+| **Hóa Thần**   | > 50          | Chạm tay vào thiên đạo, đại tài thư viện  | Tím     |
+
+---
+
 ## 🔐 CHI TIẾT PHÂN QUYỀN
 
 Dựa trên cấu hình bảo mật hệ thống, các vai trò có quyền hạn cụ thể như sau:
@@ -145,6 +166,7 @@ Dựa trên cấu hình bảo mật hệ thống, các vai trò có quyền hạ
 | Đặt trước sách            |   ❌   |     ✅     |      ✅      |  ✅   |
 | Xem phiếu nhập kho        |   ❌   |     ✅     |      ✅      |  ✅   |
 | Quản lý Độc giả (CRUD)    |   ❌   |     ❌     |      ✅      |  ✅   |
+| Xem SĐT/Địa chỉ độc giả  |   ❌   |     ❌     |      ✅      |  ✅   |
 | Quản lý Phiếu mượn/trả    |   ❌   |     ❌     |      ✅      |  ✅   |
 | Quản lý Đặt trước (Duyệt) |   ❌   |     ❌     |      ✅      |  ✅   |
 | Quản lý Sách (CRUD)       |   ❌   |     ❌     |      ✅      |  ✅   |

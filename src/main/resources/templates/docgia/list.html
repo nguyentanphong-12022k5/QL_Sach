@@ -14,6 +14,7 @@
         <nav class="nav">
             <a th:href="@{/}" class="nav-link"><i class="fas fa-home"></i> Trang Chủ</a>
             <a th:href="@{/sach}" class="nav-link"><i class="fas fa-book"></i> Sách</a>
+            <a th:href="@{/docgia/leaderboard}" class="nav-link"><i class="fas fa-trophy" style="color: #f1c40f;"></i> Bảng Xếp Hạng</a>
             <a th:href="@{/phieumuon}" class="nav-link"><i class="fas fa-hand-holding"></i> Phiếu Mượn</a>
             <a th:href="@{/thongke}" class="nav-link"><i class="fas fa-chart-bar"></i> Thống Kê</a>
             <a th:href="@{/dien-dan}" class="nav-link"><i class="fas fa-comments"></i> Diễn Đàn</a>
@@ -52,9 +53,9 @@
                     <tr>
                         <th>Mã ĐG</th>
                         <th>Họ Tên</th>
-                        <th>Giới Tính</th>
-                        <th>Số Điện Thoại</th>
-                        <th>Địa Chỉ</th>
+                        <th>Cấp Bậc</th>
+                        <th sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')">Số Điện Thoại</th>
+                        <th sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')">Địa Chỉ</th>
                         <th>Trạng Thái</th>
                         <th>Thao Tác</th>
                     </tr>
@@ -63,9 +64,13 @@
                     <tr th:each="dg : ${docGiaList}">
                         <td th:text="${dg.id}">1</td>
                         <td th:text="${dg.hoTen}">Nguyễn Văn A</td>
-                        <td th:text="${dg.gioiTinh} ?: '--'">Nam</td>
-                        <td th:text="${dg.soDienThoai}">0123456789</td>
-                        <td th:text="${dg.diaChi} ?: '--'">Hà Nội</td>
+                        <td>
+                            <span class="badge" th:text="${dg.getTenCapBac()}" 
+                                  th:style="'background-color: ' + ${dg.getRankColor()} + '; color: white;'">
+                            </span>
+                        </td>
+                        <td sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')" th:text="${dg.soDienThoai}">0123456789</td>
+                        <td sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')" th:text="${dg.diaChi} ?: '--'">Hà Nội</td>
                         <td>
                             <span th:if="${dg.trangThai == 1}" class="badge badge-success">Hoạt động</span>
                             <span th:unless="${dg.trangThai == 1}" class="badge badge-danger">Khóa</span>

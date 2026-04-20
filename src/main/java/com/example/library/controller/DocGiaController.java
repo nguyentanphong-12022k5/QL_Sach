@@ -63,4 +63,14 @@ public class DocGiaController {
         model.addAttribute("phieuMuonList", phieuMuonRepository.findByDocGiaId(id));
         return "docgia/view";
     }
+
+    @GetMapping("/leaderboard")
+    public String leaderboard(Model model) {
+        java.util.List<DocGia> docGiaList = docGiaRepository.findAll();
+        // Sắp xếp theo số lượng phiếu mượn giảm dần
+        docGiaList.sort((a, b) -> Integer.compare(b.getTongSachMuon(), a.getTongSachMuon()));
+        
+        model.addAttribute("docGiaList", docGiaList);
+        return "docgia/leaderboard";
+    }
 }
