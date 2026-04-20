@@ -11,77 +11,7 @@
 <body>
 	<div class="container">
 		<!-- Header -->
-		<header class="header fade-in">
-			<h1>
-				<i class="fas fa-book-open"></i> Quản Lý Thư Viện
-			</h1>
-			<nav class="nav">
-				<a th:href="@{/sach}" class="nav-link"> <i class="fas fa-book"></i> Sách </a>
-				<a th:href="@{/about}" class="nav-link"> <i class="fas fa-info-circle"></i> Giới Thiệu </a>
-				<a th:href="@{/docgia}" class="nav-link"> <i class="fas fa-users"></i> Độc Giả </a>
-				<a th:href="@{/docgia/leaderboard}" class="nav-link"> <i class="fas fa-trophy" style="color: #f1c40f;"></i> Bảng Xếp Hạng </a>
-				<a th:href="@{/phieumuon}" class="nav-link"> <i class="fas fa-hand-holding"></i> Phiếu Mượn </a>
-				<a th:href="@{/phieunhap}" class="nav-link"> <i class="fas fa-truck"></i> Phiếu Nhập </a>
-				<a sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')" th:href="@{/thongke}" class="nav-link"> <i class="fas fa-chart-bar"></i> Thống Kê </a>
-				<a th:href="@{/dien-dan}" class="nav-link"><i class="fas fa-comments"></i> Diễn Đàn</a>
-				
-				<!-- === MENU ADMIN - CHỈ HIỂN THỊ VỚI ADMIN === -->
-				<a th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}" 
-				   th:href="@{/admin/dashboard}" class="nav-link" style="background: linear-gradient(135deg, #ef4444, #dc2626);">
-					<i class="fas fa-crown"></i> Quản Trị
-				</a>
-				
-				<!-- === CHUÔNG THÔNG BÁO === -->
-				<div class="noti-bell-wrapper" th:if="${currentUser != null}">
-					<a th:href="@{/notifications}" class="noti-bell">
-						<i class="fas fa-bell"></i>
-						<span class="noti-badge" 
-							  th:if="${unreadNotificationCount > 0}" 
-							  th:text="${unreadNotificationCount}">0</span>
-					</a>
-				</div>
-				
-				<!-- === LINH THẠCH DISPLAY === -->
-				<div class="linh-thach-wrapper" th:if="${currentUser != null}">
-					<div class="linh-thach-display" title="Số dư Linh Thạch">
-						<i class="fas fa-gem"></i>
-						<span th:text="${linhThachCount}">0</span>
-					</div>
-				</div>
-				
-				<div class="user-menu" th:if="${currentUser != null}">
-					<div class="avatar-dropdown">
-						<img th:src="${currentUser?.avatar != null && !currentUser.avatar.empty} ? @{${currentUser.avatar}} : 'https://ui-avatars.com/api/?name=' + ${currentUser?.hoTen != null ? currentUser.hoTen : 'User'} + '&background=1877f2&color=fff&size=40&bold=true'"
-							alt="Avatar" class="avatar-small" onclick="toggleDropdown()"
-							th:attr="data-name=${currentUser?.hoTen != null ? currentUser.hoTen : 'User'}"
-							onerror="this.src='https://ui-avatars.com/api/?name=' + encodeURIComponent(this.getAttribute('data-name')) + '&background=1877f2&color=fff&size=40'">
-						<div class="dropdown-content" id="userDropdown">
-							<a th:href="@{/profile}"><i class="fas fa-user"></i> Hồ sơ</a>
-							<a th:href="@{/profile/settings}"><i class="fas fa-cog"></i> Cài đặt</a>
-							<a th:href="@{/dat-truoc/lich-su}"><i class="fas fa-calendar-check"></i> Sách đã đặt trước</a>
-							<a th:href="@{/dien-dan/da-thu-hoi}"><i class="fas fa-history"></i> Bình luận đã thu hồi</a>
-							
-							<!-- === MENU ADMIN TRONG DROPDOWN === -->
-							<div th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">
-								<hr>
-								<a th:href="@{/admin/dashboard}"><i class="fas fa-crown"></i> Quản Trị Hệ Thống</a>
-								<a th:href="@{/admin/dat-truoc}"><i class="fas fa-calendar-check"></i> Duyệt Đặt Trước</a>
-							</div>
-							
-							<hr>
-							<form th:action="@{/logout}" method="post">
-								<button type="submit" class="logout-btn">
-									<i class="fas fa-sign-out-alt"></i> Đăng xuất
-								</button>
-							</form>
-						</div>
-					</div>
-				</div>
-				<a th:unless="${currentUser != null}" th:href="@{/login}" class="nav-link btn-primary" style="color: white; padding: 10px 20px; border-radius: 50px; margin-left: 10px;">
-					<i class="fas fa-sign-in-alt"></i> Đăng Nhập
-				</a>
-			</nav>
-		</header>
+		<div th:replace="~{fragments/header :: header}"></div>
 
 		<!-- Main Content -->
 		<main class="main fade-in">

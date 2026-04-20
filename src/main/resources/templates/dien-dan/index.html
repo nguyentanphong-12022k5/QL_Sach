@@ -387,68 +387,8 @@
   </head>
   <body>
     <div class="container">
-      <header class="header fade-in">
-        <h1><i class="fas fa-comments"></i> Diễn Đàn</h1>
-        <nav class="nav">
-          <a th:href="@{/}" class="nav-link"
-            ><i class="fas fa-home"></i> Trang Chủ</a
-          >
-          <a th:href="@{/sach}" class="nav-link"
-            ><i class="fas fa-book"></i> Sách</a
-          >
-          <a th:href="@{/dien-dan}" class="nav-link"
-            ><i class="fas fa-comments"></i> Diễn Đàn</a
-          >
-
-          <!-- Admin link -->
-          <a
-            th:if="${currentUser != null && currentUser.quyen == 1}"
-            th:href="@{/dien-dan/admin}"
-            class="nav-link"
-          >
-            <i class="fas fa-cog"></i> Quản Lý
-          </a>
-
-          <!-- User menu - Chỉ hiển thị khi đã đăng nhập -->
-          <div class="user-menu" th:if="${currentUser != null}">
-            <div class="avatar-dropdown">
-              <img
-                th:src="${currentUser.avatar != null && !currentUser.avatar.empty} ? @{${currentUser.avatar}} : 'https://ui-avatars.com/api/?name=' + ${currentUser.hoTen != null ? currentUser.hoTen : 'User'} + '&background=1877f2&color=fff&size=40'"
-                alt="Avatar"
-                class="avatar-small"
-                onclick="toggleDropdown()"
-                th:attr="data-name=${currentUser.hoTen != null ? currentUser.hoTen : 'User'}"
-                onerror="this.src='https://ui-avatars.com/api/?name=' + encodeURIComponent(this.getAttribute('data-name')) + '&background=1877f2&color=fff&size=40'"
-              />
-              <div class="dropdown-content" id="userDropdown">
-                <a th:href="@{/profile}"><i class="fas fa-user"></i> Hồ sơ</a>
-                <a th:href="@{/profile/settings}"
-                  ><i class="fas fa-cog"></i> Cài đặt</a
-                >
-                <a th:href="@{/dat-truoc/lich-su}"><i class="fas fa-calendar-check"></i> Sách đã đặt trước</a>
-                <a th:href="@{/dien-dan/da-thu-hoi}"
-                  ><i class="fas fa-history"></i> Bình luận đã thu hồi</a
-                >
-                <hr />
-                <form th:action="@{/logout}" method="post">
-                  <button type="submit" class="logout-btn">
-                    <i class="fas fa-sign-out-alt"></i> Đăng xuất
-                  </button>
-                </form>
-              </div>
-            </div>
-          </div>
-
-          <!-- Login link khi chưa đăng nhập -->
-          <a
-            th:unless="${currentUser != null}"
-            th:href="@{/login}"
-            class="nav-link"
-          >
-            <i class="fas fa-sign-in-alt"></i> Đăng nhập
-          </a>
-        </nav>
-      </header>
+      <!-- Header -->
+      <div th:replace="~{fragments/header :: header}"></div>
 
       <main class="main fade-in">
         <div th:if="${success}" class="alert alert-success">
@@ -745,22 +685,5 @@
       </footer>
     </div>
 
-    <script>
-      function toggleDropdown() {
-        document.getElementById("userDropdown").classList.toggle("show");
-      }
-
-      window.onclick = function (event) {
-        if (!event.target.matches(".avatar-small")) {
-          var dropdowns = document.getElementsByClassName("dropdown-content");
-          for (var i = 0; i < dropdowns.length; i++) {
-            var openDropdown = dropdowns[i];
-            if (openDropdown.classList.contains("show")) {
-              openDropdown.classList.remove("show");
-            }
-          }
-        }
-      };
-    </script>
   </body>
 </html>

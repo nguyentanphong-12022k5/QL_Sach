@@ -50,4 +50,18 @@ public class GlobalControllerAdvice {
         }
         return 0;
     }
+
+    @ModelAttribute("currentUser")
+    public TaiKhoan getCurrentUser() {
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (auth != null && auth.isAuthenticated() && !auth.getPrincipal().equals("anonymousUser")) {
+                String username = auth.getName();
+                return taiKhoanRepository.findByUsername(username).orElse(null);
+            }
+        } catch (Exception e) {
+            return null;
+        }
+        return null;
+    }
 }

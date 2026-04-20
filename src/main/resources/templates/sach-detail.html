@@ -183,25 +183,7 @@
 <body>
 	<div class="container">
 		<!-- Header -->
-		<header class="header fade-in">
-			<h1>
-				<i class="fas fa-book-open"></i> Chi Tiết Sách
-			</h1>
-			<nav class="nav">
-				<a th:href="@{/}" class="nav-link"> <i class="fas fa-home"></i>
-					Trang Chủ
-				</a> <a th:href="@{/sach}" class="nav-link"> <i class="fas fa-book"></i>
-					Danh Sách Sách
-				</a> <a th:href="@{/docgia}" class="nav-link"> <i
-					class="fas fa-users"></i> Độc Giả
-				</a> <a th:href="@{/phieumuon}" class="nav-link"> <i
-					class="fas fa-hand-holding"></i> Phiếu Mượn
-				</a> <a th:href="@{/dien-dan/sach/{id}(id=${sach.id})}"
-					class="btn btn-outline"> <i class="fas fa-comments"></i> Bình
-					luận (<span th:text="${soBinhLuan}">0</span>)
-				</a>
-			</nav>
-		</header>
+		<div th:replace="~{fragments/header :: header}"></div>
 
 		<!-- Main Content -->
 		<main class="main fade-in">

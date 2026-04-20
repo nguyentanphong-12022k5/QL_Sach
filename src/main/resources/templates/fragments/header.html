@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+
+    <header th:fragment="header" class="header fade-in">
+        <h1>
+            <i class="fas fa-book-open"></i> 
+            <a th:href="@{/}" style="color: inherit; text-decoration: none;">Quản Lý Thư Viện</a>
+        </h1>
+        <nav class="nav">
+            <a th:href="@{/sach}" class="nav-link"> <i class="fas fa-book"></i> Sách </a>
+            <a th:href="@{/docgia/leaderboard}" class="nav-link"> <i class="fas fa-trophy" style="color: #f1c40f;"></i> Xếp Hạng </a>
+            <a th:href="@{/dien-dan}" class="nav-link"><i class="fas fa-comments"></i> Diễn Đàn</a>
+            
+            <!-- Dropdown Menu cho các mục khác -->
+            <div class="user-menu" style="margin-left: 0;">
+                <div class="avatar-dropdown">
+                    <a href="javascript:void(0)" class="nav-link dropdown-toggle" onclick="toggleNavDropdown(event)">
+                        <i class="fas fa-bars"></i> Danh Mục <i class="fas fa-chevron-down" style="font-size: 0.7rem; margin-left: 5px;"></i>
+                    </a>
+                    <div class="dropdown-content" id="navDropdown">
+                        <a th:href="@{/phieumuon}"><i class="fas fa-hand-holding"></i> Phiếu Mượn</a>
+                        <a th:href="@{/phieunhap}"><i class="fas fa-truck"></i> Phiếu Nhập</a>
+                        <a th:href="@{/docgia}"><i class="fas fa-users"></i> Độc Giả</a>
+                        <a th:href="@{/about}"><i class="fas fa-info-circle"></i> Giới Thiệu</a>
+                        <div sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')">
+                            <hr>
+                            <a th:href="@{/thongke}"><i class="fas fa-chart-bar"></i> Thống Kê</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- === MENU ADMIN - CHỈ HIỂN THỊ VỚI ADMIN === -->
+            <a th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}" 
+               th:href="@{/admin/dashboard}" class="nav-link admin-glow-btn">
+                <i class="fas fa-crown"></i> Quản Trị
+            </a>
+            
+            <!-- === CHUÔNG THÔNG BÁO === -->
+            <div class="noti-bell-wrapper" th:if="${currentUser != null}">
+                <a th:href="@{/notifications}" class="noti-bell">
+                    <i class="fas fa-bell"></i>
+                    <span class="noti-badge" 
+                          th:if="${unreadNotificationCount > 0}" 
+                          th:text="${unreadNotificationCount}">0</span>
+                </a>
+            </div>
+            
+            <!-- === LINH THẠCH DISPLAY === -->
+            <div class="linh-thach-wrapper" th:if="${currentUser != null}">
+                <div class="linh-thach-display" title="Số dư Linh Thạch">
+                    <i class="fas fa-gem"></i>
+                    <span th:text="${linhThachCount}">0</span>
+                </div>
+            </div>
+            
+            <!-- USER MENU / AVATAR -->
+            <div class="user-menu" th:if="${currentUser != null}">
+                <div class="avatar-dropdown">
+                    <img th:src="${currentUser?.avatar != null && !currentUser.avatar.empty} ? @{${currentUser.avatar}} : 'https://ui-avatars.com/api/?name=' + ${currentUser?.hoTen != null ? currentUser.hoTen : 'User'} + '&background=1877f2&color=fff&size=40&bold=true'"
+                        alt="Avatar" class="avatar-small" onclick="toggleUserDropdown(event)"
+                        th:attr="data-name=${currentUser?.hoTen != null ? currentUser.hoTen : 'User'}"
+                        onerror="this.src='https://ui-avatars.com/api/?name=' + encodeURIComponent(this.getAttribute('data-name')) + '&background=1877f2&color=fff&size=40'">
+                    <div class="dropdown-content" id="userDropdown">
+                        <div class="dropdown-header">
+                            <strong th:text="${currentUser.hoTen}">User</strong>
+                            <div style="font-size: 0.8rem; color: var(--gray-color);" th:text="${currentUser.username}">@username</div>
+                        </div>
+                        <hr>
+                        <a th:href="@{/profile}"><i class="fas fa-user"></i> Hồ sơ cá nhân</a>
+                        <a th:href="@{/profile/settings}"><i class="fas fa-cog"></i> Cài đặt tài khoản</a>
+                        <a th:href="@{/dat-truoc/lich-su}"><i class="fas fa-calendar-check"></i> Sách đã đặt trước</a>
+                        <a th:href="@{/dien-dan/da-thu-hoi}"><i class="fas fa-history"></i> Lịch sử bình luận</a>
+                        
+                        <div th:if="${#authorization.expression('hasAuthority(''ROLE_ADMIN'')')}">
+                            <hr>
+                            <a th:href="@{/admin/dashboard}"><i class="fas fa-crown"></i> Trang quản trị</a>
+                            <a th:href="@{/admin/dat-truoc}"><i class="fas fa-calendar-check"></i> Duyệt đặt trước</a>
+                        </div>
+                        
+                        <hr>
+                        <form th:action="@{/logout}" method="post">
+                            <button type="submit" class="logout-btn">
+                                <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <a th:unless="${currentUser != null}" th:href="@{/login}" class="nav-link btn-primary" style="color: white !important; padding: 10px 20px; border-radius: 50px; margin-left: 10px;">
+                <i class="fas fa-sign-in-alt"></i> Đăng Nhập
+            </a>
+        </nav>
+
+        <script>
+            function toggleUserDropdown(event) {
+                event.stopPropagation();
+                document.getElementById("userDropdown").classList.toggle("show");
+                // Đóng nav dropdown nếu đang mở
+                const navD = document.getElementById("navDropdown");
+                if (navD) navD.classList.remove("show");
+            }
+
+            function toggleNavDropdown(event) {
+                event.stopPropagation();
+                document.getElementById("navDropdown").classList.toggle("show");
+                // Đóng user dropdown nếu đang mở
+                const userD = document.getElementById("userDropdown");
+                if (userD) userD.classList.remove("show");
+            }
+
+            // Đóng tất cả dropdown khi click ra ngoài
+            window.onclick = function(event) {
+                if (!event.target.matches('.avatar-small') && !event.target.matches('.dropdown-toggle') && !event.target.closest('.dropdown-toggle')) {
+                    var dropdowns = document.getElementsByClassName("dropdown-content");
+                    for (var i = 0; i < dropdowns.length; i++) {
+                        var openDropdown = dropdowns[i];
+                        if (openDropdown.classList.contains('show')) {
+                            openDropdown.classList.remove('show');
+                        }
+                    }
+                }
+            }
+        </script>
+    </header>
+
+</body>
+</html>

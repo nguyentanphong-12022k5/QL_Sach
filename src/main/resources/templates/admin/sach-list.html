@@ -9,14 +9,8 @@
 </head>
 <body>
 <div class="container">
-    <header class="header fade-in">
-        <h1><i class="fas fa-book"></i> Quản Lý Sách</h1>
-        <nav class="nav">
-            <a th:href="@{/admin/dashboard}" class="nav-link"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-            <a th:href="@{/}" class="nav-link"><i class="fas fa-home"></i> Trang Chủ</a>
-            <a th:href="@{/admin/sach/add}" class="nav-link btn-success"><i class="fas fa-plus"></i> Thêm Sách</a>
-        </nav>
-    </header>
+    <!-- Header -->
+    <div th:replace="~{fragments/header :: header}"></div>
 
     <main class="main fade-in">
         <div th:if="${success}" class="alert alert-success">

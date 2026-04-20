@@ -791,4 +791,140 @@ tbody tr:last-child td {
 		margin-bottom: 10px;
 	}
 }
-$styles
+/* ===== NOTIFICATION BELL ===== */
+.noti-bell-wrapper {
+	position: relative;
+	margin-right: 15px;
+}
+
+.noti-bell {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 42px;
+	height: 42px;
+	background: #f1f5f9;
+	border-radius: 50%;
+	color: var(--gray-color);
+	font-size: 1.2rem;
+	transition: var(--transition);
+	position: relative;
+}
+
+.noti-bell:hover {
+	background: #e2e8f0;
+	color: var(--primary-color);
+	transform: rotate(15deg);
+}
+
+.noti-badge {
+	position: absolute;
+	top: -5px;
+	right: -5px;
+	background: var(--danger-color);
+	color: white;
+	font-size: 0.75rem;
+	font-weight: 700;
+	min-width: 20px;
+	height: 20px;
+	border-radius: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0 5px;
+	border: 2px solid white;
+}
+
+/* ===== DROPDOWN ENHANCEMENTS ===== */
+.dropdown-content {
+	display: none;
+	position: absolute;
+	right: 0;
+	background-color: white;
+	min-width: 260px;
+	box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+	z-index: 1000;
+	border-radius: 16px;
+	overflow: hidden;
+	margin-top: 10px;
+	border: 1px solid #edf2f7;
+	animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+	from { opacity: 0; transform: translateY(-10px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown-content.show {
+	display: block;
+}
+
+.dropdown-header {
+	padding: 15px 20px;
+	background: #f8fafc;
+	border-bottom: 1px solid #edf2f7;
+}
+
+.dropdown-content a, .dropdown-content button {
+	color: var(--dark-color);
+	padding: 12px 20px;
+	text-decoration: none;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	font-size: 0.95rem;
+	transition: var(--transition);
+	width: 100%;
+	text-align: left;
+	background: none;
+	border: none;
+	cursor: pointer;
+}
+
+.dropdown-content a:hover, .dropdown-content .logout-btn:hover {
+	background-color: #f1f5f9;
+	color: var(--primary-color);
+	padding-left: 25px;
+}
+
+.dropdown-content hr {
+	border: 0;
+	border-top: 1px solid #edf2f7;
+	margin: 5px 0;
+}
+
+.logout-btn {
+	color: var(--danger-color) !important;
+	font-weight: 600;
+}
+
+/* ===== ADMIN GLOW BUTTON ===== */
+.admin-glow-btn {
+	background: linear-gradient(135deg, #f43f5e, #e11d48) !important;
+	color: white !important;
+	font-weight: 700 !important;
+	box-shadow: 0 4px 15px rgba(225, 29, 72, 0.4);
+	border: none !important;
+}
+
+.admin-glow-btn i {
+	color: white !important;
+}
+
+.admin-glow-btn:hover {
+	transform: translateY(-2px) scale(1.02) !important;
+	box-shadow: 0 8px 25px rgba(225, 29, 72, 0.6) !important;
+}
+
+/* Fix for mobile nav dropdown */
+@media (max-width: 768px) {
+	.dropdown-content {
+		position: static;
+		width: 100%;
+		box-shadow: none;
+		border: 1px solid #edf2f7;
+		margin-bottom: 10px;
+	}
+}
+

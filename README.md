@@ -1,6 +1,6 @@
 # 📚 HỆ THỐNG QUẢN LÝ THƯ VIỆN
 
-![version](https://img.shields.io/badge/version-1.5.0-blue.svg)
+![version](https://img.shields.io/badge/version-1.6.0-purple.svg)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.2-green.svg)
 ![Java](https://img.shields.io/badge/Java-17-orange.svg)
 ![MySQL](https://img.shields.io/badge/MySQL-8.0-blue.svg)
@@ -25,6 +25,16 @@
 
 ![Demo toàn bộ tính năng mới](file:///C:/Users/Lenovo/.gemini/antigravity/brain/1339f3c5-d279-49fa-8184-72905f65c917/system_full_test_demo_1776483562001.webp)
 _Video minh họa: Truy cập Public -> Đăng nhập Độc giả -> Đặt trước sách với Số lượng -> Admin duyệt yêu cầu._
+
+---
+
+## 📸 GIAO DIỆN PREMIUM (v1.6.0)
+
+### 💎 Global Header Synchronization
+Hệ thống điều hướng hoàn toàn mới, đồng bộ hóa số dư Linh Thạch và Thông báo trên mọi trang.
+
+![Premium Global Header](file:///C:/Users/Lenovo/.gemini/antigravity/brain/a69bedd7-1c07-4d30-8644-bb9ad6f586a9/sach_page_header_verification_1776702148594.png)
+_Giao diện Header phát sáng với capsule Linh Thạch và chuông thông báo thông minh._
 
 ---
 
@@ -95,6 +105,15 @@ Hệ thống Quản lý Thư viện là một ứng dụng web hiện đại đ�
 ### 📊 Thống kê & Dashboard
 
 - Dashboard trực quan cho Admin với biểu đồ xu hướng và các chỉ số vận hành.
+
+### 🏗️ Hệ Thống Global Header & UI Sync (New v1.6.0)
+
+- **Centralized Navigation:** Chuyển đổi toàn bộ hệ thống sang sử dụng Thymeleaf Fragments cho thanh điều hướng.
+- **Tính năng Duy nhất (Single Point of Truth):** Đảm bảo Linh Thạch, Thông báo và Hồ sơ người dùng luôn hiển thị chính xác trên 100% trang web.
+- **Dropdown Thông Minh:** 
+  - Gộp các menu phụ (Phiếu mượn, Độc giả, Thống kê) vào menu "Danh Mục" để tối ưu không gian.
+  - Avatar Dropdown tích hợp đầy đủ các phím tắt quản trị và cá nhân.
+- **Global Data Persistence:** Sử dụng `GlobalControllerAdvice` để duy trì trạng thái đăng nhập và dữ liệu người dùng (`currentUser`) xuyên suốt phiên làm việc.
 
 ---
 
@@ -588,6 +607,8 @@ Nhật ký ghi lại các vấn đề đã xảy ra và cách khắc phục đ�
 
 | Ngày | Vấn đề (Bug) | Giải pháp (Fix) | Ghi chú kỹ thuật |
 | :--- | :--- | :--- | :--- |
+| 20/04/2026 | **Global Header System (v1.6.0)** | Trung tâm hóa thanh điều hướng bằng Fragment, đồng bộ Linh Thạch & Thông báo. | Xóa bỏ sự không nhất quán giữa các trang (Home vs Sách). |
+| 20/04/2026 | **Lỗi mất trạng thái đăng nhập (Header)** | Cung cấp `currentUser` thông qua `GlobalControllerAdvice`. | Sửa lỗi Header hiển thị "Đăng Nhập" mặc dù user đã login trên trang /sach. |
 | 20/04/2026 | **Hệ thống Linh Thạch (v1.5.0)** | Triển khai loyalty points, thưởng mượn/trả sách & bình luận. | Biến thư viện thành thế giới Tu Tiên đích thực. |
 | 20/04/2026 | **Lỗi NullPointerException (Linh Thạch)** | Thêm null-safe getter vào entity và migration logic trên startup. | Xử lý lỗi unboxing khi `linh_thach` trong DB bị null cho user cũ. |
 | 20/04/2026 | **Port 8080 already in use** | Kill process PID 24192 để giải phóng port. | Đảm bảo server restart mượt mà khi đổi code liên tục. |
