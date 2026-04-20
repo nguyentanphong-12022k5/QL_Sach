@@ -15,6 +15,10 @@ public interface PhieuMuonRepository extends JpaRepository<PhieuMuon, Long> {
     
     List<PhieuMuon> findByNgayTraIsNull();
     
+    List<PhieuMuon> findByNgayTraIsNullAndNgayTraDuKien(LocalDate date);
+    
+    List<PhieuMuon> findByNgayTraIsNullAndNgayTraDuKienBefore(LocalDate date);
+    
     @Query("SELECT p FROM PhieuMuon p WHERE p.ngayTra IS NULL AND p.ngayMuon < :date")
     List<PhieuMuon> findQuaHan(@Param("date") LocalDate date);
     

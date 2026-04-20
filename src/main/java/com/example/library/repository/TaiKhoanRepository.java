@@ -11,6 +11,7 @@ import java.util.Optional;
 @Repository
 public interface TaiKhoanRepository extends JpaRepository<TaiKhoan, Long> {
     Optional<TaiKhoan> findByUsername(String username);
+    Optional<TaiKhoan> findBySoDienThoai(String soDienThoai);
     Optional<TaiKhoan> findByEmail(String email);
     Optional<TaiKhoan> findByResetToken(String resetToken);
     boolean existsByUsername(String username);

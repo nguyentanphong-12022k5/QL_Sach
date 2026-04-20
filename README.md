@@ -1,6 +1,6 @@
 # 📚 HỆ THỐNG QUẢN LÝ THƯ VIỆN
 
-![version](https://img.shields.io/badge/version-1.3.0-blue.svg)
+![version](https://img.shields.io/badge/version-1.4.0-blue.svg)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.2-green.svg)
 ![Java](https://img.shields.io/badge/Java-17-orange.svg)
 ![MySQL](https://img.shields.io/badge/MySQL-8.0-blue.svg)
@@ -70,6 +70,15 @@ Hệ thống Quản lý Thư viện là một ứng dụng web hiện đại đ�
 ### 💬 Diễn đàn & Bình luận
 
 - Hệ thống diễn đàn trao đổi chung và đánh giá (Rating) trực tiếp trên từng đầu sách.
+
+### 🔔 Hệ thống Thông báo Tự động (New)
+
+- **Global Notification Bell:** Biểu tượng chuông với số thông báo chưa đọc hiển thị trên toàn bộ hệ thống.
+- **Real-time Triggers:** 
+  - Tự động thông báo khi Admin duyệt/hủy yêu cầu đặt sách.
+  - Thông báo khi mượn sách thành công, trả sách, hoặc thanh toán phí phạt.
+- **Notification Center:** Trang quản lý thông báo riêng biệt, cho phép đánh dấu đã đọc và xem chi tiết lịch sử tin nhắn.
+- **Resilient Engine:** Cơ chế xử lý lỗi database và routing thông minh giữa tài khoản (`TaiKhoan`) và hồ sơ (`DocGia`).
 
 ### 📊 Thống kê & Dashboard
 
@@ -200,6 +209,7 @@ erDiagram
     PHIEU_NHAP ||--o{ CHI_TIET_PHIEU_NHAP : "chi tiết"
     TAIKHOAN ||--o{ BINH_LUAN : "đăng"
     TAIKHOAN ||--o{ THANH_TOAN : "thực hiện"
+    TAIKHOAN ||--o{ THONG_BAO : "nhận"
 
     TACGIA {
         bigint MaTacGia PK
@@ -307,6 +317,15 @@ erDiagram
         nvarchar chuc_vu
         nvarchar email
     }
+    THONG_BAO {
+        bigint id PK
+        bigint tai_khoan_id FK
+        nvarchar tieu_de
+        longtext noi_dung
+        datetime ngay_tao
+        boolean da_doc
+        nvarchar loai
+    }
 ```
 
 ### 📝 Chi tiết các bảng
@@ -327,6 +346,7 @@ erDiagram
 | **binh_luan**           | Lưu các bình luận, góp ý về sách.                      |
 | **thanh_toan**          | Quản lý các giao dịch thanh toán phí phạt.             |
 | **nhan_vien**           | Thông tin nhân viên thư viện.                          |
+| **thong_bao**           | Hệ thống thông báo tự động cho người dùng.             |
 
 ### 💻 Script khởi tạo (SQL)
 
@@ -508,6 +528,19 @@ CREATE TABLE nhan_vien (
     email nvarchar(100) NULL,
     PRIMARY KEY (id)
 );
+
+-- Bảng thong_bao (Mới v1.4.0)
+CREATE TABLE thong_bao (
+    id bigint NOT NULL IDENTITY(1,1),
+    tai_khoan_id bigint NOT NULL,
+    tieu_de nvarchar(255) NOT NULL,
+    noi_dung ntext NULL,
+    ngay_tao datetime DEFAULT GETDATE(),
+    da_doc bit DEFAULT 0,
+    loai nvarchar(50) NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (tai_khoan_id) REFERENCES taikhoan(matk)
+);
 ```
 
 </details>
@@ -529,6 +562,9 @@ Nhật ký ghi lại các vấn đề đã xảy ra và cách khắc phục đ�
 
 | Ngày | Vấn đề (Bug) | Giải pháp (Fix) | Ghi chú kỹ thuật |
 | :--- | :--- | :--- | :--- |
+| 20/04/2026 | **Hệ thống Thông báo (v1.4.0)** | Triển khai Automated Notifications, chuông thông báo toàn cục. | Tăng tính tương tác giữa thư viện và độc giả. |
+| 20/04/2026 | **Lỗi Redirect Loop (Login)** | Thêm try-catch vào `GlobalControllerAdvice` để xử lý lỗi DB khi chưa có bảng thong_bao. | Ngăn chặn vòng lặp vô tận khi component global lỗi. |
+| 20/04/2026 | **Lỗi SQL Grammer (ThongBao)** | Đổi kiểu dữ liệu từ `NTEXT` sang `LONGTEXT` trong entity để tương thích MySQL 8. | Sửa lỗi không tự động tạo bảng của Hibernate. |
 | 20/04/2026 | **Lỗi không lường trước (500 Error)** | Triển khai Global Error Logger lưu vào `logs/app-runtime.log`. | Giúp theo dõi lỗi runtime khi ứng dụng đang chạy. |
 | 20/04/2026 | **Hệ thống Log tự động** | Thiết lập quy trình tự động cập nhật Fix Log và Runtime Log. | Đảm bảo tính minh bạch và dễ bảo trì. |
 | 20/04/2026 | **Icon bị tàng hình trong bảng Admin** | Định nghĩa Gradient nền cho `.btn-warning`, `.btn-danger` và đặt `!important` cho icon. | Tránh việc icon white trên nền default white của table. |

@@ -31,6 +31,16 @@
 					<i class="fas fa-crown"></i> Quản Trị
 				</a>
 				
+				<!-- === CHUÔNG THÔNG BÁO === -->
+				<div class="noti-bell-wrapper" th:if="${currentUser != null}">
+					<a th:href="@{/notifications}" class="noti-bell">
+						<i class="fas fa-bell"></i>
+						<span class="noti-badge" 
+							  th:if="${unreadNotificationCount > 0}" 
+							  th:text="${unreadNotificationCount}">0</span>
+					</a>
+				</div>
+				
 				<div class="user-menu" th:if="${currentUser != null}">
 					<div class="avatar-dropdown">
 						<img th:src="${currentUser?.avatar != null && !currentUser.avatar.empty} ? @{${currentUser.avatar}} : 'https://ui-avatars.com/api/?name=' + ${currentUser?.hoTen != null ? currentUser.hoTen : 'User'} + '&background=1877f2&color=fff&size=40&bold=true'"

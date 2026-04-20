@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thông Báo - Thư Viện</title>
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+	<div class="container">
+		<header class="header fade-in">
+			<h1>
+				<i class="fas fa-bell"></i> Thông Báo Của Bạn
+			</h1>
+			<nav class="nav">
+				<a th:href="@{/}" class="nav-link"><i class="fas fa-home"></i>
+					Trang Chủ</a>
+				<a th:href="@{/notifications/read-all}" class="nav-link" style="color: var(--primary-color);">
+					<i class="fas fa-check-double"></i> Đánh dấu tất cả đã đọc
+				</a>
+			</nav>
+		</header>
+
+		<main class="main fade-in">
+			<div th:if="${success}" class="alert alert-success" style="margin-bottom: 20px;">
+				<i class="fas fa-check-circle"></i> <span th:text="${success}"></span>
+			</div>
+
+			<div class="noti-list-container">
+				<div th:if="${notifications == null || notifications.empty}" style="text-align: center; padding: 50px; color: #7f8c8d;">
+					<i class="fas fa-bell-slash" style="font-size: 3rem; margin-bottom: 20px; display: block;"></i>
+					<p>Bạn không có thông báo nào.</p>
+				</div>
+
+				<div th:each="noti : ${notifications}" 
+					 th:class="'noti-item ' + (${noti.daDoc} ? '' : 'unread ') + ${noti.loai != null ? noti.loai.toLowerCase() : 'info'}">
+					
+					<div class="noti-header">
+						<span class="noti-title">
+							<i th:if="${noti.loai == 'SUCCESS'}" class="fas fa-check-circle" style="color: var(--success-color);"></i>
+							<i th:if="${noti.loai == 'WARNING'}" class="fas fa-exclamation-triangle" style="color: var(--warning-color);"></i>
+							<i th:if="${noti.loai == 'DANGER'}" class="fas fa-times-circle" style="color: var(--danger-color);"></i>
+							<i th:if="${noti.loai == 'INFO' || noti.loai == null}" class="fas fa-info-circle" style="color: var(--secondary-color);"></i>
+							<span th:text="${noti.tieuDe}">Tiêu đề</span>
+						</span>
+						<span class="noti-time" th:text="${#temporals.format(noti.ngayTao, 'dd/MM/yyyy HH:mm')}">Thời gian</span>
+					</div>
+					
+					<div class="noti-body" th:text="${noti.noiDung}">Nội dung thông báo...</div>
+					
+					<div class="noti-actions" th:if="${!noti.daDoc}">
+						<a th:href="@{/notifications/read/{id}(id=${noti.id})}" class="noti-btn btn-primary">
+							<i class="fas fa-check"></i> Đánh dấu đã đọc
+						</a>
+					</div>
+				</div>
+			</div>
+		</main>
+	</div>
+</body>
+</html>

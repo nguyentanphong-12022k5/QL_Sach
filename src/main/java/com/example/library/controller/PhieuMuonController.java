@@ -2,7 +2,7 @@ package com.example.library.controller;
 
 import com.example.library.entity.*;
 import com.example.library.repository.*;
-
+import com.example.library.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,6 +31,8 @@ public class PhieuMuonController {
     private ThanhToanRepository thanhToanRepository;
     @Autowired
     private TaiKhoanRepository taiKhoanRepository;
+    @Autowired
+    private NotificationService notificationService;
 
     @GetMapping
     public String list(@RequestParam(value = "status", required = false) String status, Model model) {
@@ -91,6 +93,11 @@ public class PhieuMuonController {
             }
             chiTietPhieuMuonRepository.saveAll(chiTiets);
 
+            notificationService.notifyReader(docGia, 
+                "Phiếu mượn mới #"+saved.getId(), 
+                "Bạn đã mượn thành công " + sachIds.size() + " đầu sách. Hạn trả dự kiến là " + phieuMuon.getNgayTraDuKien() + ".", 
+                "SUCCESS");
+
             redirect.addFlashAttribute("success", "Tạo phiếu mượn thành công!");
         } catch (Exception e) {
             redirect.addFlashAttribute("error", "Lỗi: " + e.getMessage());
@@ -121,6 +128,12 @@ public class PhieuMuonController {
             }
 
             phieuMuonRepository.save(phieuMuon);
+            
+            notificationService.notifyReader(phieuMuon.getDocGia(), 
+                "Hệ thống: Trả sách thành công", 
+                "Phiếu mượn #"+phieuMuon.getId()+" đã được xác nhận trả sách. Cảm ơn bạn đã sử dụng dịch vụ!", 
+                "SUCCESS");
+                
             redirect.addFlashAttribute("success", "Đã xác nhận trả sách!");
         }
         return "redirect:/phieumuon";
@@ -230,6 +243,11 @@ public class PhieuMuonController {
             }
 
             phieuMuonRepository.save(phieuMuon);
+
+            notificationService.notifyReader(phieuMuon.getDocGia(), 
+                "Thanh toán thành công", 
+                "Giao dịch thanh toán phí mượn cho phiếu #" + phieuMuon.getId() + " đã hoàn tất. Số tiền: " + soTien + " VNĐ.", 
+                "SUCCESS");
 
             redirect.addFlashAttribute("success", String.format(
                     "Thanh toán thành công! Mã giao dịch: %s - Số tiền: %,.0f VNĐ", 
