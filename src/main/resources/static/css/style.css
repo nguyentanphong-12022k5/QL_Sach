@@ -222,10 +222,10 @@ tbody tr:last-child td {
 	border-radius: 12px; /* Bo gọn hơn */
 }
 
-.book-actions .btn-warning {
-	background: linear-gradient(135deg, #f59e0b, #d97706);
-	color: white !important;
-	border: none;
+
+.book-meta i {
+	width: 20px;
+	color: var(--primary-color);
 }
 
 
@@ -561,8 +561,46 @@ tbody tr:last-child td {
 }
 
 /* Fix icon visibility in buttons */
-.btn i, .nav-link.btn-primary i, .nav-link.btn-success i, .nav-link.btn-warning i {
+.btn-primary {
+	background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)) !important;
 	color: white !important;
+}
+
+.btn-success {
+	background: linear-gradient(135deg, #10b981, #059669) !important;
+	color: white !important;
+}
+
+.btn-warning {
+	background: linear-gradient(135deg, #f59e0b, #d97706) !important;
+	color: white !important;
+}
+
+.btn-danger {
+	background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+	color: white !important;
+}
+
+.btn-info {
+	background: linear-gradient(135deg, #06b6d4, #0891b2) !important;
+	color: white !important;
+}
+
+.btn i {
+	color: white !important;
+}
+
+/* Fix for small buttons in tables */
+.btn-sm {
+	padding: 8px 12px !important;
+	font-size: 0.85rem !important;
+	border-radius: 10px !important;
+}
+
+/* Badge icon fix */
+.badge i {
+	margin-right: 5px;
+	color: currentColor !important;
 }
 
 .btn-block {
