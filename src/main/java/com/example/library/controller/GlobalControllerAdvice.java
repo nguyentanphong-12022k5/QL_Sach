@@ -34,4 +34,20 @@ public class GlobalControllerAdvice {
         }
         return 0;
     }
+
+    @ModelAttribute("linhThachCount")
+    public long getLinhThachCount() {
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (auth != null && auth.isAuthenticated() && !auth.getPrincipal().equals("anonymousUser")) {
+                String username = auth.getName();
+                return taiKhoanRepository.findByUsername(username)
+                        .map(tk -> tk.getLinhThach() != null ? tk.getLinhThach() : 0L)
+                        .orElse(0L);
+            }
+        } catch (Exception e) {
+            return 0;
+        }
+        return 0;
+    }
 }

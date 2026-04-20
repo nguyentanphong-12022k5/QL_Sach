@@ -93,7 +93,12 @@ public class DienDanController {
             }
             
             binhLuanRepository.save(binhLuan);
-            redirect.addFlashAttribute("success", "Đăng bình luận thành công!");
+
+            // ✅ THƯỞNG LINH THẠCH: Đăng bình luận +10
+            taiKhoan.setLinhThach(taiKhoan.getLinhThach() + 10);
+            taiKhoanRepository.save(taiKhoan);
+
+            redirect.addFlashAttribute("success", "Đăng bình luận thành công! Đạo hữu được tặng 10 Linh Thạch.");
             
             if (sachId != null) {
                 Sach sach = sachRepository.findById(sachId).orElse(null);

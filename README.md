@@ -1,6 +1,6 @@
 # 📚 HỆ THỐNG QUẢN LÝ THƯ VIỆN
 
-![version](https://img.shields.io/badge/version-1.4.0-blue.svg)
+![version](https://img.shields.io/badge/version-1.5.0-blue.svg)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.2-green.svg)
 ![Java](https://img.shields.io/badge/Java-17-orange.svg)
 ![MySQL](https://img.shields.io/badge/MySQL-8.0-blue.svg)
@@ -79,6 +79,18 @@ Hệ thống Quản lý Thư viện là một ứng dụng web hiện đại đ�
   - Thông báo khi mượn sách thành công, trả sách, hoặc thanh toán phí phạt.
 - **Notification Center:** Trang quản lý thông báo riêng biệt, cho phép đánh dấu đã đọc và xem chi tiết lịch sử tin nhắn.
 - **Resilient Engine:** Cơ chế xử lý lỗi database và routing thông minh giữa tài khoản (`TaiKhoan`) và hồ sơ (`DocGia`).
+
+### 💎 Hệ thống Linh Thạch - Loyalty Points (New)
+
+- **Cơ chế tích lũy:** Tự động thưởng Linh Thạch cho các hành động:
+  - **Mới đăng ký:** +100 Linh Thạch.
+  - **Mượn sách:** +50 Linh Thạch.
+  - **Trả sách/Thanh toán:** +100 Linh Thạch.
+  - **Bình luận diễn đàn:** +10 Linh Thạch.
+- **Giao diện Tu Tiên:** 
+  - Hiển thị số dư với hiệu ứng **Glow & Pulse** (phát sáng) trên Header.
+  - Trang cá nhân tích hợp số dư Linh Thạch cùng cấp bậc tu luyện.
+- **Tính năng mở rộng:** Linh Thạch là minh chứng cho sự tích cực của đạo hữu trong thư viện.
 
 ### 📊 Thống kê & Dashboard
 
@@ -210,6 +222,18 @@ erDiagram
     TAIKHOAN ||--o{ BINH_LUAN : "đăng"
     TAIKHOAN ||--o{ THANH_TOAN : "thực hiện"
     TAIKHOAN ||--o{ THONG_BAO : "nhận"
+    TAIKHOAN {
+        bigint matk PK
+        nvarchar username
+        nvarchar password
+        nvarchar email
+        nvarchar hoten
+        int quyen
+        int trangthai
+        datetime ngaytao
+        nvarchar avatar
+        bigint linh_thach
+    }
 
     TACGIA {
         bigint MaTacGia PK
@@ -290,6 +314,7 @@ erDiagram
         int trangthai
         datetime ngaytao
         nvarchar avatar
+        bigint linh_thach
     }
     BINH_LUAN {
         bigint id PK
@@ -483,6 +508,7 @@ CREATE TABLE taikhoan (
     avatar nvarchar(500) NULL,
     sodienthoai nvarchar(20) NULL,
     diachi nvarchar(500) NULL,
+    linh_thach bigint DEFAULT 100,
     PRIMARY KEY (matk),
     UNIQUE (username),
     UNIQUE (email)
@@ -562,6 +588,9 @@ Nhật ký ghi lại các vấn đề đã xảy ra và cách khắc phục đ�
 
 | Ngày | Vấn đề (Bug) | Giải pháp (Fix) | Ghi chú kỹ thuật |
 | :--- | :--- | :--- | :--- |
+| 20/04/2026 | **Hệ thống Linh Thạch (v1.5.0)** | Triển khai loyalty points, thưởng mượn/trả sách & bình luận. | Biến thư viện thành thế giới Tu Tiên đích thực. |
+| 20/04/2026 | **Lỗi NullPointerException (Linh Thạch)** | Thêm null-safe getter vào entity và migration logic trên startup. | Xử lý lỗi unboxing khi `linh_thach` trong DB bị null cho user cũ. |
+| 20/04/2026 | **Port 8080 already in use** | Kill process PID 24192 để giải phóng port. | Đảm bảo server restart mượt mà khi đổi code liên tục. |
 | 20/04/2026 | **Hệ thống Thông báo (v1.4.0)** | Triển khai Automated Notifications, chuông thông báo toàn cục. | Tăng tính tương tác giữa thư viện và độc giả. |
 | 20/04/2026 | **Lỗi Redirect Loop (Login)** | Thêm try-catch vào `GlobalControllerAdvice` để xử lý lỗi DB khi chưa có bảng thong_bao. | Ngăn chặn vòng lặp vô tận khi component global lỗi. |
 | 20/04/2026 | **Lỗi SQL Grammer (ThongBao)** | Đổi kiểu dữ liệu từ `NTEXT` sang `LONGTEXT` trong entity để tương thích MySQL 8. | Sửa lỗi không tự động tạo bảng của Hibernate. |

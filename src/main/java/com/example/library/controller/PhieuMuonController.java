@@ -93,12 +93,22 @@ public class PhieuMuonController {
             }
             chiTietPhieuMuonRepository.saveAll(chiTiets);
 
+            // ✅ THƯỞNG LINH THẠCH: Mượn sách được +50
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (auth != null && auth.isAuthenticated()) {
+                String username = auth.getName();
+                taiKhoanRepository.findByUsername(username).ifPresent(tk -> {
+                    tk.setLinhThach(tk.getLinhThach() + 50);
+                    taiKhoanRepository.save(tk);
+                });
+            }
+
             notificationService.notifyReader(docGia, 
                 "Phiếu mượn mới #"+saved.getId(), 
-                "Bạn đã mượn thành công " + sachIds.size() + " đầu sách. Hạn trả dự kiến là " + phieuMuon.getNgayTraDuKien() + ".", 
+                "Bạn đã mượn thành công " + sachIds.size() + " đầu sách. Linh Thạch +50!", 
                 "SUCCESS");
 
-            redirect.addFlashAttribute("success", "Tạo phiếu mượn thành công!");
+            redirect.addFlashAttribute("success", "Tạo phiếu mượn thành công! Đạo hữu được tặng 50 Linh Thạch.");
         } catch (Exception e) {
             redirect.addFlashAttribute("error", "Lỗi: " + e.getMessage());
         }
@@ -129,12 +139,21 @@ public class PhieuMuonController {
 
             phieuMuonRepository.save(phieuMuon);
             
+            // ✅ THƯỞNG LINH THẠCH: Trả sách sớm/đúng hạn +100
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (auth != null && auth.isAuthenticated()) {
+                taiKhoanRepository.findByUsername(auth.getName()).ifPresent(tk -> {
+                    tk.setLinhThach(tk.getLinhThach() + 100);
+                    taiKhoanRepository.save(tk);
+                });
+            }
+
             notificationService.notifyReader(phieuMuon.getDocGia(), 
                 "Hệ thống: Trả sách thành công", 
-                "Phiếu mượn #"+phieuMuon.getId()+" đã được xác nhận trả sách. Cảm ơn bạn đã sử dụng dịch vụ!", 
+                "Phiếu mượn #"+phieuMuon.getId()+" đã được xác nhận trả. Linh Thạch +100. Cảm ơn đạo hữu!", 
                 "SUCCESS");
                 
-            redirect.addFlashAttribute("success", "Đã xác nhận trả sách!");
+            redirect.addFlashAttribute("success", "Đã xác nhận trả sách! Đạo hữu nhận được 100 Linh Thạch.");
         }
         return "redirect:/phieumuon";
     }
@@ -244,13 +263,17 @@ public class PhieuMuonController {
 
             phieuMuonRepository.save(phieuMuon);
 
+            // ✅ THƯỞNG LINH THẠCH: Thanh toán phí phạt/mượn +100
+            taiKhoan.setLinhThach(taiKhoan.getLinhThach() + 100);
+            taiKhoanRepository.save(taiKhoan);
+
             notificationService.notifyReader(phieuMuon.getDocGia(), 
                 "Thanh toán thành công", 
-                "Giao dịch thanh toán phí mượn cho phiếu #" + phieuMuon.getId() + " đã hoàn tất. Số tiền: " + soTien + " VNĐ.", 
+                "Giao dịch cho phiếu #" + phieuMuon.getId() + " hoàn tất. Linh Thạch +100. Số tiền: " + soTien + " VNĐ.", 
                 "SUCCESS");
 
             redirect.addFlashAttribute("success", String.format(
-                    "Thanh toán thành công! Mã giao dịch: %s - Số tiền: %,.0f VNĐ", 
+                    "Thanh toán thành công! Đạo hữu nhận được 100 Linh Thạch. Mã: %s - Số tiền: %,.0f VNĐ", 
                     thanhToan.getMaGiaoDich(), soTien));
         } catch (Exception e) {
             redirect.addFlashAttribute("error", "Lỗi thanh toán: " + e.getMessage());

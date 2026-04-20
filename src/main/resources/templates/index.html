@@ -41,6 +41,14 @@
 					</a>
 				</div>
 				
+				<!-- === LINH THẠCH DISPLAY === -->
+				<div class="linh-thach-wrapper" th:if="${currentUser != null}">
+					<div class="linh-thach-display" title="Số dư Linh Thạch">
+						<i class="fas fa-gem"></i>
+						<span th:text="${linhThachCount}">0</span>
+					</div>
+				</div>
+				
 				<div class="user-menu" th:if="${currentUser != null}">
 					<div class="avatar-dropdown">
 						<img th:src="${currentUser?.avatar != null && !currentUser.avatar.empty} ? @{${currentUser.avatar}} : 'https://ui-avatars.com/api/?name=' + ${currentUser?.hoTen != null ? currentUser.hoTen : 'User'} + '&background=1877f2&color=fff&size=40&bold=true'"

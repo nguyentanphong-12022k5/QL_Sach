@@ -198,6 +198,15 @@
 								(Đã mượn <strong th:text="${docGia.getTongSachMuon()}">0</strong> quyển)
 							</span>
 						</div>
+						
+						<!-- === HIỂN THỊ LINH THẠCH === -->
+						<div style="margin-top: 10px; display: flex; align-items: center; gap: 10px;">
+							<div style="background: linear-gradient(135deg, #22d3ee, #0891b2); color: white; padding: 7px 18px; border-radius: 50px; font-weight: 700; font-size: 1rem; box-shadow: 0 4px 10px rgba(34, 211, 238, 0.4); border: 1px solid white;">
+								<i class="fas fa-gem" style="margin-right: 8px;"></i>
+								<span th:text="${linhThachCount}">0</span> Linh Thạch
+							</div>
+							<small style="color: #64748b;">Tích lũy thông qua mượn sách & đóng góp</small>
+						</div>
 
 						<!-- === HIỂN THỊ ROLE === -->
 						<div class="role" style="margin-top: 10px;">

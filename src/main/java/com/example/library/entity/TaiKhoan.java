@@ -45,6 +45,9 @@ public class TaiKhoan {
     @Column(name = "diachi", length = 500)
     private String diaChi;
 
+    @Column(name = "linh_thach")
+    private Long linhThach = 100L; // Mặc định tặng 100 Linh Thạch cho tài khoản mới
+
     // Constructors
     public TaiKhoan() {
     }
@@ -93,4 +96,7 @@ public class TaiKhoan {
 
     public String getDiaChi() { return diaChi; }
     public void setDiaChi(String diaChi) { this.diaChi = diaChi; }
+
+    public Long getLinhThach() { return linhThach != null ? linhThach : 0L; }
+    public void setLinhThach(Long linhThach) { this.linhThach = linhThach; }
 }

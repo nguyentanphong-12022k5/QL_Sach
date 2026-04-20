@@ -741,5 +741,54 @@ tbody tr:last-child td {
     border: 2px solid var(--primary-color);
 }
 .stat-card.highlight .stat-icon {
-    background: linear-gradient(135deg, #10b981, #059669);
-}$styles
+	background: linear-gradient(135deg, #10b981, #059669);
+}
+
+/* ===== LINH THẠCH UI ===== */
+.linh-thach-wrapper {
+	margin-right: 15px;
+	padding: 8px 16px;
+	background: linear-gradient(135deg, #22d3ee, #0891b2);
+	border-radius: 50px;
+	color: white;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-weight: 700;
+	box-shadow: 0 0 15px rgba(34, 211, 238, 0.4);
+	border: 1px solid rgba(255, 255, 255, 0.3);
+	cursor: default;
+	transition: var(--transition);
+	animation: gemGlow 3s ease-in-out infinite;
+}
+
+.linh-thach-wrapper:hover {
+	transform: scale(1.05);
+	box-shadow: 0 0 20px rgba(34, 211, 238, 0.6);
+}
+
+.linh-thach-wrapper i {
+	color: #fff !important;
+	animation: gemPulse 2s ease-in-out infinite;
+}
+
+@keyframes gemGlow {
+	0%, 100% { box-shadow: 0 0 15px rgba(34, 211, 238, 0.4); }
+	50% { box-shadow: 0 0 25px rgba(34, 211, 238, 0.7); }
+}
+
+@keyframes gemPulse {
+	0%, 100% { transform: scale(1); filter: brightness(1); }
+	50% { transform: scale(1.2); filter: brightness(1.3); }
+}
+
+/* Response for small screens */
+@media (max-width: 768px) {
+	.linh-thach-wrapper {
+		margin-right: 0;
+		width: 100%;
+		justify-content: center;
+		margin-bottom: 10px;
+	}
+}
+$styles
