@@ -560,6 +560,11 @@ tbody tr:last-child td {
 	box-shadow: 0 8px 20px rgba(79, 70, 229, 0.4);
 }
 
+/* Fix icon visibility in buttons */
+.btn i, .nav-link.btn-primary i, .nav-link.btn-success i, .nav-link.btn-warning i {
+	color: white !important;
+}
+
 .btn-block {
 	width: 100%;
 	padding: 16px;
