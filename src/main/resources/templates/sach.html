@@ -50,6 +50,10 @@
 					<a th:href="@{/sach}" class="btn btn-outline" style="border-radius: 50px; padding: 12px 20px;" title="Xóa toàn bộ bộ lọc">
 						<i class="fas fa-times"></i>
 					</a>
+					<a th:if="${#authorization.expression('hasAnyAuthority(''ROLE_ADMIN'', ''ROLE_THUTHU'', ''ROLE_NHANVIEN'')')}"
+						th:href="@{/admin/dashboard}" class="btn btn-secondary" style="border-radius: 50px; padding: 12px 20px;">
+						<i class="fas fa-tachometer-alt"></i> Quay lại Dashboard
+					</a>
 					<a th:if="${#authorization.expression('hasAnyAuthority(''ROLE_ADMIN'')')}"
 						th:href="@{/admin/sach/add}" class="btn btn-success" style="border-radius: 50px; padding: 12px 20px;">
 						<i class="fas fa-plus"></i> Thêm Sách

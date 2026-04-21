@@ -36,7 +36,10 @@
             <a th:href="@{/phieumuon(status='quahan')}" class="btn btn-outline">
                 <i class="fas fa-exclamation-triangle"></i> Quá Hạn
             </a>
-            <a sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')" th:href="@{/phieumuon/add}" class="btn btn-success" style="margin-left: auto;">
+            <a sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')" th:href="@{/admin/dashboard}" class="btn btn-secondary" style="margin-left: auto;">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+            <a sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')" th:href="@{/phieumuon/add}" class="btn btn-success">
                 <i class="fas fa-plus"></i> Tạo Phiếu Mượn
             </a>
         </div>

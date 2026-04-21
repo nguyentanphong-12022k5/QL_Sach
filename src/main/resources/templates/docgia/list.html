@@ -37,7 +37,12 @@
             </div>
             <button class="btn btn-primary" onclick="searchDocGia()"><i class="fas fa-search"></i> Tìm</button>
             <a th:href="@{/docgia}" class="btn btn-outline"><i class="fas fa-sync-alt"></i> Làm Mới</a>
-            <a sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')" th:href="@{/docgia/add}" class="btn btn-success"><i class="fas fa-plus"></i> Thêm Độc Giả</a>
+            <a sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')" th:href="@{/admin/dashboard}" class="btn btn-secondary" style="margin-left: auto;">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+            <a sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')" th:href="@{/docgia/add}" class="btn btn-success">
+                <i class="fas fa-plus"></i> Thêm Độc Giả
+            </a>
         </div>
 
         <!-- Search Result -->
@@ -66,7 +71,7 @@
                         <td th:text="${dg.hoTen}">Nguyễn Văn A</td>
                         <td>
                             <span class="badge" th:text="${dg.getTenCapBac()}" 
-                                  th:style="'background-color: ' + ${dg.getRankColor()} + '; color: white;'">
+                                  th:style="'background-color: ' + ${dg.getRankColor()} + '; color: ' + ${dg.getRankTextColor()} + ';'">
                             </span>
                         </td>
                         <td sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')" th:text="${dg.soDienThoai}">0123456789</td>

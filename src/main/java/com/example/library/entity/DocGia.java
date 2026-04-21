@@ -133,4 +133,11 @@ public class DocGia {
         if (count <= 50) return "#e67e22"; // Orange
         return "#9b59b6"; // Purple
     }
+
+    public String getRankTextColor() {
+        String bgColor = getRankColor();
+        // Nền vàng (Kim Đan) dùng chữ tối để dễ đọc
+        if ("#f1c40f".equals(bgColor)) return "#1e293b";
+        return "#ffffff";
+    }
 }

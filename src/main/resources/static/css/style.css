@@ -47,6 +47,8 @@ body {
 	justify-content: space-between;
 	flex-wrap: wrap;
 	gap: 20px;
+	position: relative;
+	z-index: 2000 !important; /* Extremely high to stay above all cards */
 }
 
 .header h1 {
@@ -270,7 +272,7 @@ tbody tr:last-child td {
 	min-width: 200px;
 	box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
 	border-radius: 16px;
-	z-index: 1000;
+	z-index: 3000; /* Above header */
 	overflow: hidden;
 }
 
@@ -451,9 +453,11 @@ tbody tr:last-child td {
 /* ===== FOOTER ===== */
 .footer {
 	text-align: center;
-	margin-top: 25px;
-	color: rgba(255, 255, 255, 0.9);
-	font-size: 0.9rem;
+	margin-top: 30px;
+	color: rgba(255, 255, 255, 1); /* Full white for readability */
+	font-weight: 500;
+	font-size: 0.95rem;
+	text-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 /* ===== AUTH CONTAINER ===== */
@@ -586,8 +590,35 @@ tbody tr:last-child td {
 	color: white !important;
 }
 
+.btn-secondary {
+	background: linear-gradient(135deg, #64748b, #475569) !important;
+	color: white !important;
+}
+
+.btn-secondary i {
+	color: white !important;
+}
+
+.nav-link {
+	padding: 10px 20px;
+	background: #f1f5f9; /* Higher contrast light color */
+	color: var(--dark-color);
+	text-decoration: none;
+	border-radius: 40px;
+	font-weight: 600;
+	transition: var(--transition);
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 0.95rem;
+}
+
 
 .btn-primary i, .btn-success i, .btn-warning i, .btn-danger i, .btn-info i {
+	color: white !important;
+}
+
+.btn-primary i, .btn-primary:hover i {
 	color: white !important;
 }
 
@@ -601,6 +632,11 @@ tbody tr:last-child td {
 
 .btn-outline i {
 	color: var(--primary-color) !important;
+}
+
+/* Ensure icons in primary state override outline state */
+.btn-primary.btn-outline i {
+	color: white !important;
 }
 
 .btn-outline:hover {
@@ -617,6 +653,18 @@ tbody tr:last-child td {
 	padding: 8px 12px !important;
 	font-size: 0.85rem !important;
 	border-radius: 10px !important;
+}
+
+/* Ensure icons in tables are always visible and clear */
+table i, .table-wrapper i {
+	opacity: 1 !important;
+	visibility: visible !important;
+	filter: none !important;
+	transition: var(--transition);
+}
+
+tbody tr:hover i {
+	transform: scale(1.1);
 }
 
 /* Badge icon fix */
@@ -724,17 +772,19 @@ tbody tr:last-child td {
 /* ===== ANIMATIONS ===== */
 @keyframes fadeIn {
 	from {
-		opacity: 0;
-		transform: translateY(15px);
+		opacity: 0.5; /* Bắt đầu từ 0.5 để tránh cảm giác bị mất hoàn toàn/mờ tịt */
+		transform: translateY(10px);
+		filter: blur(2px);
 	}
 	to {
 		opacity: 1;
 		transform: translateY(0);
+		filter: blur(0);
 	}
 }
 
 .fade-in {
-	animation: fadeIn 0.5s ease-out;
+	animation: fadeIn 0.4s ease-out forwards;
 }
 .stat-card.highlight {
     background: linear-gradient(135deg, #f8fafc 0%, #e8f0fe 100%);
@@ -748,18 +798,19 @@ tbody tr:last-child td {
 .linh-thach-wrapper {
 	margin-right: 15px;
 	padding: 8px 16px;
-	background: linear-gradient(135deg, #22d3ee, #0891b2);
+	background: linear-gradient(135deg, #06b6d4, #0891b2); /* Sửa màu Cyan đậm hơn để tương phản tốt với chữ trắng */
 	border-radius: 50px;
 	color: white;
 	display: flex;
 	align-items: center;
 	gap: 8px;
 	font-weight: 700;
-	box-shadow: 0 0 15px rgba(34, 211, 238, 0.4);
+	box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
 	border: 1px solid rgba(255, 255, 255, 0.3);
 	cursor: default;
 	transition: var(--transition);
 	animation: gemGlow 3s ease-in-out infinite;
+	text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3); /* Thêm đổ bóng chữ để dễ đọc */
 }
 
 .linh-thach-wrapper:hover {
