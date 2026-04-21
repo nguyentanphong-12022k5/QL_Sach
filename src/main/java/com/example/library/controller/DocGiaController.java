@@ -20,7 +20,20 @@ public class DocGiaController {
     public String list(@RequestParam(value = "keyword", required = false) String keyword, Model model) {
         java.util.List<DocGia> docGiaList;
         if (keyword != null && !keyword.trim().isEmpty()) {
-            docGiaList = docGiaRepository.findByHoTenContainingIgnoreCaseOrSoDienThoaiContaining(keyword, keyword);
+            String cleanKeyword = keyword.trim();
+            // Nếu keyword là số, ưu tiên tìm theo ID
+            if (cleanKeyword.matches("\\d+")) {
+                Long id = Long.parseLong(cleanKeyword);
+                java.util.Optional<DocGia> dg = docGiaRepository.findById(id);
+                if (dg.isPresent()) {
+                    docGiaList = java.util.Collections.singletonList(dg.get());
+                } else {
+                    // Fallback sang tìm theo số điện thoại (nếu trùng số nhưng ko phải ID)
+                    docGiaList = docGiaRepository.findByHoTenContainingIgnoreCaseOrSoDienThoaiContaining(cleanKeyword, cleanKeyword);
+                }
+            } else {
+                docGiaList = docGiaRepository.findByHoTenContainingIgnoreCaseOrSoDienThoaiContaining(cleanKeyword, cleanKeyword);
+            }
             model.addAttribute("keyword", keyword);
             model.addAttribute("resultCount", docGiaList.size());
         } else {

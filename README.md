@@ -1,6 +1,6 @@
 # 📚 HỆ THỐNG QUẢN LÝ THƯ VIỆN
 
-![version](https://img.shields.io/badge/version-1.7.0-purple.svg)
+![version](https://img.shields.io/badge/version-1.8.0-purple.svg)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.2-green.svg)
 ![Java](https://img.shields.io/badge/Java-17-orange.svg)
 ![MySQL](https://img.shields.io/badge/MySQL-8.0-blue.svg)
@@ -27,6 +27,14 @@
 _Video minh họa: Truy cập Public -> Đăng nhập Độc giả -> Đặt trước sách với Số lượng -> Admin duyệt yêu cầu._
 
 ---
+
+## 📸 GIAO DIỆN PREMIUM (v1.8.0)
+
+### 📸 Admin QR Scanner (v1.8.0)
+Thủ thư có thể dùng camera để quét mã thẻ độc giả, tự động điền thông tin mượn sách.
+
+![Admin QR Scanner](file:///C:/Users/Lenovo/.gemini/antigravity/brain/b784ee68-adbe-4596-8357-2be46508223e/qr_scanner_modal_active_1776737182694.png)
+_Giao diện quét mã QR tích hợp trực tiếp trong form tạo phiếu mượn._
 
 ### 💎 Digital Library Card (v1.7.0)
 Hệ thống thẻ thư viện kỹ thuật số tích hợp QR Code định danh duy nhất cho từng độc giả.
@@ -74,9 +82,11 @@ Hệ thống Quản lý Thư viện là một ứng dụng web hiện đại đ�
   - Hỗ trợ tải mã QR về thiết bị để sử dụng offline.
   - Sẵn sàng cho hệ thống quét chuyên dụng tại quầy thư viện.
 
-### 📖 Mượn - Trả Sách
+### 📖 Mượn - Trả Sách (Admin Optimization)
 
 - Quy trình mượn/trả chuyên nghiệp, tự động cập nhật số lượng sách trong kho.
+- **Quét Mã Thẻ Thư Viện (QR Scan):** Tích hợp máy quét QR trực tiếp trên trình duyệt, tự động nhận diện độc giả từ thẻ kỹ thuật số (`READER:ID`).
+- **Tìm kiếm chính xác:** Hỗ trợ tìm kiếm độc giả theo ID (Mã ĐG) với tốc độ cao.
 - Chuyển đổi yêu cầu đặt trước thành phiếu mượn chỉ với 1 click từ Admin.
 
 ### 💬 Diễn đàn & Bình luận
@@ -130,6 +140,7 @@ Hệ thống Quản lý Thư viện là một ứng dụng web hiện đại đ�
 | **Thymeleaf**       | 3.1       | Template Engine                         |
 | **MySQL**           | 8.0       | Cơ sở dữ liệu quan hệ                   |
 | **Zxing**           | 3.5.3     | Thư viện tạo mã QR (Backend)            |
+| **html5-qrcode**    | 2.3.8     | Thư viện quét mã QR (Frontend)          |
 | **Vanilla CSS**     | -         | Giao diện tùy chỉnh (Custom Premium UI) |
 
 ---
@@ -610,6 +621,7 @@ Nhật ký ghi lại các vấn đề đã xảy ra và cách khắc phục đ�
 
 | Ngày | Vấn đề (Bug) | Giải pháp (Fix) | Ghi chú kỹ thuật |
 | :--- | :--- | :--- | :--- |
+| 21/04/2026 | **Admin QR Scanning (v1.8.0)** | Tích hợp máy quét QR vào form mượn sách và tìm kiếm theo ID Độc giả. | Sử dụng `html5-qrcode` cho frontend và sửa lỗi ánh xạ ID giữa Tài khoản/Độc giả. |
 | 21/04/2026 | **Digital Library Card (v1.7.0)** | Triển khai mã QR định danh độc giả tích hợp trong Profile. | Áp dụng công nghệ Zxing để tạo mã QR dạng `READER:{id}` phục vụ quét tại quầy. |
 | 20/04/2026 | **Global Header System (v1.6.0)** | Trung tâm hóa thanh điều hướng bằng Fragment, đồng bộ Linh Thạch & Thông báo. | Xóa bỏ sự không nhất quán giữa các trang (Home vs Sách). |
 | 20/04/2026 | **Lỗi mất trạng thái đăng nhập (Header)** | Cung cấp `currentUser` thông qua `GlobalControllerAdvice`. | Sửa lỗi Header hiển thị "Đăng Nhập" mặc dù user đã login trên trang /sach. |

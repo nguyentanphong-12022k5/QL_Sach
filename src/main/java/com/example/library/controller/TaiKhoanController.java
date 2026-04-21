@@ -241,8 +241,28 @@ public class TaiKhoanController {
 				.orElseThrow(() -> new RuntimeException("Không tìm thấy tài khoản"));
 
 		try {
-			// Nội dung mã QR: READER:ID
-			String qrContent = "READER:" + taiKhoan.getId();
+			// Nội dung mã QR mặc định là ID tài khoản
+			Long idToEncode = taiKhoan.getId();
+			
+			// Tìm thông tin Độc giả để lấy ID thực tế của thẻ thư viện
+			java.util.Optional<DocGia> docGiaOpt = java.util.Optional.empty();
+			if (taiKhoan.getSoDienThoai() != null && !taiKhoan.getSoDienThoai().isEmpty()) {
+				docGiaOpt = docGiaRepository.findBySoDienThoai(taiKhoan.getSoDienThoai());
+			}
+			
+			if (docGiaOpt.isEmpty() && taiKhoan.getHoTen() != null && !taiKhoan.getHoTen().isEmpty()) {
+				List<DocGia> listByHoTen = docGiaRepository.findByHoTenContainingIgnoreCaseOrSoDienThoaiContaining(taiKhoan.getHoTen(), "---NOT-FIND---");
+				docGiaOpt = listByHoTen.stream()
+						.filter(d -> d.getHoTen().equalsIgnoreCase(taiKhoan.getHoTen()))
+						.findFirst();
+			}
+
+			// Nếu tìm thấy Độc giả, sử dụng ID độc giả (đây mới là ID đúng để quét mượn sách)
+			if (docGiaOpt.isPresent()) {
+				idToEncode = docGiaOpt.get().getId();
+			}
+
+			String qrContent = "READER:" + idToEncode;
 			byte[] qrImage = qrCodeService.generateQRCodeImage(qrContent, 300, 300);
 
 			return ResponseEntity.ok()
