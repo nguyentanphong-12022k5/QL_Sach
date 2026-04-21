@@ -1,6 +1,6 @@
 # 📚 HỆ THỐNG QUẢN LÝ THƯ VIỆN
 
-![version](https://img.shields.io/badge/version-1.6.0-purple.svg)
+![version](https://img.shields.io/badge/version-1.7.0-purple.svg)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.2-green.svg)
 ![Java](https://img.shields.io/badge/Java-17-orange.svg)
 ![MySQL](https://img.shields.io/badge/MySQL-8.0-blue.svg)
@@ -28,13 +28,11 @@ _Video minh họa: Truy cập Public -> Đăng nhập Độc giả -> Đặt tr�
 
 ---
 
-## 📸 GIAO DIỆN PREMIUM (v1.6.0)
+### 💎 Digital Library Card (v1.7.0)
+Hệ thống thẻ thư viện kỹ thuật số tích hợp QR Code định danh duy nhất cho từng độc giả.
 
-### 💎 Global Header Synchronization
-Hệ thống điều hướng hoàn toàn mới, đồng bộ hóa số dư Linh Thạch và Thông báo trên mọi trang.
-
-![Premium Global Header](file:///C:/Users/Lenovo/.gemini/antigravity/brain/a69bedd7-1c07-4d30-8644-bb9ad6f586a9/sach_page_header_verification_1776702148594.png)
-_Giao diện Header phát sáng với capsule Linh Thạch và chuông thông báo thông minh._
+![Digital Library Card](file:///C:/Users/Lenovo/.gemini/antigravity/brain/b784ee68-adbe-4596-8357-2be46508223e/profile_qr_code_1776736083214.png)
+_Giao diện thẻ thư viện cao cấp với hiệu ứng mã QR phát sáng và thông tin định danh `READER:{id}`._
 
 ---
 
@@ -71,6 +69,10 @@ Hệ thống Quản lý Thư viện là một ứng dụng web hiện đại đ�
   - Tự động xếp hạng dựa trên 6 cấp bậc tu luyện (Phàm Nhân -> Hóa Thần).
   - **Bảng Xếp Hạng (Leaderboard):** Trang vinh danh những người mượn sách nhiều nhất.
 - Xem lịch sử mượn và đặt trước sách (Hiển thị chi tiết số lượng).
+- **Thẻ Thư Viện Kỹ Thuật Số (Digital Library Card):**
+  - Mỗi độc giả có một mã QR định danh riêng biệt.
+  - Hỗ trợ tải mã QR về thiết bị để sử dụng offline.
+  - Sẵn sàng cho hệ thống quét chuyên dụng tại quầy thư viện.
 
 ### 📖 Mượn - Trả Sách
 
@@ -127,6 +129,7 @@ Hệ thống Quản lý Thư viện là một ứng dụng web hiện đại đ�
 | **Spring Data JPA** | 3.x       | Quản lý cơ sở dữ liệu (ORM)             |
 | **Thymeleaf**       | 3.1       | Template Engine                         |
 | **MySQL**           | 8.0       | Cơ sở dữ liệu quan hệ                   |
+| **Zxing**           | 3.5.3     | Thư viện tạo mã QR (Backend)            |
 | **Vanilla CSS**     | -         | Giao diện tùy chỉnh (Custom Premium UI) |
 
 ---
@@ -607,6 +610,7 @@ Nhật ký ghi lại các vấn đề đã xảy ra và cách khắc phục đ�
 
 | Ngày | Vấn đề (Bug) | Giải pháp (Fix) | Ghi chú kỹ thuật |
 | :--- | :--- | :--- | :--- |
+| 21/04/2026 | **Digital Library Card (v1.7.0)** | Triển khai mã QR định danh độc giả tích hợp trong Profile. | Áp dụng công nghệ Zxing để tạo mã QR dạng `READER:{id}` phục vụ quét tại quầy. |
 | 20/04/2026 | **Global Header System (v1.6.0)** | Trung tâm hóa thanh điều hướng bằng Fragment, đồng bộ Linh Thạch & Thông báo. | Xóa bỏ sự không nhất quán giữa các trang (Home vs Sách). |
 | 20/04/2026 | **Lỗi mất trạng thái đăng nhập (Header)** | Cung cấp `currentUser` thông qua `GlobalControllerAdvice`. | Sửa lỗi Header hiển thị "Đăng Nhập" mặc dù user đã login trên trang /sach. |
 | 20/04/2026 | **Hệ thống Linh Thạch (v1.5.0)** | Triển khai loyalty points, thưởng mượn/trả sách & bình luận. | Biến thư viện thành thế giới Tu Tiên đích thực. |
