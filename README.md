@@ -1,101 +1,149 @@
-# 📚 HỆ THỐNG QUẢN LÝ THƯ VIỆN
+# 📚 HỆ THỐNG QUẢN LÝ THƯ VIỆN - LUYỆN KHÍ ĐƯỜNG
 
-![version](https://img.shields.io/badge/version-1.9.0-purple.svg)
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.2.2-green.svg)
-![Java](https://img.shields.io/badge/Java-17-orange.svg)
-![MySQL](https://img.shields.io/badge/MySQL-8.0-blue.svg)
-![license](https://img.shields.io/badge/license-MIT-yellow.svg)
-
-## 📋 MỤC LỤC
-
-1. [Giới thiệu](#-giới-thiệu)
-2. [Tính năng](#-tính-năng)
-3. [Công nghệ sử dụng](#-công-nghệ-sử-dụng)
-4. [Cài đặt và Chạy](#-cài-đặt-và-chạy)
-5. [Cấu trúc dự án](#-cấu-trúc-dự-án)
-6. [Tài khoản mặc định](#-tài-khoản-mặc-định)
-7. [API Endpoints](#-api-endpoints)
-8. [Cơ sở dữ liệu](#-cơ-sở-dữ-liệu)
-9. [Hướng dẫn sử dụng](#-hướng-dẫn-sử-dụng)
-10. [Giấy phép](#-giấy-phép)
-
----
-
-## 📸 GIAO DIỆN PREMIUM (v1.9.0)
-
-### 🚀 UI/UX Master Polish (v1.9.0)
-Hệ thống đã được tinh chỉnh toàn diện về mặt thẩm mỹ và trải nghiệm người dùng:
-- **Layout Overlap Fix**: Xử lý triệt để lỗi thẻ nội dung đè lên menu điều hướng bằng hệ thống Z-index phân lớp.
-- **Accessibility Master**: Khắc phục hiện tượng chữ bị mờ khi hoạt ảnh fade-in và tăng độ tương phản cho toàn bộ nút bấm.
-- **Security Nav**: Tự động ẩn các thành phần quản trị (Dashboard) đối với người dùng phổ thông trên toàn hệ thống.
-
-### 📸 Admin QR Scanner (v1.8.0)
-Thủ thư có thể dùng camera để quét mã thẻ độc giả, tự động điền thông tin mượn sách.
-
-![Admin QR Scanner](file:///C:/Users/Lenovo/.gemini/antigravity/brain/b784ee68-adbe-4596-8357-2be46508223e/qr_scanner_modal_active_1776737182694.png)
-_Giao diện quét mã QR tích hợp trực tiếp trong form tạo phiếu mượn._
+<p align="center">
+  <img src="https://img.shields.io/badge/version-1.9.0-purple.svg?style=for-the-badge" alt="version">
+  <img src="https://img.shields.io/badge/Spring%20Boot-3.2.2-green.svg?style=for-the-badge" alt="Spring Boot">
+  <img src="https://img.shields.io/badge/Java-17-orange.svg?style=for-the-badge" alt="Java">
+  <img src="https://img.shields.io/badge/MySQL-8.0-blue.svg?style=for-the-badge" alt="MySQL">
+</p>
 
 ---
 
 ## 📖 GIỚI THIỆU
 
-Hệ thống Quản lý Thư viện là một ứng dụng web hiện đại được xây dựng bằng **Spring Boot 3** và **Thymeleaf**, cung cấp giải pháp quản lý toàn diện cho thư viện với giao diện Premium và trải nghiệm người dùng tối ưu.
+**Luyện Khí Đường** không chỉ là một hệ thống quản lý thư viện thông thường. Đây là một nền tảng quản trị tri thức kết hợp với các yếu tố **Tu Tiên (Cultivation)** độc đáo, mang lại trải nghiệm thú vị cho cả độc giả và quản lý. Hệ thống được xây dựng trên nền tảng **Spring Boot 3** hiện đại, tập trung vào hiệu suất cao, bảo mật chặt chẽ và giao diện người dùng Premium.
+
+> [!TIP]
+> Hệ thống tích hợp mã QR thông minh giúp việc mượn/trả sách diễn ra trong tích tắc!
 
 ---
 
-## ✨ TÍNH NĂNG
+## ✨ TÍNH NĂNG NỔI BẬT
 
-### 🔐 Xác thực & Phân quyền (Updated)
+### 🛡️ Bảo mật & Phân quyền (RBAC)
+- **4 Cấp độ quyền hạn:** Admin, Thủ thư, Nhân viên, Độc giả.
+- **Smart Security:** Tự động điều hướng và ẩn/hiện các thành phần giao diện dựa trên vai trò.
+- **Privacy Protection:** Bảo vệ thông tin nhạy cảm của độc giả (ẩn SDT/Địa chỉ đối với vai trò thấp).
 
-- **Public Pages:** Cho phép khách truy cập không cần đăng nhập vào **Trang chủ (`/`)**, **Danh sách sách (`/sach`, `/products`)**, và **Trang giới thiệu (`/about`)**.
-- **Unauthenticated Routes:** Route dành riêng cho người dùng chưa đăng nhập (Login/Register).
-- **Smart Redirect:** Tự động đưa người dùng đã đăng nhập thoát khỏi trang login về trang chủ.
-- **Phân quyền 4 cấp:** Admin, Thủ thư, Nhân viên, Khách hàng.
+### 🏷️ Hệ thống Tu Tiên & Linh Thạch (Unique!)
+- **Tu Vi Cấp Bậc:** Độc giả được xếp hạng dựa trên số lượng sách đã mượn:
+  - **Phàm Nhân:** Mới bắt đầu.
+  - **Luyện Khí:** 1 - 5 quyển.
+  - **Trúc Cơ:** 6 - 15 quyển.
+  - **Kim Đan:** 16 - 30 quyển.
+  - **Nguyên Anh:** 31 - 50 quyển.
+  - **Hóa Thần:** Trên 50 quyển.
+- **Linh Thạch (Loyalty Points):** Đơn vị tiền tệ trong hệ thống dùng để nhận quà, thực hiện các tương tác đặc biệt. Tự động cộng Linh Thạch khi mượn/trả sách đúng hạn hoặc tham gia bình luận.
 
-### 📚 Quản lý Sách
+### 📱 Thẻ Thư Viện Kỹ Thuật Số
+- Tích hợp mã QR định danh cho mỗi Độc giả.
+- Hỗ trợ **QR Scanner** cho Thủ thư để xử lý phiếu mượn siêu tốc.
 
-- CRUD sách với ảnh bìa (Hệ thống upload ảnh tối ưu).
-- **Tính năng Đặt trước (Book Reservation):**
-  - Cho phép chọn ngày hẹn lấy sách.
-  - **Mới:** Cho phép người dùng nhập **số lượng** quyển sách muốn đặt trước.
-  - Tự động kiểm tra tồn kho và giới hạn số lượng đặt.
-
-### 👥 Quản lý Độc giả
-
-- Quản lý thông tin độc giả chi tiết, tự động tạo bản ghi cho khách hàng mới.
-- **Bảo mật Dữ liệu Độc giả (Privacy Protection):** 
-  - Ẩn số điện thoại và địa chỉ của độc giả khác đối với cấp độ Khách hàng. 
-  - Chỉ Admin/Thủ thư/Nhân viên mới thấy thông tin liên hệ đầy đủ.
-- **Hệ thống Xếp hạng Độc giả (Tu Tiên Ranking):**
-  - Tự động xếp hạng dựa trên 6 cấp bậc tu luyện (Phàm Nhân -> Hóa Thần).
-  - **Bảng Xếp Hạng (Leaderboard):** Trang vinh danh những người mượn sách nhiều nhất.
-- Xem lịch sử mượn và đặt trước sách (Hiển thị chi tiết số lượng).
-- **Thẻ Thư Viện Kỹ Thuật Số (Digital Library Card):**
-  - Mỗi độc giả có một mã QR định danh riêng biệt.
-  - Hỗ trợ tải mã QR về thiết bị để sử dụng offline.
+### 📅 Đặt Trước Sách (Reservation)
+- Đặt lịch hẹn lấy sách với số lượng tùy chọn.
+- Hệ thống tự động kiểm tra tồn kho và thông báo khi sách sẵn sàng.
 
 ---
 
-## 🛠 LỊCH SỬ SỬA LỖI & BẢO TRÌ (BUG FIX LOG)
+## 🛠 CÔNG NGHỆ SỬ DỤNG
 
-| Ngày | Vấn đề (Bug) | Giải pháp (Fix) | Ghi chú kỹ thuật |
-| :--- | :--- | :--- | :--- |
-| 21/04/2026 | **UI/UX Master Polish (v1.9.0)** | Sửa lỗi overlap header, tăng tương phản nút bấm và tối ưu hiệu ứng fade-in. | Nâng cấp Z-index lên 2000 cho header và 3000 cho dropdown content. |
-| 21/04/2026 | **Security Audit: Dashboard Nav** | Phân quyền nghiêm ngặt nút Dashboard trên toàn bộ list templates. | Sử dụng `sec:authorize` để ẩn nút quản trị đối với ROLE_READER. |
-| 21/04/2026 | **Lỗi tàng hình icon "Tất Cả"** | Sửa quy tắc CSS tranh chấp khiến icon cùng màu nền khi active. | Thêm bộ chọn `.btn-primary.btn-outline i { color: white !important; }`. |
-| 21/04/2026 | **Admin QR Scanning (v1.8.0)** | Tích hợp máy quét QR vào form mượn sách và tìm kiếm theo ID Độc giả. | Sử dụng `html5-qrcode` cho frontend và sửa lỗi ánh xạ ID giữa Tài khoản/Độc giả. |
-| 21/04/2026 | **Digital Library Card (v1.7.0)** | Triển khai mã QR định danh độc giả tích hợp trong Profile. | Áp dụng công nghệ Zxing để tạo mã QR dạng `READER:{id}` phục vụ quét tại quầy. |
-| 20/04/2026 | **Global Header System (v1.6.0)** | Trung tâm hóa thanh điều hướng bằng Fragment, đồng bộ Linh Thạch & Thông báo. | Xóa bỏ sự không nhất quán giữa các trang (Home vs Sách). |
-| 20/04/2026 | **Hệ thống Linh Thạch (v1.5.0)** | Triển khai loyalty points, thưởng mượn/trả sách & bình luận. | Biến thư viện thành thế giới Tu Tiên đích thực. |
-| 20/04/2026 | **Hệ thống Thông báo (v1.4.0)** | Triển khai Automated Notifications, chuông thông báo toàn cục. | Tăng tính tương tác giữa thư viện và độc giả. |
+### Backend
+- **Framework:** Spring Boot 3.2.2 (Java 17)
+- **Security:** Spring Security 6 (RBAC, CSRF Protection)
+- **Data Access:** Spring Data JPA (Hibernate 6)
+- **QR Engine:** Google ZXing
+- **Database:** MySQL 8.0
+
+### Frontend
+- **Template Engine:** Thymeleaf
+- **Styling:** CSS3, Google Fonts (Inter, Roboto)
+- **JavaScript:** Vanilla JS + jQuery
+- **Scanning:** HTML5-QRCode
 
 ---
 
-## 📄 GIẤY PHÉP
+## 📂 CẤU TRÚC DỰ ÁN
 
-Phát hành dưới giấy phép **MIT**.
+```bash
+f:/Project/QL_Sach
+├── src/main/java/com/example/library
+│   ├── config/         # Cấu hình Security, MVC, Web
+│   ├── controller/     # Điều hướng Request
+│   ├── entity/         # Đối tượng Cơ sở dữ liệu (Tu Tiên entities)
+│   ├── repository/     # Giao tiếp Data Access
+│   ├── service/        # Xử lý Logic nghiệp vụ
+│   └── dto/            # Data Transfer Objects
+├── src/main/resources
+│   ├── templates/      # Giao diện Thymeleaf
+│   ├── static/         # CSS, JS, Images
+│   └── application.properties # Cấu hình hệ thống
+└── uploads/            # Thư mục lưu trữ ảnh sách & avatar
+```
+
+---
+
+## 🚀 CÀI ĐẶT VÀ CHẠY
+
+### 1. Chuẩn bị
+- JDK 17 trở lên.
+- Maven 3.x.
+- MySQL 8.0.
+
+### 2. Cấu hình Cơ sở dữ liệu
+```sql
+CREATE DATABASE qltv;
+```
+Cập nhật thông tin kết nối trong `src/main/resources/application.properties`:
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/qltv
+spring.datasource.username=YOUR_USERNAME
+spring.datasource.password=YOUR_PASSWORD
+```
+
+### 3. Chạy ứng dụng
+```bash
+mvn clean install
+mvn spring-boot:run
+```
+Truy cập tại: `http://localhost:8080`
+
+---
+
+## 🔑 TÀI KHOẢN MẶC ĐỊNH
+
+| Vai trò | Username | Password |
+| :--- | :--- | :--- |
+| **Quản trị viên** | admin | 123 |
+| **Thủ thư** | thuthu | 123 |
+| **Nhân viên** | nhanvien | 123 |
+
+---
+
+## 📊 CƠ SỞ DỮ LIỆU (DATABASE SCHEMA)
+
+Hệ thống bao gồm 16 bảng chính, các bảng quan trọng nhất:
+- `taikhoan`: Lưu trữ thông tin đăng nhập và Linh Thạch.
+- `docgia`: Thông tin cá nhân, cấp bậc Tu Tiên và Mã QR.
+- `sach`: Kho tàng tri thức (thông tin sách, tồn kho).
+- `phieumuon`: Theo dõi quá trình mượn trả và tính điểm Linh Thạch.
+- `thongbao`: Hệ thống thông báo đẩy real-time.
+
+---
+
+## 📜 BUG FIX LOG & UPDATE HISTORY
+
+| Phiên bản | Ngày | Nội dung cập nhật |
+| :--- | :--- | :--- |
+| **v1.9.0** | 21/04/26 | Polish UI/UX, Z-index Fix, Accessibility improvement. |
+| **v1.8.0** | 21/04/26 | Tích hợp Admin QR Scanning, tự động nhận diện độc giả. |
+| **v1.7.0** | 21/04/26 | Digital Library Card (Mã QR định danh độc giả). |
+| **v1.6.0** | 20/04/26 | Global Header System, đồng bộ Linh Thạch & Notify. |
+| **v1.5.0** | 20/04/26 | Hệ thống Linh Thạch (Loyalty Points) & Tu Tiên Rank. |
+
+---
 
 <p align="center"> 
   <b>Made with ❤️ by Antigravity AI & You</b><br> 
   <sub>© 2026 Library Management System. All rights reserved.</sub> 
 </p>
+
