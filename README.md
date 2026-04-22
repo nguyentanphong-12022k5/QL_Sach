@@ -76,27 +76,72 @@ graph TD
 
 ## 📊 4. MÔ HÌNH DỮ LIỆU (DATABASE SCHEMA)
 
-Cơ sở dữ liệu được thiết kế tối ưu với 16 bảng quan hệ, hỗ trợ đầy đủ các nghiệp vụ từ quản lý kho đến tài chính.
+Cơ sở dữ liệu được thiết kế đồng bộ với 16 bảng quan hệ, hỗ trợ đầy đủ các nghiệp vụ từ quản lý kho đến vinh danh tu vi.
 
+### 📐 Sơ đồ Quan hệ Thực thể (ER Diagram)
 ```mermaid
 erDiagram
-    TAI_KHOAN ||--o| DOC_GIA : "SDT Tracking"
-    DOC_GIA ||--o{ PHIEU_MUON : "Creates"
-    DOC_GIA ||--o{ DAT_TRUOC : "Reserves"
-    PHIEU_MUON ||--o{ CHI_TIET_PHIEU_MUON : "Items"
-    PHIEU_MUON ||--o| THANH_TOAN : "Settles"
-    SACH }|--|| TAC_GIA : "Authorship"
-    SACH }|--|| LOAI_SACH : "Category"
-    SACH }|--|| KE_SACH : "Shelf Loc"
-    SACH ||--o{ BINH_LUAN : "Ratings"
+    tacgia ||--o{ sach : "sáng tác"
+    nhaxuatban ||--o{ sach : "xuất bản"
+    loai ||--o{ sach : "phân loại"
+    kesach ||--o{ sach : "lưu trữ"
+    sach ||--o{ chi_tiet_phieu_muon : "nằm trong"
+    sach ||--o{ chi_tiet_phieu_nhap : "được nhập"
+    sach ||--o{ binh_luan : "được đánh giá"
+    docgia ||--o{ phieu_muon : "thực hiện"
+    docgia ||--o{ dat_truoc : "đặt sách"
+    phieu_muon ||--o{ chi_tiet_phieu_muon : "liệt kê"
+    phieu_muon ||--o| thanh_toan : "đối trừ"
+    phieu_nhap ||--o{ chi_tiet_phieu_nhap : "vận đơn"
+    taikhoan ||--o{ binh_luan : "viết"
+    taikhoan ||--o{ thanh_toan : "thanh toán"
 ```
 
-### 📒 Các bảng dữ liệu trọng yếu:
-- **`taikhoan`**: `id`, `username`, `password`, `quyen` (1:Admin, 2:Staff/Librarian, 3:Reader), `linh_thach`, `avatar`.
-- **`docgia`**: `madocgia`, `tendocgia`, `sdt`, `diachi`, `ngaytao`.
-- **`sach`**: `masach`, `tensach`, `so_luong`, `gia_muon`, `average_rating`, `rating_count`.
-- **`phieumuon`**: `id`, `ngay_muon`, `ngay_tra_du_kien`, `tien_phat`.
-- **`thanhtoan`**: `ma_giao_dich`, `so_tien`, `phuong_thuc` (TIEN_MAT/CHUYEN_KHOAN), `ngay_thanh_toan`.
+### 📒 Chi tiết các bảng dữ liệu
+1.  **`tacgia`**: Thông tin tác giả (Tên, Năm sinh, Quê quán).
+2.  **`nhaxuatban`**: Thông tin nhà xuất bản (Tên, Địa chỉ, SĐT).
+3.  **`loai`**: Danh mục thể loại sách (Văn học, Khoa học, v.v.).
+4.  **`kesach`**: Vị trí lưu trữ vật lý trong thư viện.
+5.  **`sach`**: Bảng trung tâm chứa thông tin sách, số lượng và trạng thái.
+6.  **`docgia`**: Thông tin độc giả, đặc biệt tích hợp **Tu Tiên Rank**.
+7.  **`phieu_muon`**: Quản lý thông tin mượn và ngày trả.
+8.  **`chi_tiet_phieu_muon`**: Chi tiết các đầu sách trong một lần mượn.
+9.  **`phieu_nhap`**: Quản lý nhập kho từ nhà cung cấp.
+10. **`chi_tiet_phieu_nhap`**: Chi tiết số lượng và đơn giá nhập.
+11. **`taikhoan`**: Quản lý đăng nhập, vai trò, **Linh Thạch** và Avatar.
+12. **`binh_luan`**: Hệ thống feedback, đánh giá sao cho sách.
+13. **`thanh_toan`**: Biên lai tài chính, phí phạt quá hạn.
+14. **`nhan_vien`**: Danh sách nhân sự vận hành thư viện.
+
+### 💾 Kịch bản Khởi tạo (SQL Script)
+<details>
+<summary><b>Click để xem SQL Script khởi tạo Database (MS SQL Server)</b></summary>
+
+```sql
+-- Tạo cơ sở dữ liệu
+CREATE DATABASE qltv;
+GO
+USE qltv;
+GO
+
+-- Cấu trúc các bảng chính
+CREATE TABLE tacgia ( MaTacGia bigint NOT NULL IDENTITY(1,1) PRIMARY KEY, TenTacGia nvarchar(255) NOT NULL, NamSinh nvarchar(10) NULL, QueQuan nvarchar(255) NULL, TrangThai int DEFAULT 1 );
+CREATE TABLE nhaxuatban ( MaNXB bigint NOT NULL IDENTITY(1,1) PRIMARY KEY, TenNXB nvarchar(255) NOT NULL, DiaChi nvarchar(255) NULL, Sdt nvarchar(20) NULL, TrangThai int DEFAULT 1 );
+CREATE TABLE loai ( MaLoai bigint NOT NULL IDENTITY(1,1) PRIMARY KEY, TenLoai nvarchar(255) NOT NULL, TrangThai int DEFAULT 1 );
+CREATE TABLE kesach ( MaKe bigint NOT NULL IDENTITY(1,1) PRIMARY KEY, ViTri nvarchar(255) NULL, TrangThai int DEFAULT 1 );
+CREATE TABLE sach ( MaSach bigint NOT NULL IDENTITY(1,1) PRIMARY KEY, TenSach nvarchar(255) NOT NULL, MaTacGia bigint, MaNXB bigint, MaLoai bigint, Make bigint, HinhAnh nvarchar(500), NamXB int, SoLuong int DEFAULT 10, TrangThai nvarchar(10) DEFAULT '1' );
+CREATE TABLE docgia ( madocgia bigint NOT NULL IDENTITY(1,1) PRIMARY KEY, tendocgia nvarchar(255) NOT NULL, gioitinh nvarchar(10), diachi nvarchar(500), sdt nvarchar(20), TrangThai int DEFAULT 1 );
+CREATE TABLE taikhoan ( matk bigint NOT NULL IDENTITY(1,1) PRIMARY KEY, username nvarchar(50) UNIQUE NOT NULL, password nvarchar(255) NOT NULL, email nvarchar(100) UNIQUE, hoten nvarchar(100), quyen int DEFAULT 4, trangthai int DEFAULT 1, linh_thach bigint DEFAULT 100 );
+
+-- Liên kết (Foreign Keys)
+ALTER TABLE sach ADD CONSTRAINT FK_Sach_TacGia FOREIGN KEY (MaTacGia) REFERENCES tacgia(MaTacGia);
+ALTER TABLE sach ADD CONSTRAINT FK_Sach_NXB FOREIGN KEY (MaNXB) REFERENCES nhaxuatban(MaNXB);
+ALTER TABLE phieu_muon ADD CONSTRAINT FK_PM_DocGia FOREIGN KEY (doc_gia_id) REFERENCES docgia(madocgia);
+-- ... (Xem file SQL đầy đủ trong source code)
+```
+> [!IMPORTANT]
+> Script đầy đủ bao gồm dữ liệu mẫu (Seed Data) cho 5 Tác giả, 5 NXB và các tài khoản mặc định (admin/thuthu/nhanvien).
+</details>
 
 ---
 
