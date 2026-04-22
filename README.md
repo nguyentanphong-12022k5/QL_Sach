@@ -78,7 +78,7 @@ graph TD
 
 Cơ sở dữ liệu được thiết kế đồng bộ với 16 bảng quan hệ, hỗ trợ đầy đủ các nghiệp vụ từ quản lý kho đến vinh danh tu vi.
 
-### 📐 Sơ đồ Quan hệ Thực thể (ER Diagram)
+### 📐 Sơ đồ Quan hệ Thực thể chi tiết (Detailed ER Diagram)
 ```mermaid
 erDiagram
     tacgia ||--o{ sach : "sáng tác"
@@ -88,13 +88,132 @@ erDiagram
     sach ||--o{ chi_tiet_phieu_muon : "nằm trong"
     sach ||--o{ chi_tiet_phieu_nhap : "được nhập"
     sach ||--o{ binh_luan : "được đánh giá"
+    sach ||--o{ dattruoc : "được đặt"
     docgia ||--o{ phieu_muon : "thực hiện"
-    docgia ||--o{ dat_truoc : "đặt sách"
+    docgia ||--o{ dattruoc : "đặt sách"
+    docgia ||--o{ thongbao : "nhận"
     phieu_muon ||--o{ chi_tiet_phieu_muon : "liệt kê"
     phieu_muon ||--o| thanh_toan : "đối trừ"
     phieu_nhap ||--o{ chi_tiet_phieu_nhap : "vận đơn"
     taikhoan ||--o{ binh_luan : "viết"
     taikhoan ||--o{ thanh_toan : "thanh toán"
+
+    tacgia {
+        bigint MaTacGia PK
+        nvarchar TenTacGia
+        nvarchar NamSinh
+        nvarchar QueQuan
+        int TrangThai
+    }
+    nhaxuatban {
+        bigint MaNXB PK
+        nvarchar TenNXB
+        nvarchar DiaChi
+        nvarchar Sdt
+        int TrangThai
+    }
+    loai {
+        bigint MaLoai PK
+        nvarchar TenLoai
+        int TrangThai
+    }
+    kesach {
+        bigint MaKe PK
+        nvarchar ViTri
+        int TrangThai
+    }
+    sach {
+        bigint MaSach PK
+        nvarchar TenSach
+        bigint MaTacGia FK
+        bigint MaNXB FK
+        bigint MaLoai FK
+        bigint Make FK
+        nvarchar HinhAnh
+        int NamXB
+        int SoLuong
+        nvarchar TrangThai
+    }
+    docgia {
+        bigint madocgia PK
+        nvarchar tendocgia
+        nvarchar gioitinh
+        nvarchar diachi
+        nvarchar sdt
+        int TrangThai
+    }
+    phieu_muon {
+        bigint id PK
+        bigint doc_gia_id FK
+        date ngay_muon
+        date ngay_tra
+    }
+    chi_tiet_phieu_muon {
+        bigint id PK
+        bigint phieu_muon_id FK
+        bigint sach_id FK
+        int so_luong
+    }
+    phieu_nhap {
+        bigint id PK
+        date ngay_nhap
+        nvarchar nha_cung_cap
+        nvarchar ghi_chu
+    }
+    chi_tiet_phieu_nhap {
+        bigint id PK
+        bigint phieu_nhap_id FK
+        bigint sach_id FK
+        int so_luong
+        float don_gia
+    }
+    taikhoan {
+        bigint matk PK
+        nvarchar username
+        nvarchar password
+        nvarchar email
+        nvarchar hoten
+        int quyen
+        int trangthai
+        datetime ngaytao
+        bigint linh_thach
+        nvarchar avatar
+    }
+    binh_luan {
+        bigint id PK
+        bigint tai_khoan_id FK
+        bigint sach_id FK
+        ntext noi_dung
+        datetime ngay_dang
+        int trang_thai
+        nvarchar loai
+    }
+    thanh_toan {
+        bigint id PK
+        bigint phieu_muon_id FK
+        bigint tai_khoan_id FK
+        float so_tien
+        nvarchar ly_do
+        datetime ngay_thanh_toan
+        nvarchar phuong_thuc
+        nvarchar ma_giao_dich
+        int trang_thai
+    }
+    dattruoc {
+        bigint id PK
+        bigint MaSach FK
+        bigint MaDocGia FK
+        datetime NgayDat
+        int SoLuong
+        int TrangThai
+    }
+    thongbao {
+        bigint id PK
+        bigint doc_gia_id FK
+        nvarchar tieu_de
+        nvarchar noi_dung
+        int trang_thai
+    }
 ```
 
 ### 📒 Chi tiết các bảng dữ liệu
