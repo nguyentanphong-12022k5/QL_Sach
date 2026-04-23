@@ -63,22 +63,24 @@ Hệ thống được xây dựng trên nền tảng công nghệ mạnh mẽ, �
 - **Template Engine**: [Thymeleaf](https://www.thymeleaf.org/) (Server-side Java template engine).
 
 ### 🎨 Frontend & UI/UX
-- **Styling**: Vanilla CSS3 (Custom Glassmorphism, Backdrop Filters).
+- **Styling**: Vanilla CSS3 (Custom Design System, Glassmorphism, Responsive Grid/Flexbox).
 - **Logic**: Vanilla JavaScript (ES6+), Module-based components.
-- **Iconography**: FontAwesome 6 / Boxicons.
-- **Animations**: CSS Keyframes + AOS (Animate On Scroll).
+- **Iconography**: FontAwesome 6.5.1 (CDN).
+- **Animations**: CSS Keyframes & Smooth Transitions.
 
 ### ⚙️ Công cụ & Thư viện (Tools & Libraries)
-- **Build Tool**: [Apache Maven](https://maven.apache.org/) (Quản lý dependency và lifecycle).
+- **Build Tool**: [Apache Maven](https://maven.apache.org/) (Quản lý dependency và build lifecycle).
 - **Utilities**: [Project Lombok](https://projectlombok.org/) (Giảm thiểu boilerplate code).
-- **Integrations**: [Google ZXing](https://github.com/zxing/zxing) (Xử lý và sinh mã QR).
-- **QR Scanner**: `html5-qrcode` (Thư viện xử lý camera trực tiếp trên trình duyệt).
+- **QR Generation**: [Google ZXing](https://github.com/zxing/zxing) (Sinh mã QR cho Độc giả và Sách).
+- **QR Scanner**: `html5-qrcode` (Thư viện quét mã QR qua Camera trực tiếp trên trình duyệt).
+- **Version Control**: Git & GitHub.
 
 ### 🖥️ Môi trường phát triển (Development Environment)
-- **IDE**: Visual Studio Code / IntelliJ IDEA.
-- **Database Tool**: MySQL Workbench / DBeaver.
-- **Version Control**: Git (Quản lý mã nguồn trên GitHub).
-- **API Testing**: Postman (Kiểm thử các endpoint nghiệp vụ).
+- **IDE**: Visual Studio Code / IntelliJ IDEA / Eclipse.
+- **Database Management**: MySQL Workbench / DBeaver / Navicat.
+- **API Testing**: Postman / Insomnia.
+- **OS**: Windows / Linux / macOS compatible.
+
 
 ### 🏛️ Sơ đồ Phân Quyền (Security Filter Chain)
 ```mermaid
