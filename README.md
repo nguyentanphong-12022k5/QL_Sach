@@ -14,6 +14,7 @@
 **Luyện Khí Đường** là hệ thống quản lý thư viện hiện đại được thiết kế với triết lý: "Kiến thức là nền tảng của sức mạnh". Hệ thống không chỉ quản lý sách và độc giả mà còn biến quá trình học hỏi thành một cuộc phiêu lưu **Tu Tiên (Cultivation)** độc đáo với các cấp bậc tu vi và đơn vị tiền tệ **Linh Thạch**.
 
 ### 🌟 Điểm nổi bật
+
 - **Giao diện Premium**: Sử dụng Glassmorphism, hiệu ứng mờ nhòe (backdrop-filter), animations mượt mà và tối ưu hóa UX/UI cho mọi thiết bị.
 - **Hệ thống Gamification**: Biến việc mượn sách thành việc "tích lũy tu vi", khuyến khích độc giả gắn bó lâu dài.
 - **Công nghệ QR**: Tích hợp quét mã định danh độc giả và xử lý nghiệp vụ mượn sách siêu tốc thông qua Camera.
@@ -24,30 +25,32 @@
 ## 🏷️ 2. HỆ THỐNG TU TIÊN & LINH THẠCH
 
 ### 🧬 Cấp Bậc Tu Vi (Ranking System)
+
 Hệ thống tự động đồng bộ và xếp hạng Độc giả dựa trên tổng số sách đã mượn thành công. Cấp bậc này được hiển thị nổi bật trên Hồ sơ cá nhân (Profile) và Bảng xếp hạng:
 
-| Cấp Bậc | Số Sách Yêu Cầu | Màu Sắc | Mã HSL |
-| :--- | :--- | :--- | :--- |
-| **Phàm Nhân** | 0 | Gray | `#7f8c8d` |
-| **Luyện Khí** | 1 - 5 | Green | `#27ae60` |
-| **Trúc Cơ** | 6 - 15 | Blue | `#2980b9` |
-| **Kim Đan** | 16 - 30 | Yellow | `#f1c40f` |
-| **Nguyên Anh** | 31 - 50 | Orange | `#e67e22` |
-| **Hóa Thần** | > 50 | Purple | `#9b59b6` |
+| Cấp Bậc        | Số Sách Yêu Cầu | Màu Sắc | Mã HSL    |
+| :------------- | :-------------- | :------ | :-------- |
+| **Phàm Nhân**  | 0               | Gray    | `#7f8c8d` |
+| **Luyện Khí**  | 1 - 5           | Green   | `#27ae60` |
+| **Trúc Cơ**    | 6 - 15          | Blue    | `#2980b9` |
+| **Kim Đan**    | 16 - 30         | Yellow  | `#f1c40f` |
+| **Nguyên Anh** | 31 - 50         | Orange  | `#e67e22` |
+| **Hóa Thần**   | > 50            | Purple  | `#9b59b6` |
 
 ### 💎 Hệ Thống Linh Thạch (Loyalty Points)
+
 Linh Thạch là đơn vị tiền tệ kỹ thuật số dùng để đo lường mức độ cống hiến và uy tín của độc giả.
 
 > [!NOTE]
 > Mọi giao dịch Linh Thạch đều được lưu trữ trực tiếp trong bảng `taikhoan` để đảm bảo tính nhất quán trên toàn hệ thống.
 
-| Hành Động | Thưởng Linh Thạch | Mô tả |
-| :--- | :--- | :--- |
-| **Đăng ký (New Account)** | +100 | Quà tặng tân thủ khi gia nhập Luyện Khí Đường. |
-| **Mượn Sách (New Voucher)** | +50 | Thưởng khi phát sinh giao dịch mượn sách mới. |
-| **Trả Sách Đúng Hạn** | +100 | Khuyến khích độc giả trả sách văn minh, đúng thời hạn. |
-| **Bình luận & Rating** | +10 | Thưởng khi đạo hữu chia sẻ cảm nghĩ về một bộ sách. |
-| **Thanh toán Phí Phạt** | +100 | Vinh danh độc giả hoàn thành nghĩa vụ tài chính khi quá hạn. |
+| Hành Động                   | Thưởng Linh Thạch | Mô tả                                                        |
+| :-------------------------- | :---------------- | :----------------------------------------------------------- |
+| **Đăng ký (New Account)**   | +100              | Quà tặng tân thủ khi gia nhập Luyện Khí Đường.               |
+| **Mượn Sách (New Voucher)** | +50               | Thưởng khi phát sinh giao dịch mượn sách mới.                |
+| **Trả Sách Đúng Hạn**       | +100              | Khuyến khích độc giả trả sách văn minh, đúng thời hạn.       |
+| **Bình luận & Rating**      | +10               | Thưởng khi đạo hữu chia sẻ cảm nghĩ về một bộ sách.          |
+| **Thanh toán Phí Phạt**     | +100              | Vinh danh độc giả hoàn thành nghĩa vụ tài chính khi quá hạn. |
 
 ---
 
@@ -55,20 +58,29 @@ Linh Thạch là đơn vị tiền tệ kỹ thuật số dùng để đo lườ
 
 Hệ thống được xây dựng trên nền tảng công nghệ mạnh mẽ, đảm bảo tính ổn định, bảo mật và khả năng mở rộng cao.
 
-### 🌐 Tech Stack Core
-- **Backend Framework**: [Spring Boot 3.2.2](https://spring.io/projects/spring-boot) (Java 17).
-- **Security**: Spring Security 6 (Cấu hình RBAC, Filter Chain bảo mật đa lớp).
-- **Data Persistence**: Spring Data JPA + Hibernate 6.
-- **Database**: [MySQL 8.0](https://www.mysql.com/) (Hệ quản trị CSDL quan hệ mạnh mẽ).
-- **Template Engine**: [Thymeleaf](https://www.thymeleaf.org/) (Server-side Java template engine).
+### 🌐 Danh mục Công nghệ & Phiên bản
+
+| Phân loại              | Công nghệ / Công cụ         | Phiên bản | Lý do lựa chọn và ưu điểm chính                                                            |
+| :--------------------- | :-------------------------- | :-------- | :----------------------------------------------------------------------------------------- |
+| **Ngôn ngữ lập trình** | Java                        | 17 (LTS)  | Phiên bản hỗ trợ dài hạn (LTS) mới nhất, hiệu năng cao, ổn định và nhiều cải tiến cú pháp. |
+| **Framework Backend**  | Spring Boot                 | 3.2.2     | Đơn giản hóa cấu hình, tích hợp sẵn Tomcat, hỗ trợ AOP và hệ sinh thái rộng lớn.           |
+| **Template Engine**    | Thymeleaf                   | 3.1.2     | Tạo giao diện server-side tự nhiên với HTML5, tích hợp sâu và mượt mà với Spring.          |
+| **Bảo mật**            | Spring Security             | 6.2.1     | Tiêu chuẩn bảo mật cho Spring, cung cấp cơ chế xác thực/phân quyền mạnh mẽ (RBAC, CSRF).   |
+| **ORM & Data Access**  | Spring Data JPA / Hibernate | 6.4.1     | Ánh xạ đối tượng-quan hệ (ORM) mượt mà, giảm thiểu viết SQL thủ công và lỗi truy vấn.      |
+| **Cơ sở dữ liệu**      | MySQL                       | 8.3.0     | CSDL quan hệ mã nguồn mở phổ biến, hiệu suất cao, cộng đồng hỗ trợ lớn.                    |
+| **Công cụ xây dựng**   | Maven                       | 3.9.14    | Quản lý dependency và build lifecycle tự động, chuyên nghiệp.                              |
+| **Kiểm thử**           | JUnit 5 & Mockito           | 5.10.1    | Bộ khung viết Unit Test và Integration Test đảm bảo độ tin cậy của mã nguồn.               |
+| **Tài liệu hóa UML**   | StarUML                     | 6.x       | Công cụ mạnh mẽ để thiết kế sơ đồ Use Case, Class và ER Diagram.                           |
 
 ### 🎨 Frontend & UI/UX
+
 - **Styling**: Vanilla CSS3 (Custom Design System, Glassmorphism, Responsive Grid/Flexbox).
 - **Logic**: Vanilla JavaScript (ES6+), Module-based components.
 - **Iconography**: FontAwesome 6.5.1 (CDN).
 - **Animations**: CSS Keyframes & Smooth Transitions.
 
 ### ⚙️ Công cụ & Thư viện (Tools & Libraries)
+
 - **Build Tool**: [Apache Maven](https://maven.apache.org/) (Quản lý dependency và build lifecycle).
 - **Utilities**: [Project Lombok](https://projectlombok.org/) (Giảm thiểu boilerplate code).
 - **QR Generation**: [Google ZXing](https://github.com/zxing/zxing) (Sinh mã QR cho Độc giả và Sách).
@@ -76,13 +88,14 @@ Hệ thống được xây dựng trên nền tảng công nghệ mạnh mẽ, �
 - **Version Control**: Git & GitHub.
 
 ### 🖥️ Môi trường phát triển (Development Environment)
+
 - **IDE**: Visual Studio Code / IntelliJ IDEA / Eclipse.
 - **Database Management**: MySQL Workbench / DBeaver / Navicat.
 - **API Testing**: Postman / Insomnia.
 - **OS**: Windows / Linux / macOS compatible.
 
-
 ### 🏛️ Sơ đồ Phân Quyền (Security Filter Chain)
+
 ```mermaid
 graph TD
     User((Người dùng)) --> Filter{Security Filter}
@@ -100,6 +113,7 @@ graph TD
 Cơ sở dữ liệu được thiết kế đồng bộ với 16 bảng quan hệ, hỗ trợ đầy đủ các nghiệp vụ từ quản lý kho đến vinh danh tu vi.
 
 ### 📐 Sơ đồ Quan hệ Thực thể chi tiết (Detailed ER Diagram)
+
 ```mermaid
 erDiagram
     tacgia ||--o{ sach : "sáng tác"
@@ -238,6 +252,7 @@ erDiagram
 ```
 
 ### 📒 Chi tiết các bảng dữ liệu
+
 1.  **`tacgia`**: Thông tin tác giả (Tên, Năm sinh, Quê quán).
 2.  **`nhaxuatban`**: Thông tin nhà xuất bản (Tên, Địa chỉ, SĐT).
 3.  **`loai`**: Danh mục thể loại sách (Văn học, Khoa học, v.v.).
@@ -254,6 +269,7 @@ erDiagram
 14. **`nhan_vien`**: Danh sách nhân sự vận hành thư viện.
 
 ### 💾 Kịch bản Khởi tạo (SQL Script)
+
 <details>
 <summary><b>Click để xem SQL Script khởi tạo Database (MS SQL Server)</b></summary>
 
@@ -279,8 +295,10 @@ ALTER TABLE sach ADD CONSTRAINT FK_Sach_NXB FOREIGN KEY (MaNXB) REFERENCES nhaxu
 ALTER TABLE phieu_muon ADD CONSTRAINT FK_PM_DocGia FOREIGN KEY (doc_gia_id) REFERENCES docgia(madocgia);
 -- ... (Xem file SQL đầy đủ trong source code)
 ```
+
 > [!IMPORTANT]
 > Script đầy đủ bao gồm dữ liệu mẫu (Seed Data) cho 5 Tác giả, 5 NXB và các tài khoản mặc định (admin/thuthu/nhanvien).
+
 </details>
 
 ---
@@ -288,14 +306,17 @@ ALTER TABLE phieu_muon ADD CONSTRAINT FK_PM_DocGia FOREIGN KEY (doc_gia_id) REFE
 ## 🔗 5. HƯỚNG DẪN NGHIỆP VỤ & API
 
 ### 🛡️ Module Quản Trị Hệ Thống (`/admin`)
+
 - **Dashboard**: `GET /admin/dashboard` - Xem biểu đồ tăng trưởng độc giả và doanh thu Linh Thạch/VNĐ.
 - **Chiến lược Sách**: `GET /admin/sach` - Quản lý metadata sách, tác giả và kệ sách.
 
 ### 📚 Module Nghiệp Vụ Thư Viện (`/phieumuon`)
+
 - **Xử lý Mượn**: `GET /phieumuon/add` - Cung cấp giao diện quét QR để tự động điền mã độc giả.
 - **Thanh Toán**: `GET /phieumuon/thanh-toan/{id}` - Tính toán tự động số ngày mượn, số ngày quá hạn và tổng phí (VND).
 
 ### 👤 Module Người Dùng Cá Nhân (`/profile`)
+
 - **Identity**: `GET /profile/qr-code` - Hệ thống sinh mã QR động với nội dung `READER:ID` để đọc bằng scanner tại quầy.
 - **Tùy biến Profile**: Hỗ trợ upload ảnh đại diện (MultipartFile) với cơ chế lưu trữ redundancy (cấp nguồn src và target classes).
 
@@ -304,6 +325,7 @@ ALTER TABLE phieu_muon ADD CONSTRAINT FK_PM_DocGia FOREIGN KEY (doc_gia_id) REFE
 ## 🌊 6. CÀI ĐẶT & VẬN HÀNH (DEVOPS)
 
 ### 🚀 Quy trình thực thi
+
 1. **Khởi tạo Database**: Chạy SQL Script (Update DDL tự động bật trong `application.properties`).
 2. **Cấu hình Môi trường**:
    - `spring.datasource.url=jdbc:mysql://localhost:3306/qltv`
@@ -315,7 +337,9 @@ ALTER TABLE phieu_muon ADD CONSTRAINT FK_PM_DocGia FOREIGN KEY (doc_gia_id) REFE
    ```
 
 ### 📡 Keep-Alive Engine
+
 Để đảm bảo hệ thống không bị "ngủ đông" khi deploy trên Cloud (Render, Fly.io), hệ thống sử dụng một tác vụ nền tự động ping chính mình:
+
 - **Ping URL**: `http://localhost:8080/ping`
 - **Tần suất**: Tự động hóa thông qua config `app.keep-alive.enabled=true`.
 
@@ -324,15 +348,18 @@ ALTER TABLE phieu_muon ADD CONSTRAINT FK_PM_DocGia FOREIGN KEY (doc_gia_id) REFE
 ## 📜 7. NHẬT KÝ PHIÊN BẢN (CHANGELOG)
 
 ### 💠 v1.9.0 - UI Mastery Update
+
 - [x] Tối ưu hóa Z-index cho hệ thống Header và Modals (2000 vs 3000).
 - [x] Sửa lỗi xung đột màu icon active trong Sidebar.
 - [x] Đồng bộ hệ thống Linh Thạch trên Global Header thông qua `ControllerAdvice`.
 
 ### 💠 v1.8.0 - Smart Scanning
+
 - [x] Tích hợp thư viện `html5-qrcode` xử lý camera trực tiếp.
 - [x] Liên kết ID Tài khoản và ID Độc giả trong luồng nghiệp vụ quét mã.
 
 ### 💠 v1.5.0 - Gamification Engine
+
 - [x] Triển khai Rank logic (6 cấp bậc tu tiên).
 - [x] Hệ thống cộng/trừ Linh Thạch tự động theo Trigger nghiệp vụ.
 
@@ -342,4 +369,3 @@ ALTER TABLE phieu_muon ADD CONSTRAINT FK_PM_DocGia FOREIGN KEY (doc_gia_id) REFE
   <b>Premium Documentation by Antigravity AI & You</b><br> 
   <sub>© 2026 Luyện Khí Đường - Giải pháp Thư viện 4.0.</sub> 
 </p>
-
