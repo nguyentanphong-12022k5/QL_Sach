@@ -51,15 +51,34 @@ Linh Thạch là đơn vị tiền tệ kỹ thuật số dùng để đo lườ
 
 ---
 
-## 🛠️ 3. TỔ CHỨC KỸ THUẬT & KIẾN TRÚC
+## 🛠️ 3. CÔNG NGHỆ VÀ CÔNG CỤ PHÁT TRIỂN
 
-### 🧱 Tech Stack Chi Tiết
-- **Backend**: Spring Boot 3.2.2 (Java 17).
-- **Security**: Spring Security 6 (Custom RBAC, NoOp Password Encoding cho môi trường học tập).
-- **Data persistence**: Spring Data JPA + Hibernate 6 + MySQL 8.0.
-- **UI Engine**: Thymeleaf Layout Dialect + Security Extras.
-- **Frontend Assets**: CSS3 (Vanilla), JS (Vanilla + JavaScript Modules).
-- **Integrations**: Google ZXing (Zebra Crossing) cho xử lý mã QR.
+Hệ thống được xây dựng trên nền tảng công nghệ mạnh mẽ, đảm bảo tính ổn định, bảo mật và khả năng mở rộng cao.
+
+### 🌐 Tech Stack Core
+- **Backend Framework**: [Spring Boot 3.2.2](https://spring.io/projects/spring-boot) (Java 17).
+- **Security**: Spring Security 6 (Cấu hình RBAC, Filter Chain bảo mật đa lớp).
+- **Data Persistence**: Spring Data JPA + Hibernate 6.
+- **Database**: [MySQL 8.0](https://www.mysql.com/) (Hệ quản trị CSDL quan hệ mạnh mẽ).
+- **Template Engine**: [Thymeleaf](https://www.thymeleaf.org/) (Server-side Java template engine).
+
+### 🎨 Frontend & UI/UX
+- **Styling**: Vanilla CSS3 (Custom Glassmorphism, Backdrop Filters).
+- **Logic**: Vanilla JavaScript (ES6+), Module-based components.
+- **Iconography**: FontAwesome 6 / Boxicons.
+- **Animations**: CSS Keyframes + AOS (Animate On Scroll).
+
+### ⚙️ Công cụ & Thư viện (Tools & Libraries)
+- **Build Tool**: [Apache Maven](https://maven.apache.org/) (Quản lý dependency và lifecycle).
+- **Utilities**: [Project Lombok](https://projectlombok.org/) (Giảm thiểu boilerplate code).
+- **Integrations**: [Google ZXing](https://github.com/zxing/zxing) (Xử lý và sinh mã QR).
+- **QR Scanner**: `html5-qrcode` (Thư viện xử lý camera trực tiếp trên trình duyệt).
+
+### 🖥️ Môi trường phát triển (Development Environment)
+- **IDE**: Visual Studio Code / IntelliJ IDEA.
+- **Database Tool**: MySQL Workbench / DBeaver.
+- **Version Control**: Git (Quản lý mã nguồn trên GitHub).
+- **API Testing**: Postman (Kiểm thử các endpoint nghiệp vụ).
 
 ### 🏛️ Sơ đồ Phân Quyền (Security Filter Chain)
 ```mermaid
