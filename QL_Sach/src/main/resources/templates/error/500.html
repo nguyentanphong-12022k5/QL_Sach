@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đạo Pháp Hỗn Loạn - 500 Error</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+      .error-page {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        background: var(--body-bg);
+      }
+      .error-card {
+        background: var(--card-bg);
+        padding: 50px;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        text-align: center;
+        border: 1px solid var(--border-color);
+        max-width: 600px;
+        width: 100%;
+        animation: shake 0.5s ease-in-out infinite alternate;
+      }
+      @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px) rotate(-1deg); }
+        75% { transform: translateX(5px) rotate(1deg); }
+      }
+      .error-image {
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto 30px;
+        opacity: 0.8;
+      }
+      .error-code {
+        font-size: 8rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, var(--danger-color), #f59e0b);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 10px;
+        line-height: 1;
+      }
+      .error-title {
+        font-size: 1.8rem;
+        color: var(--text-main);
+        margin-bottom: 15px;
+        font-weight: 700;
+      }
+      .error-desc {
+        color: var(--text-muted);
+        margin-bottom: 30px;
+        line-height: 1.6;
+      }
+      .btn-back {
+        background: var(--primary-color);
+        color: white;
+        padding: 12px 30px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .btn-back:hover {
+        background: var(--primary-dark);
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
+      }
+      .tech-details {
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border-color);
+        text-align: left;
+        font-family: monospace;
+        font-size: 0.85rem;
+        color: var(--danger-color);
+        background: rgba(239, 68, 68, 0.05);
+        padding: 15px;
+        border-radius: 10px;
+        overflow-x: auto;
+      }
+    </style>
+</head>
+<body>
+    <div class="error-page">
+        <div class="error-card">
+            <div class="error-code">500</div>
+            <h1 class="error-title">Đạo Pháp Hỗn Loạn!</h1>
+            <p class="error-desc">
+                Cảnh giới linh lực đang gặp chấn động mạnh. <br>
+                Hệ thống (Trận pháp) đang gặp lỗi nội bộ không lường trước được. 
+                Đạo hữu vui lòng quay lại sau khi linh khí ổn định.
+            </p>
+            <div style="display: flex; gap: 15px; justify-content: center;">
+                <a href="/" class="btn-back">
+                    <i class="fas fa-home"></i> Trở về Tiên Phủ
+                </a>
+                <button onclick="location.reload()" class="btn btn-outline" style="border-radius: 50px; padding: 0 25px;">
+                    <i class="fas fa-sync-alt"></i> Thử lại
+                </button>
+            </div>
+            
+            <div th:if="${error}" class="tech-details">
+                <strong>[Huyền cơ tiết lộ]:</strong>
+                <p th:text="${error}"></p>
+                <p th:text="${message}"></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

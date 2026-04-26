@@ -1,0 +1,79 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Danh Sách Phiếu Mượn - Thư Viện</title>
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+<div class="container">
+    <!-- Header -->
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <main class="main fade-in">
+        <h2 style="margin-bottom: 30px;"><i class="fas fa-hand-holding"></i> Danh Sách Phiếu Mượn</h2>
+        <div th:if="${success}" class="alert alert-success">
+            <i class="fas fa-check-circle"></i> <span th:text="${success}"></span>
+        </div>
+
+        <!-- Filter Buttons -->
+        <div style="margin-bottom: 20px; display: flex; gap: 10px;">
+            <a th:href="@{/phieumuon}" class="btn btn-outline" th:classappend="${param.status == null ? 'btn-primary' : ''}">
+                <i class="fas fa-list"></i> Tất Cả
+            </a>
+            <a th:href="@{/phieumuon(status='dangmuon')}" class="btn btn-outline">
+                <i class="fas fa-hourglass-half"></i> Đang Mượn
+            </a>
+            <a th:href="@{/phieumuon(status='quahan')}" class="btn btn-outline">
+                <i class="fas fa-exclamation-triangle"></i> Quá Hạn
+            </a>
+            <a sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')" th:href="@{/admin/dashboard}" class="btn btn-secondary" style="margin-left: auto;">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a>
+            <a sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')" th:href="@{/phieumuon/add}" class="btn btn-success">
+                <i class="fas fa-plus"></i> Tạo Phiếu Mượn
+            </a>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mã PM</th>
+                        <th>Độc Giả</th>
+                        <th>Ngày Mượn</th>
+                        <th>Ngày Trả</th>
+                        <th>Trạng Thái</th>
+                        <th>Thao Tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="pm : ${phieuMuonList}">
+                        <td th:text="${pm.id}">1</td>
+                        <td th:text="${pm.docGia.hoTen}">Nguyễn Văn A</td>
+                        <td th:text="${#temporals.format(pm.ngayMuon, 'dd/MM/yyyy')}">01/01/2026</td>
+                        <td th:text="${pm.ngayTra != null ? #temporals.format(pm.ngayTra, 'dd/MM/yyyy') : '--'}">--</td>
+                        <td>
+                            <span th:if="${pm.ngayTra != null}" class="badge badge-success">Đã trả</span>
+                            <span th:if="${pm.ngayTra == null && pm.ngayMuon.plusDays(7) >= today}" class="badge badge-warning">Đang mượn</span>
+                            <span th:if="${pm.ngayTra == null && pm.ngayMuon.plusDays(7) < today}" class="badge badge-danger">Quá hạn</span>
+                        </td>
+                        <td>
+                            <a th:href="@{/phieumuon/view/{id}(id=${pm.id})}" class="btn btn-outline btn-sm" title="Xem chi tiết"><i class="fas fa-eye"></i></a>
+                            <a sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')" th:if="${pm.ngayTra == null}" th:href="@{/phieumuon/thanh-toan/{id}(id=${pm.id})}" class="btn btn-warning btn-sm" title="Thanh toán &amp; trả sách"><i class="fas fa-credit-card"></i></a>
+                            <a sec:authorize="hasAnyAuthority('ROLE_ADMIN', 'ROLE_THUTHU', 'ROLE_NHANVIEN')" th:href="@{/phieumuon/delete/{id}(id=${pm.id})}" class="btn btn-danger btn-sm" onclick="return confirm('Xóa phiếu mượn?')" title="Xóa"><i class="fas fa-trash"></i></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 Quản Lý Thư Viện. All rights reserved.</p>
+    </footer>
+</div>
+</body>
+</html>

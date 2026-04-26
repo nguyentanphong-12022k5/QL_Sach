@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quản Lý Thanh Toán - Admin</title>
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+<div class="container">
+    <header class="header fade-in">
+        <h1><i class="fas fa-money-bill-wave"></i> Quản Lý Thanh Toán</h1>
+        <nav class="nav">
+            <a th:href="@{/admin/dashboard}" class="nav-link"><i class="fas fa-arrow-left"></i> Dashboard</a>
+        </nav>
+    </header>
+
+    <main class="main fade-in">
+        <div class="stats-grid" style="margin-bottom: 30px;">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-coins"></i></div>
+                <h3 th:text="${tongDoanhThu != null ? #numbers.formatDecimal(tongDoanhThu, 0, 'COMMA', 0, 'POINT') : '0'}">0</h3>
+                <p>Tổng Doanh Thu (VNĐ)</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-calendar-day"></i></div>
+                <h3 th:text="${doanhThuHomNay != null ? #numbers.formatDecimal(doanhThuHomNay, 0, 'COMMA', 0, 'POINT') : '0'}">0</h3>
+                <p>Doanh Thu Hôm Nay (VNĐ)</p>
+            </div>
+        </div>
+
+        <h3 style="margin-bottom: 20px;"><i class="fas fa-list"></i> Danh Sách Giao Dịch</h3>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mã GD</th>
+                        <th>Phiếu Mượn</th>
+                        <th>Độc Giả</th>
+                        <th>Nhân Viên</th>
+                        <th>Số Tiền</th>
+                        <th>Phương Thức</th>
+                        <th>Ngày Thanh Toán</th>
+                        <th>Trạng Thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="tt : ${thanhToanList}">
+                        <td th:text="${tt.maGiaoDich}">TT123</td>
+                        <td>
+                            <a th:href="@{/phieumuon/view/{id}(id=${tt.phieuMuon.id})}" th:text="'#' + ${tt.phieuMuon.id}"></a>
+                        </td>
+                        <td th:text="${tt.phieuMuon.docGia.hoTen}"></td>
+                        <td th:text="${tt.taiKhoan.hoTen} ?: tt.taiKhoan.username"></td>
+                        <td th:text="${#numbers.formatDecimal(tt.soTien, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></td>
+                        <td>
+                            <span th:if="${tt.phuongThuc == 'TIEN_MAT'}" class="badge badge-info">Tiền mặt</span>
+                            <span th:if="${tt.phuongThuc == 'CHUYEN_KHOAN'}" class="badge badge-primary">Chuyển khoản</span>
+                        </td>
+                        <td th:text="${#temporals.format(tt.ngayThanhToan, 'dd/MM/yyyy HH:mm')}"></td>
+                        <td>
+                            <span th:if="${tt.trangThai == 1}" class="badge badge-success">Thành công</span>
+                            <span th:if="${tt.trangThai == 0}" class="badge badge-danger">Đã hủy</span>
+                        </td>
+                    </tr>
+                    <tr th:if="${thanhToanList == null || thanhToanList.isEmpty()}">
+                        <td colspan="8" style="text-align: center; padding: 40px;">Chưa có giao dịch nào.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+</body>
+</html>

@@ -1,0 +1,298 @@
+package com.example.library.controller;
+
+import com.example.library.entity.*;
+import com.example.library.repository.*;
+import com.example.library.service.NotificationService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+@Controller
+@RequestMapping("/phieumuon")
+public class PhieuMuonController {
+
+    @Autowired
+    private PhieuMuonRepository phieuMuonRepository;
+    @Autowired
+    private DocGiaRepository docGiaRepository;
+    @Autowired
+    private SachRepository sachRepository;
+    @Autowired
+    private ChiTietPhieuMuonRepository chiTietPhieuMuonRepository;
+    @Autowired
+    private ThanhToanRepository thanhToanRepository;
+    @Autowired
+    private TaiKhoanRepository taiKhoanRepository;
+    @Autowired
+    private NotificationService notificationService;
+
+    @GetMapping
+    public String list(@RequestParam(value = "status", required = false) String status, Model model) {
+        List<PhieuMuon> list;
+        if ("dangmuon".equals(status)) {
+            list = phieuMuonRepository.findByNgayTraIsNull();
+        } else if ("quahan".equals(status)) {
+            list = phieuMuonRepository.findQuaHan(LocalDate.now().minusDays(7));
+        } else {
+            list = phieuMuonRepository.findAll();
+        }
+        model.addAttribute("phieuMuonList", list);
+        model.addAttribute("today", LocalDate.now());
+        return "phieumuon/list";
+    }
+
+    @GetMapping("/add")
+    public String addForm(Model model) {
+        model.addAttribute("phieuMuon", new PhieuMuon());
+        model.addAttribute("docGiaList", docGiaRepository.findAll());
+        model.addAttribute("sachList", sachRepository.findAvailableBooks());
+        model.addAttribute("today", LocalDate.now());
+        return "phieumuon/form";
+    }
+
+    @PostMapping("/save")
+    public String save(@ModelAttribute PhieuMuon phieuMuon, @RequestParam("docGiaId") Long docGiaId,
+            @RequestParam("sachIds") List<Long> sachIds, @RequestParam("soLuongs") List<Integer> soLuongs,
+            @RequestParam("ngayTraDuKien") String ngayTraDuKien, RedirectAttributes redirect) {
+        try {
+            DocGia docGia = docGiaRepository.findById(docGiaId)
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy độc giả"));
+
+            phieuMuon.setDocGia(docGia);
+            phieuMuon.setNgayMuon(LocalDate.now());
+            phieuMuon.setNgayTra(null);
+
+            PhieuMuon saved = phieuMuonRepository.save(phieuMuon);
+
+            List<ChiTietPhieuMuon> chiTiets = new ArrayList<>();
+            for (int i = 0; i < sachIds.size(); i++) {
+                Sach sach = sachRepository.findById(sachIds.get(i)).orElseThrow();
+                int soLuong = soLuongs.get(i);
+
+                if (sach.getSoLuong() < soLuong) {
+                    throw new RuntimeException("Sách '" + sach.getTenSach() + "' không đủ số lượng!");
+                }
+
+                sach.setSoLuong(sach.getSoLuong() - soLuong);
+                sachRepository.save(sach);
+
+                ChiTietPhieuMuon chiTiet = new ChiTietPhieuMuon();
+                chiTiet.setPhieuMuon(saved);
+                chiTiet.setSach(sach);
+                chiTiet.setSoLuong(soLuong);
+                chiTiet.setGiaMuon(sach.getGiaMuon() != null ? sach.getGiaMuon() : 0.0);
+                chiTiets.add(chiTiet);
+            }
+            chiTietPhieuMuonRepository.saveAll(chiTiets);
+
+            // ✅ THƯỞNG LINH THẠCH: Mượn sách được +50
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (auth != null && auth.isAuthenticated()) {
+                String username = auth.getName();
+                taiKhoanRepository.findByUsername(username).ifPresent(tk -> {
+                    tk.setLinhThach(tk.getLinhThach() + 50);
+                    taiKhoanRepository.save(tk);
+                });
+            }
+
+            notificationService.notifyReader(docGia, 
+                "Phiếu mượn mới #"+saved.getId(), 
+                "Bạn đã mượn thành công " + sachIds.size() + " đầu sách. Linh Thạch +50!", 
+                "SUCCESS");
+
+            redirect.addFlashAttribute("success", "Tạo phiếu mượn thành công! Đạo hữu được tặng 50 Linh Thạch.");
+        } catch (Exception e) {
+            redirect.addFlashAttribute("error", "Lỗi: " + e.getMessage());
+        }
+        return "redirect:/phieumuon";
+    }
+
+    @GetMapping("/view/{id}")
+    public String view(@PathVariable Long id, Model model) {
+        PhieuMuon phieuMuon = phieuMuonRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy phiếu mượn"));
+        model.addAttribute("phieuMuon", phieuMuon);
+        model.addAttribute("chiTiets", chiTietPhieuMuonRepository.findByPhieuMuonId(id));
+        return "phieumuon/view";
+    }
+
+    @GetMapping("/return/{id}")
+    public String returnBook(@PathVariable Long id, RedirectAttributes redirect) {
+        PhieuMuon phieuMuon = phieuMuonRepository.findById(id).orElse(null);
+        if (phieuMuon != null) {
+            phieuMuon.setNgayTra(LocalDate.now());
+
+            // Trả lại số lượng sách
+            for (ChiTietPhieuMuon chiTiet : phieuMuon.getChiTietPhieuMuons()) {
+                Sach sach = chiTiet.getSach();
+                sach.setSoLuong(sach.getSoLuong() + chiTiet.getSoLuong());
+                sachRepository.save(sach);
+            }
+
+            phieuMuonRepository.save(phieuMuon);
+            
+            // ✅ THƯỞNG LINH THẠCH: Trả sách sớm/đúng hạn +100
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (auth != null && auth.isAuthenticated()) {
+                taiKhoanRepository.findByUsername(auth.getName()).ifPresent(tk -> {
+                    tk.setLinhThach(tk.getLinhThach() + 100);
+                    taiKhoanRepository.save(tk);
+                });
+            }
+
+            notificationService.notifyReader(phieuMuon.getDocGia(), 
+                "Hệ thống: Trả sách thành công", 
+                "Phiếu mượn #"+phieuMuon.getId()+" đã được xác nhận trả. Linh Thạch +100. Cảm ơn đạo hữu!", 
+                "SUCCESS");
+                
+            redirect.addFlashAttribute("success", "Đã xác nhận trả sách! Đạo hữu nhận được 100 Linh Thạch.");
+        }
+        return "redirect:/phieumuon";
+    }
+
+    @GetMapping("/delete/{id}")
+    public String delete(@PathVariable Long id, RedirectAttributes redirect) {
+        if (!chiTietPhieuMuonRepository.findByPhieuMuonId(id).isEmpty()) {
+            chiTietPhieuMuonRepository.deleteAll(chiTietPhieuMuonRepository.findByPhieuMuonId(id));
+        }
+        phieuMuonRepository.deleteById(id);
+        redirect.addFlashAttribute("success", "Xóa phiếu mượn thành công!");
+        return "redirect:/phieumuon";
+    }
+
+    // Trang thanh toán khi trả sách
+    @GetMapping("/thanh-toan/{id}")
+    public String thanhToanForm(@PathVariable Long id, Model model) {
+        PhieuMuon phieuMuon = phieuMuonRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy phiếu mượn"));
+
+        // Tính số ngày mượn thực tế
+        LocalDate ngayMuon = phieuMuon.getNgayMuon();
+        LocalDate ngayTraDuKien = phieuMuon.getNgayTraDuKien() != null ? phieuMuon.getNgayTraDuKien() : ngayMuon.plusDays(7);
+        LocalDate ngayTraThucTe = LocalDate.now();
+
+        long soNgayMuon = java.time.temporal.ChronoUnit.DAYS.between(ngayMuon, ngayTraThucTe);
+        if (soNgayMuon < 1) soNgayMuon = 1;
+        final long soNgayMuonFinal = soNgayMuon;
+
+        long soNgayQuaHan = 0;
+        double tienPhat = 0;
+        double phatMoiNgay = phieuMuon.getTienPhat() != null ? phieuMuon.getTienPhat() : 5000.0;
+
+        if (ngayTraThucTe.isAfter(ngayTraDuKien)) {
+            soNgayQuaHan = java.time.temporal.ChronoUnit.DAYS.between(ngayTraDuKien, ngayTraThucTe);
+            tienPhat = soNgayQuaHan * phatMoiNgay;
+        }
+
+        // Tổng số sách mượn
+        int tongSach = phieuMuon.getChiTietPhieuMuons().stream()
+                .mapToInt(ChiTietPhieuMuon::getSoLuong).sum();
+        double tongTienPhat = tienPhat * tongSach;
+
+        // Tính phí mượn = giá mượn * số lượng * số ngày mượn
+        double tongPhiMuon = phieuMuon.getChiTietPhieuMuons().stream()
+                .mapToDouble(ct -> {
+                    double gia = ct.getGiaMuon() != null ? ct.getGiaMuon() : 0.0;
+                    return gia * ct.getSoLuong() * soNgayMuonFinal;
+                }).sum();
+
+        double tongCong = tongPhiMuon + tongTienPhat;
+
+        model.addAttribute("phieuMuon", phieuMuon);
+        model.addAttribute("soNgayQuaHan", soNgayQuaHan);
+        model.addAttribute("soNgayMuon", soNgayMuon);
+        model.addAttribute("tongSach", tongSach);
+        model.addAttribute("tienPhatMoiSach", tienPhat);
+        model.addAttribute("tongTienPhat", tongTienPhat);
+        model.addAttribute("tongPhiMuon", tongPhiMuon);
+        model.addAttribute("tongCong", tongCong);
+        model.addAttribute("ngayTraDuKien", ngayTraDuKien);
+        model.addAttribute("ngayTraThucTe", ngayTraThucTe);
+
+        return "phieumuon/thanh-toan";
+    }
+
+    // Xử lý thanh toán
+    @PostMapping("/thanh-toan/{id}")
+    public String xuLyThanhToan(@PathVariable Long id, @RequestParam("phuongThuc") String phuongThuc,
+            @RequestParam("soTien") Double soTien, @RequestParam(value = "ghiChu", required = false) String ghiChu,
+            RedirectAttributes redirect) {
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            String username = auth.getName();
+            TaiKhoan taiKhoan = taiKhoanRepository.findByUsername(username)
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy tài khoản"));
+
+            PhieuMuon phieuMuon = phieuMuonRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy phiếu mượn"));
+
+            // Ngăn chặn lỗi trả sách nhiều lần gian lận (Real-time debug fix)
+            if (phieuMuon.getNgayTra() != null) {
+                redirect.addFlashAttribute("error", "Phiếu mượn này đã được thanh toán và trả sách trước đó!");
+                return "redirect:/phieumuon";
+            }
+
+            // Tạo thanh toán
+            ThanhToan thanhToan = new ThanhToan();
+            thanhToan.setPhieuMuon(phieuMuon);
+            thanhToan.setTaiKhoan(taiKhoan);
+            thanhToan.setSoTien(soTien);
+            thanhToan.setPhuongThuc(phuongThuc);
+            thanhToan.setGhiChu(ghiChu);
+            thanhToan.setTrangThai(1);
+
+            thanhToanRepository.save(thanhToan);
+
+            // Cập nhật ngày trả
+            phieuMuon.setNgayTra(LocalDate.now());
+
+            // Trả lại số lượng sách
+            for (ChiTietPhieuMuon chiTiet : phieuMuon.getChiTietPhieuMuons()) {
+                Sach sach = chiTiet.getSach();
+                sach.setSoLuong(sach.getSoLuong() + chiTiet.getSoLuong());
+                sachRepository.save(sach);
+            }
+
+            phieuMuonRepository.save(phieuMuon);
+
+            // ✅ THƯỞNG LINH THẠCH: Thanh toán phí phạt/mượn +100
+            taiKhoan.setLinhThach(taiKhoan.getLinhThach() + 100);
+            taiKhoanRepository.save(taiKhoan);
+
+            notificationService.notifyReader(phieuMuon.getDocGia(), 
+                "Thanh toán thành công", 
+                "Giao dịch cho phiếu #" + phieuMuon.getId() + " hoàn tất. Linh Thạch +100. Số tiền: " + soTien + " VNĐ.", 
+                "SUCCESS");
+
+            redirect.addFlashAttribute("success", String.format(
+                    "Thanh toán thành công! Đạo hữu nhận được 100 Linh Thạch. Mã: %s - Số tiền: %,.0f VNĐ", 
+                    thanhToan.getMaGiaoDich(), soTien));
+        } catch (Exception e) {
+            redirect.addFlashAttribute("error", "Lỗi thanh toán: " + e.getMessage());
+        }
+
+        return "redirect:/phieumuon";
+    }
+
+    // Lịch sử thanh toán
+    @GetMapping("/thanh-toan/lich-su")
+    public String lichSuThanhToan(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        TaiKhoan taiKhoan = taiKhoanRepository.findByUsername(username).orElse(null);
+
+        if (taiKhoan != null) {
+            model.addAttribute("thanhToanList", thanhToanRepository.findByTaiKhoanId(taiKhoan.getId()));
+        }
+
+        return "phieumuon/lich-su-thanh-toan";
+    }
+}

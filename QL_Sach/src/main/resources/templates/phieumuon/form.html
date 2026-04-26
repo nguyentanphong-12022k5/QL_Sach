@@ -1,0 +1,188 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tạo Phiếu Mượn - Thư Viện</title>
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+<script src="https://unpkg.com/html5-qrcode"></script>
+<style>
+    .scanner-modal {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.8);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+    #reader-scanner {
+        width: 500px;
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <header class="header fade-in">
+        <h1><i class="fas fa-hand-holding"></i> Tạo Phiếu Mượn Mới</h1>
+        <nav class="nav">
+            <a th:href="@{/phieumuon}" class="btn btn-outline" style="padding: 10px 25px; border-radius: 50px;">
+                <i class="fas fa-arrow-left"></i> Quay Lại
+            </a>
+        </nav>
+    </header>
+
+    <main class="main fade-in">
+        <div th:if="${error}" class="alert alert-error"><i class="fas fa-exclamation-circle"></i> <span th:text="${error}"></span></div>
+
+        <form th:action="@{/phieumuon/save}" method="post" id="phieuMuonForm">
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> Chọn Độc Giả <span style="color: red;">*</span></label>
+                <div style="display: flex; gap: 10px;">
+                    <select name="docGiaId" id="docGiaSelect" class="form-control" required style="flex: 1;">
+                        <option value="">-- Chọn độc giả --</option>
+                        <option th:each="dg : ${docGiaList}" th:value="${dg.id}" th:text="'LIB-' + ${dg.id} + ' - ' + ${dg.hoTen} + ' (' + ${dg.soDienThoai} + ')'"></option>
+                    </select>
+                    <button type="button" class="btn btn-primary" onclick="startScanner()" title="Quét mã thẻ">
+                        <i class="fas fa-qrcode"></i> Quét Mã
+                    </button>
+                </div>
+            </div>
+
+            <!-- Scanner Modal -->
+            <div id="scannerModal" class="scanner-modal">
+                <div id="reader-scanner"></div>
+                <button type="button" class="btn btn-danger" onclick="stopScanner()" style="margin-top: 20px;">
+                    <i class="fas fa-times"></i> Đóng Camera
+                </button>
+            </div>
+
+            <div id="sachList">
+                <div class="sach-item" style="display: flex; gap: 15px; margin-bottom: 15px; align-items: center;">
+                    <div style="flex: 2;">
+                        <label>Chọn Sách</label>
+                        <select name="sachIds" class="form-control" required>
+                            <option value="">-- Chọn sách --</option>
+                            <option th:each="s : ${sachList}" th:value="${s.id}" th:text="${s.tenSach + ' (Còn: ' + s.soLuong + ')'}"></option>
+                        </select>
+                    </div>
+                    <div style="flex: 1;">
+                        <label>Số Lượng</label>
+                        <input type="number" name="soLuongs" class="form-control" min="1" value="1" required />
+                    </div>
+                    <div style="margin-top: 25px;">
+                        <button type="button" class="btn btn-danger" onclick="removeSachItem(this)"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-outline" onclick="addSachItem()" style="margin-bottom: 20px;">
+                <i class="fas fa-plus"></i> Thêm Sách
+            </button>
+
+            <div class="form-group">
+                <label><i class="fas fa-calendar"></i> Ngày Trả Dự Kiến</label>
+                <input type="date" name="ngayTraDuKien" class="form-control" th:value="${#temporals.format(today.plusDays(7), 'yyyy-MM-dd')}" />
+            </div>
+
+            <div style="display: flex; gap: 15px;">
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Tạo Phiếu Mượn</button>
+                <a th:href="@{/phieumuon}" class="btn btn-outline"><i class="fas fa-times"></i> Hủy</a>
+            </div>
+        </form>
+    </main>
+</div>
+
+<script>
+    function addSachItem() {
+        var container = document.getElementById('sachList');
+        var firstItem = container.querySelector('.sach-item');
+        var newItem = firstItem.cloneNode(true);
+        newItem.querySelectorAll('select, input').forEach(el => el.value = '');
+        container.appendChild(newItem);
+    }
+    function removeSachItem(btn) {
+        var items = document.querySelectorAll('.sach-item');
+        if (items.length > 1) {
+            btn.closest('.sach-item').remove();
+        }
+    }
+
+    // QR SCANNER LOGIC
+    let html5QrCode;
+
+    function startScanner() {
+        document.getElementById('scannerModal').style.display = 'flex';
+        html5QrCode = new Html5Qrcode("reader-scanner");
+        const qrCodeSuccessCallback = (decodedText, decodedResult) => {
+            console.log(`Scan result: ${decodedText}`, decodedResult);
+            // Expected format: READER:ID
+            if (decodedText.startsWith("READER:")) {
+                const readerId = decodedText.split(":")[1].trim();
+                const select = document.getElementById('docGiaSelect');
+                
+                // Try to find and select the option by value (ID)
+                let found = false;
+                for (let i = 0; i < select.options.length; i++) {
+                    const optionValue = select.options[i].value.toString().trim();
+                    if (optionValue === readerId) {
+                        select.selectedIndex = i;
+                        found = true;
+                        break;
+                    }
+                }
+                
+                // Fallback: Tìm theo số điện thoại (nếu ID không khớp, có thể do user chưa cập nhật profile)
+                if (!found && readerId.length >= 10) {
+                    for (let i = 0; i < select.options.length; i++) {
+                        if (select.options[i].text.includes(readerId)) {
+                            select.selectedIndex = i;
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (found) {
+                    if (typeof showToast === 'function') {
+                        showToast("Đã tìm thấy Độc giả: " + select.options[select.selectedIndex].text, "SUCCESS");
+                    } else {
+                        alert("Đã tìm thấy Độc giả: " + select.options[select.selectedIndex].text);
+                    }
+                    stopScanner();
+                } else {
+                    alert("Không tìm thấy Độc giả có ID/SĐT: " + readerId);
+                }
+            } else {
+                alert("Mã QR không hợp lệ. Nội dung quét được: " + decodedText);
+            }
+        };
+        const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+
+        html5QrCode.start({ facingMode: "environment" }, config, qrCodeSuccessCallback)
+            .catch(err => {
+                console.error("Lỗi khởi động camera", err);
+                alert("Không thể truy cập camera: " + err);
+                stopScanner();
+            });
+    }
+
+    function stopScanner() {
+        if (html5QrCode && html5QrCode.isScanning) {
+            html5QrCode.stop().then(() => {
+                document.getElementById('scannerModal').style.display = 'none';
+                html5QrCode.clear();
+            });
+        } else {
+            document.getElementById('scannerModal').style.display = 'none';
+        }
+    }
+</script>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

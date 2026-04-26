@@ -1,0 +1,690 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Diễn Đàn - Thư Viện</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <style>
+      :root {
+          --primary-color: #4361ee;
+          --secondary-color: #764ba2;
+          --dark-color: #1a1a2e;
+          --gray-color: #65676b;
+          --light-gray: #f0f2f5;
+          --danger-color: #dc3545;
+          --warning-color: #ffc107;
+          --success-color: #28a745;
+          --login-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+
+      * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+      }
+
+      body {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+          background-color: var(--light-gray);
+          color: var(--dark-color);
+          line-height: 1.5;
+      }
+
+      .container {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 20px;
+      }
+
+      .header {
+          background: white;
+          padding: 15px 30px;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+          margin-bottom: 30px;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          flex-wrap: wrap;
+          position: sticky;
+          top: 0;
+          z-index: 1001;
+          height: auto;
+          min-height: 80px;
+          border-radius: 0 0 20px 20px;
+      }
+
+      .header h1 {
+          color: var(--primary-color);
+          font-size: 1.8rem;
+      }
+
+      .nav {
+          display: flex;
+          align-items: center;
+          gap: 20px;
+          flex-wrap: wrap;
+      }
+
+      .nav-link {
+          color: var(--dark-color);
+          text-decoration: none;
+          font-weight: 500;
+          transition: color 0.2s;
+      }
+
+      .nav-link:hover {
+          color: white !important;
+          background: var(--primary-color);
+          box-shadow: 0 4px 12px rgba(24, 119, 242, 0.3);
+      }
+
+      /* User Menu Dropdown */
+      .user-menu {
+          position: relative;
+          display: inline-block;
+      }
+
+      .avatar-small {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          object-fit: cover;
+          cursor: pointer;
+          border: 2px solid var(--primary-color);
+      }
+
+      .dropdown-content {
+          display: none;
+          position: absolute;
+          right: 0;
+          background-color: white;
+          min-width: 200px;
+          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+          border-radius: 8px;
+          z-index: 1000;
+          margin-top: 10px;
+      }
+
+      .dropdown-content.show {
+          display: block;
+      }
+
+      .dropdown-content a {
+          color: var(--dark-color);
+          padding: 12px 16px;
+          text-decoration: none;
+          display: block;
+          transition: background-color 0.2s;
+      }
+
+      .dropdown-content a:hover {
+          background-color: var(--light-gray);
+      }
+
+      .dropdown-content hr {
+          margin: 5px 0;
+          border: none;
+          border-top: 1px solid #eee;
+      }
+
+      .logout-btn {
+          width: 100%;
+          padding: 12px 16px;
+          background: none;
+          border: none;
+          text-align: left;
+          color: var(--danger-color);
+          cursor: pointer;
+          font-size: 1rem;
+      }
+
+      .logout-btn:hover {
+          background-color: var(--light-gray);
+      }
+
+      /* Badge */
+      .badge {
+          display: inline-block;
+          padding: 3px 8px;
+          font-size: 0.75rem;
+          font-weight: 600;
+          border-radius: 4px;
+          margin-left: 8px;
+      }
+
+      .badge-danger {
+          background-color: var(--danger-color);
+          color: white;
+      }
+
+      .badge-warning {
+          background-color: var(--warning-color);
+          color: var(--dark-color);
+      }
+
+      .badge-success {
+          background-color: var(--success-color);
+          color: white;
+      }
+
+      /* Alert */
+      .alert {
+          padding: 15px 20px;
+          border-radius: 8px;
+          margin-bottom: 20px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+      }
+
+      .alert-success {
+          background-color: #d4edda;
+          color: #155724;
+          border: 1px solid #c3e6cb;
+      }
+
+      .alert-error {
+          background-color: #f8d7da;
+          color: #721c24;
+          border: 1px solid #f5c6cb;
+      }
+
+      /* Button */
+      .btn {
+          display: inline-block;
+          padding: 10px 20px;
+          border-radius: 6px;
+          border: none;
+          cursor: pointer;
+          font-size: 1rem;
+          font-weight: 500;
+          text-decoration: none;
+          transition: all 0.2s;
+      }
+
+  
+
+      /* --- HIỆU ỨNG THẨM MỸ CAO CẤP (PREMIUM AESTHETICS) --- */
+
+      /* Nút bấm (Button) - Gradient & Floating */
+      .btn-primary {
+          background: var(--login-gradient);
+          color: white;
+          box-shadow: 0 4px 15px rgba(118, 75, 162, 0.3);
+          transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      }
+
+      .btn-primary:hover {
+          background: linear-gradient(135deg, #0d5cdd, #0b49b3);
+          transform: translateY(-2px);
+          box-shadow: 0 8px 25px rgba(24, 119, 242, 0.4);
+      }
+
+      /* Thẻ Form Bình Luận */
+      .form-binh-luan {
+          background: white;
+          border-radius: 20px;
+          padding: 25px;
+          margin-bottom: 30px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+          border: 1px solid rgba(0, 0, 0, 0.02);
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .form-binh-luan:hover {
+          box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+      }
+
+      .form-binh-luan h3 {
+          background: var(--login-gradient);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          display: inline-block;
+          font-weight: 700;
+      }
+
+      .form-binh-luan textarea {
+          width: 100%;
+          padding: 15px 20px;
+          border: 2px solid #eef0f3;
+          background-color: #f8fafc;
+          border-radius: 16px;
+          resize: vertical;
+          min-height: 120px;
+          font-size: 1.05rem;
+          transition: all 0.3s ease;
+          box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);
+      }
+
+      .form-binh-luan textarea:focus {
+          border-color: #1877f2;
+          background-color: white;
+          outline: none;
+          box-shadow: 0 0 0 4px rgba(24, 119, 242, 0.1);
+      }
+
+      /* Thẻ Bình Luận - Micro Animation */
+      .binh-luan-card {
+          background: white;
+          border-radius: 20px;
+          padding: 25px;
+          margin-bottom: 25px;
+          border: 1px solid rgba(0,0,0,0.03);
+          box-shadow: 0 5px 20px rgba(0, 0, 0, 0.03);
+          transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      }
+
+      .binh-luan-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+          border-color: rgba(24, 119, 242, 0.1);
+      }
+
+      .binh-luan-avatar {
+          width: 55px;
+          height: 55px;
+          border-radius: 50%;
+          object-fit: cover;
+          border: 2px solid transparent;
+          background-image: linear-gradient(white, white), var(--login-gradient);
+          background-origin: border-box;
+          background-clip: content-box, border-box;
+          box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+          transition: transform 0.3s ease;
+      }
+
+      .binh-luan-card:hover .binh-luan-avatar {
+          transform: scale(1.05) rotate(5deg);
+      }
+
+      /* Chi tiết Sidebar */
+      .sidebar {
+          background: white;
+          border-radius: 20px;
+          padding: 25px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+          border: 1px solid rgba(0,0,0,0.02);
+          position: sticky;
+          top: 20px;
+      }
+
+      .sidebar-title {
+          font-size: 1.25rem;
+          font-weight: 700;
+          margin-bottom: 20px;
+          padding-bottom: 12px;
+          border-bottom: 2px dashed #eaeaea;
+          position: relative;
+          color: var(--dark-color);
+      }
+
+      .sidebar-title::after {
+          content: '';
+          position: absolute;
+          bottom: -2px;
+          left: 0;
+          width: 50px;
+          height: 2px;
+          background: var(--login-gradient);
+      }
+
+      .sidebar-item {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 12px 0;
+          border-bottom: 1px solid rgba(0,0,0,0.03);
+          transition: transform 0.2s ease, background 0.2s ease;
+          border-radius: 8px;
+      }
+
+      .sidebar-item:hover {
+          transform: translateX(5px);
+          background: #f8fafc;
+          padding-left: 10px;
+          padding-right: 10px;
+      }
+
+      .sidebar-item:last-child {
+          border-bottom: none;
+      }
+
+      .btn-action {
+          opacity: 0.6;
+          transition: all 0.2s ease;
+          margin-left: 12px;
+          text-decoration: none;
+          font-size: 1.15rem;
+          background: #f0f2f5;
+          width: 35px;
+          height: 35px;
+          border-radius: 50%;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+      }
+
+      .btn-action:hover {
+          opacity: 1;
+          transform: scale(1.1);
+          background: white;
+          box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      }
+
+      .fade-in {
+          animation: fadeIn 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+      }
+
+      @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(20px); filter: blur(4px); }
+          to { opacity: 1; transform: translateY(0); filter: blur(0); }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <div th:replace="~{fragments/header :: header}"></div>
+
+      <main class="main fade-in">
+        <div th:if="${success}" class="alert alert-success">
+          <i class="fas fa-check-circle"></i> <span th:text="${success}"></span>
+        </div>
+        <div th:if="${error}" class="alert alert-error">
+          <i class="fas fa-exclamation-circle"></i>
+          <span th:text="${error}"></span>
+        </div>
+
+        <div class="dien-dan-container">
+          <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px">
+            <!-- Cột chính -->
+            <div>
+              <!-- Form đăng bình luận -->
+              <div class="form-binh-luan" th:if="${currentUser != null}">
+                <h3 style="margin-bottom: 15px">
+                  <i class="fas fa-pen"></i> Đóng góp ý kiến
+                </h3>
+                <form th:action="@{/dien-dan/dang}" method="post">
+                  <textarea
+                    name="noiDung"
+                    placeholder="Chia sẻ ý kiến của bạn..."
+                    required
+                  ></textarea>
+                  <div
+                    style="
+                      display: flex;
+                      justify-content: flex-end;
+                      margin-top: 15px;
+                    "
+                  >
+                    <button type="submit" class="btn btn-primary">
+                      <i class="fas fa-paper-plane"></i> Gửi ý kiến
+                    </button>
+                  </div>
+                </form>
+              </div>
+
+              <!-- Thông báo khi chưa đăng nhập -->
+              <div class="form-binh-luan" th:unless="${currentUser != null}">
+                <h3 style="margin-bottom: 15px">
+                  <i class="fas fa-pen"></i> Đóng góp ý kiến
+                </h3>
+                <p style="text-align: center; padding: 20px">
+                  <a th:href="@{/login}" style="color: var(--primary-color)"
+                    >Đăng nhập</a
+                  >
+                  để đóng góp ý kiến
+                </p>
+              </div>
+
+              <!-- Danh sách bình luận -->
+              <h3 style="margin-bottom: 20px">
+                <i class="fas fa-list"></i> Ý kiến đóng góp gần đây
+              </h3>
+
+              <div th:if="${binhLuanList == null || binhLuanList.isEmpty()}">
+                <div
+                  class="binh-luan-card"
+                  style="text-align: center; padding: 40px"
+                >
+                  <i
+                    class="fas fa-comment-dots"
+                    style="
+                      font-size: 3rem;
+                      color: var(--gray-color);
+                      margin-bottom: 15px;
+                    "
+                  ></i>
+                  <p>Chưa có ý kiến đóng góp nào. Hãy là người đầu tiên!</p>
+                </div>
+              </div>
+
+              <!-- Vòng lặp bình luận -->
+              <div th:each="bl : ${binhLuanList}" class="binh-luan-card">
+                <div class="binh-luan-header">
+                  <!-- Avatar người dùng -->
+                  <img
+                    th:src="${bl.taiKhoan.avatar != null && !bl.taiKhoan.avatar.empty} ? @{${bl.taiKhoan.avatar}} : 'https://ui-avatars.com/api/?name=' + ${bl.taiKhoan.hoTen != null ? bl.taiKhoan.hoTen : 'User'} + '&background=1877f2&color=fff&size=50'"
+                    alt="Avatar"
+                    class="binh-luan-avatar"
+                    th:attr="data-name=${bl.taiKhoan.hoTen != null ? bl.taiKhoan.hoTen : 'User'}"
+                    onerror="this.src='https://ui-avatars.com/api/?name=' + encodeURIComponent(this.getAttribute('data-name')) + '&background=1877f2&color=fff&size=50'"
+                  />
+
+                  <div class="binh-luan-info">
+                    <div class="binh-luan-name">
+                      <span
+                        th:text="${bl.taiKhoan.hoTen} ?: ${bl.taiKhoan.username}"
+                        >User</span
+                      >
+                      <span
+                        th:if="${bl.taiKhoan.quyen == 1}"
+                        class="badge badge-danger"
+                        >Admin</span
+                      >
+                      <span
+                        th:if="${bl.taiKhoan.quyen == 2}"
+                        class="badge badge-warning"
+                        >Thủ thư</span
+                      >
+                    </div>
+                    <div class="binh-luan-time">
+                      <i class="far fa-clock"></i>
+                      <span
+                        th:text="${#temporals.format(bl.ngayDang, 'dd/MM/yyyy HH:mm')}"
+                      ></span>
+                      <span
+                        th:if="${bl.trangThai == 2}"
+                        style="color: var(--warning-color); margin-left: 10px"
+                      >
+                        <i class="fas fa-undo-alt"></i> Đã thu hồi
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- Action buttons cho bình luận hiển thị -->
+                  <div
+                    style="display: flex; gap: 8px"
+                    th:if="${bl.trangThai == 1}"
+                  >
+                    <!-- Nút chỉnh sửa -->
+                    <a
+                      th:if="${currentUser != null && (currentUser.id == bl.taiKhoan.id || currentUser.quyen == 1)}"
+                      th:href="@{/dien-dan/sua/{id}(id=${bl.id})}"
+                      class="btn-action"
+                      style="color: var(--primary-color)"
+                      title="Chỉnh sửa"
+                    >
+                      <i class="fas fa-edit"></i>
+                    </a>
+
+                    <!-- Nút thu hồi -->
+                    <a
+                      th:if="${currentUser != null && (currentUser.id == bl.taiKhoan.id || currentUser.quyen == 1)}"
+                      th:href="@{/dien-dan/thu-hoi/{id}(id=${bl.id})}"
+                      class="btn-action"
+                      style="color: var(--warning-color)"
+                      onclick="return confirm('Thu hồi bình luận này?');"
+                      title="Thu hồi"
+                    >
+                      <i class="fas fa-undo-alt"></i>
+                    </a>
+
+                    <!-- Nút xóa vĩnh viễn -->
+                    <a
+                      th:if="${currentUser != null && currentUser.quyen == 1}"
+                      th:href="@{/dien-dan/xoa-vinh-vien/{id}(id=${bl.id})}"
+                      class="btn-action"
+                      style="color: var(--danger-color)"
+                      onclick="return confirm('Xóa vĩnh viễn bình luận này?');"
+                      title="Xóa vĩnh viễn"
+                    >
+                      <i class="fas fa-trash"></i>
+                    </a>
+                  </div>
+
+                  <!-- Nút khôi phục cho bình luận đã thu hồi -->
+                  <div
+                    th:if="${bl.trangThai == 2 && currentUser != null && currentUser.quyen == 1}"
+                  >
+                    <a
+                      th:href="@{/dien-dan/khoi-phuc/{id}(id=${bl.id})}"
+                      class="btn-action"
+                      style="color: var(--success-color)"
+                      title="Khôi phục"
+                    >
+                      <i class="fas fa-check-circle"></i>
+                    </a>
+                  </div>
+
+                  <!-- Nút xóa vĩnh viễn cho bình luận đã thu hồi (Admin) -->
+                  <div
+                    th:if="${bl.trangThai == 2 && currentUser != null && currentUser.quyen == 1}"
+                    style="display: inline-block; margin-left: 8px"
+                  >
+                    <a
+                      th:href="@{/dien-dan/xoa-vinh-vien/{id}(id=${bl.id})}"
+                      class="btn-action"
+                      style="color: var(--danger-color)"
+                      onclick="return confirm('Xóa vĩnh viễn bình luận này?');"
+                      title="Xóa vĩnh viễn"
+                    >
+                      <i class="fas fa-trash"></i>
+                    </a>
+                  </div>
+                </div>
+
+                <div class="binh-luan-content" th:text="${bl.noiDung}"></div>
+
+                <div th:if="${bl.sach != null}" class="binh-luan-sach">
+                  <i class="fas fa-book"></i>
+                  <a
+                    th:href="@{/sach/{id}(id=${bl.sach.id})}"
+                    th:text="${bl.sach.tenSach}"
+                  ></a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div>
+              <div class="sidebar">
+                <h4 class="sidebar-title">
+                  <i class="fas fa-fire"></i> Bình luận mới nhất
+                </h4>
+                <div th:each="bl : ${binhLuanMoiNhat}">
+                  <div class="sidebar-item">
+                    <img
+                      th:src="@{${bl.taiKhoan.avatar != null && !bl.taiKhoan.avatar.isEmpty()} ? ${bl.taiKhoan.avatar} : 'https://ui-avatars.com/api/?name=' + ${bl.taiKhoan.hoTen != null ? bl.taiKhoan.hoTen : 'User'} + '&background=1877f2&color=fff&size=40'}"
+                      alt="Avatar"
+                      style="
+                        width: 35px;
+                        height: 35px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                      "
+                      onerror="
+                        this.src =
+                          'https://ui-avatars.com/api/?name=User&background=1877f2&color=fff&size=40'
+                      "
+                    />
+                    <div style="flex: 1">
+                      <div
+                        style="font-weight: 500; font-size: 0.9rem"
+                        th:text="${bl.taiKhoan.hoTen} ?: ${bl.taiKhoan.username}"
+                      ></div>
+                      <div
+                        style="
+                          font-size: 0.85rem;
+                          color: var(--gray-color);
+                          overflow: hidden;
+                          text-overflow: ellipsis;
+                          white-space: nowrap;
+                          max-width: 180px;
+                        "
+                        th:text="${bl.noiDung}"
+                      ></div>
+                      <div
+                        style="font-size: 0.75rem; color: var(--gray-color)"
+                      >
+                        <span th:text="${#temporals.format(bl.ngayDang, 'dd/MM HH:mm')}"></span>
+                        <span th:if="${bl.soSao != null}" style="color: #ffc107; margin-left: 5px;">
+                            <i class="fas fa-star" style="font-size: 0.7rem;"></i>
+                            <span th:text="${bl.soSao}" style="font-weight: 600;"></span>
+                        </span>
+                      </div>
+                    </div>
+                    <a
+                      th:if="${bl.sach != null}"
+                      th:href="@{/dien-dan/sach/{id}(id=${bl.sach.id})}"
+                      style="color: var(--primary-color)"
+                    >
+                      <i class="fas fa-book"></i>
+                    </a>
+                  </div>
+                </div>
+                <div
+                  th:if="${binhLuanMoiNhat == null || binhLuanMoiNhat.isEmpty()}"
+                >
+                  <p
+                    style="
+                      color: var(--gray-color);
+                      text-align: center;
+                      padding: 20px;
+                    "
+                  >
+                    Chưa có bình luận nào
+                  </p>
+                </div>
+              </div>
+
+              <div class="sidebar" style="margin-top: 20px">
+                <h4 class="sidebar-title">
+                  <i class="fas fa-info-circle"></i> Hướng dẫn
+                </h4>
+                <p style="color: var(--gray-color); line-height: 1.6">
+                  <i class="fas fa-check-circle" style="color: #27ae60"></i>
+                  Hãy lịch sự và tôn trọng người khác.<br />
+                  <i class="fas fa-check-circle" style="color: #27ae60"></i>
+                  Đóng góp ý kiến xây dựng để cải thiện thư viện.<br />
+                  <i class="fas fa-check-circle" style="color: #27ae60"></i>
+                  Bạn có thể bình luận về sách tại trang chi tiết sách.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+
+      <footer class="footer">
+        <p>&copy; 2026 Quản Lý Thư Viện. All rights reserved.</p>
+      </footer>
+    </div>
+
+  </body>
+</html>

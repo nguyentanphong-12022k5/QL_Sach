@@ -1,0 +1,83 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Thư Viện Sách - Trang Chủ</title>
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+	<div class="container">
+		<!-- Header -->
+		<div th:replace="~{fragments/header :: header}"></div>
+
+		<!-- Main Content -->
+		<main class="main fade-in">
+			<div class="welcome">
+				<div class="welcome-icon">
+					<i class="fas fa-scroll"></i>
+				</div>
+				<h2>Kính Chào Đạo Hữu Gia Nhập Luyện Khí Đường</h2>
+				<p>Hệ thống quản lý thư viện tối tân - Nơi lưu trữ vạn cuốn bí tịch, tra cứu thần tốc và quản lý tu vi độc giả dễ dàng.</p>
+			</div>
+
+			<!-- Quick Stats -->
+			<div class="stats-grid">
+				<div class="stat-card">
+					<div class="stat-icon"><i class="fas fa-book"></i></div>
+					<h3 th:text="${totalSach}">0</h3>
+					<p>Tổng Sách</p>
+				</div>
+				<div class="stat-card">
+					<div class="stat-icon"><i class="fas fa-users"></i></div>
+					<h3 th:text="${totalDocGia}">0</h3>
+					<p>Độc Giả</p>
+				</div>
+				<div class="stat-card">
+					<div class="stat-icon"><i class="fas fa-hand-holding-heart"></i></div>
+					<h3 th:text="${dangMuon}">0</h3>
+					<p>Đang Mượn</p>
+				</div>
+				<div class="stat-card">
+					<div class="stat-icon"><i class="fas fa-clock"></i></div>
+					<h3 th:text="${quaHan}">0</h3>
+					<p>Quá Hạn</p>
+				</div>
+			</div>
+
+			<!-- Features -->
+			<div class="features-grid">
+				<div class="feature-card">
+					<div class="feature-icon"><i class="fas fa-search"></i></div>
+					<h3>Tìm Kiếm Nhanh</h3>
+					<p>Tra cứu bí tịch theo tên, tác giả, thể loại chỉ trong chớp mắt.</p>
+				</div>
+				<div class="feature-card">
+					<div class="feature-icon"><i class="fas fa-qrcode"></i></div>
+					<h3>Quét Mã QR</h3>
+					<p>Mượn trả sách nhanh chóng với công nghệ QR hiện đại.</p>
+				</div>
+				<div class="feature-card">
+					<div class="feature-icon"><i class="fas fa-bell"></i></div>
+					<h3>Thông Báo</h3>
+					<p>Nhắc nhở đến hạn trả sách tự động qua hệ thống linh điệp.</p>
+				</div>
+				<div class="feature-card">
+					<div class="feature-icon"><i class="fas fa-chart-line"></i></div>
+					<h3>Báo Cáo</h3>
+					<p>Thống kê chi tiết hoạt động thư viện bằng biểu đồ trực quan.</p>
+				</div>
+			</div>
+		</main>
+
+		<!-- Footer -->
+		<footer class="footer">
+			<p>&copy; 2026 Quản Lý Thư Viện. All rights reserved.</p>
+		</footer>
+	</div>
+
+	<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

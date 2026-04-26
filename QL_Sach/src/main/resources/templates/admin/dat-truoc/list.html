@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Đặt Trước - Thư Viện</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            background: white;
+            padding: 10px;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            width: fit-content;
+        }
+        .tab-link {
+            padding: 8px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            color: var(--gray-color);
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        .tab-link.active {
+            background: var(--primary-color);
+            color: white;
+        }
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        .status-0 { background: #fff3cd; color: #856404; } /* Pending */
+        .status-1 { background: #d1ecf1; color: #0c5460; } /* Approved/Holding */
+        .status-2 { background: #d4edda; color: #155724; } /* Borrowed */
+        .status-3 { background: #f8d7da; color: #721c24; } /* Cancelled */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-calendar-check"></i> Quản Lý Đặt Trước</h1>
+            <nav class="nav">
+                <a th:href="@{/}" class="nav-link"><i class="fas fa-home"></i> Trang Chủ</a>
+                <a th:href="@{/phieumuon}" class="nav-link"><i class="fas fa-hand-holding"></i> Phiếu Mượn</a>
+            </nav>
+        </header>
+
+        <main class="main">
+            <div th:if="${success}" class="alert alert-success">
+                <i class="fas fa-check-circle"></i> <span th:text="${success}"></span>
+            </div>
+            <div th:if="${error}" class="alert alert-danger">
+                <i class="fas fa-exclamation-circle"></i> <span th:text="${error}"></span>
+            </div>
+
+            <div class="filter-tabs">
+                <a th:href="@{/admin/dat-truoc}" class="tab-link" th:classappend="${param.status == null ? 'active' : ''}">Tất cả</a>
+                <a th:href="@{/admin/dat-truoc(status=0)}" class="tab-link" th:classappend="${param.status != null && param.status[0] == '0' ? 'active' : ''}">Chờ duyệt</a>
+                <a th:href="@{/admin/dat-truoc(status=1)}" class="tab-link" th:classappend="${param.status != null && param.status[0] == '1' ? 'active' : ''}">Đã duyệt</a>
+                <a th:href="@{/admin/dat-truoc(status=2)}" class="tab-link" th:classappend="${param.status != null && param.status[0] == '2' ? 'active' : ''}">Đã nhận</a>
+            </div>
+
+            <div class="table-wrapper fade-in">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Độc Giả</th>
+                            <th>Sách</th>
+                            <th>Ngày Đặt</th>
+                            <th>Ngày Hẹn Lấy</th>
+                            <th>Trạng Thái</th>
+                            <th>Thao Tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="dt : ${datTruocList}">
+                            <td>
+                                <div style="font-weight: 600;" th:text="${dt.docGia.hoTen}"></div>
+                                <div style="font-size: 0.8rem; color: #7f8c8d;" th:text="${dt.docGia.soDienThoai}"></div>
+                            </td>
+                            <td>
+                                <div style="font-weight: 600;" th:text="${dt.sach.tenSach}"></div>
+                                <div style="font-size: 0.8rem; color: #7f8c8d;">SL: <span th:text="${dt.soLuong}"></span></div>
+                            </td>
+                            <td th:text="${#temporals.format(dt.ngayDat, 'dd/MM/yyyy HH:mm')}"></td>
+                            <td th:text="${#temporals.format(dt.ngayHen, 'dd/MM/yyyy')}"></td>
+                            <td>
+                                <div th:class="'status-badge status-' + ${dt.trangThai}">
+                                    <span th:if="${dt.trangThai == 0}">Chờ duyệt</span>
+                                    <span th:if="${dt.trangThai == 1}">Đã duyệt</span>
+                                    <span th:if="${dt.trangThai == 2}">Đã nhận sách</span>
+                                    <span th:if="${dt.trangThai == 3}">Đã hủy</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="display: flex; gap: 5px;">
+                                    <a th:if="${dt.trangThai == 0}" th:href="@{'/admin/dat-truoc/approve/' + ${dt.id}}" 
+                                       class="btn btn-success btn-sm" title="Duyệt"><i class="fas fa-check"></i> Duyệt</a>
+                                    
+                                    <a th:if="${dt.trangThai == 1}" th:href="@{'/admin/dat-truoc/convert/' + ${dt.id}}" 
+                                       class="btn btn-primary btn-sm" title="Chuyển sang mượn sách"><i class="fas fa-exchange-alt"></i> Mượn</a>
+                                    
+                                    <a th:if="${dt.trangThai == 0 || dt.trangThai == 1}" th:href="@{'/admin/dat-truoc/reject/' + ${dt.id}}" 
+                                       class="btn btn-danger btn-sm" title="Từ chối/Hủy" onclick="return confirm('Hủy yêu cầu này?')"><i class="fas fa-times"></i></a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr th:if="${datTruocList == null || datTruocList.isEmpty()}">
+                            <td colspan="6" style="text-align: center; padding: 40px; color: var(--gray-color);">
+                                <i class="fas fa-inbox" style="font-size: 2rem; display: block; margin-bottom: 10px;"></i>
+                                Không có yêu cầu nào.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2026 Quản Lý Thư Viện. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>

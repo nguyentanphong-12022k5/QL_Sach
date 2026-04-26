@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title th:text="${sach.tenSach} + ' - Chi tiết sách'">Chi tiết
+	sách</title>
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+.book-detail-container {
+	max-width: 1200px;
+	margin: 40px auto;
+	padding: 30px;
+	background: white;
+	border-radius: 20px;
+	box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.book-detail {
+	display: grid;
+	grid-template-columns: 350px 1fr;
+	gap: 40px;
+}
+
+.book-cover {
+	text-align: center;
+}
+
+.book-cover img {
+	width: 100%;
+	max-width: 300px;
+	height: auto;
+	border-radius: 15px;
+	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+	object-fit: cover;
+}
+
+.book-actions-detail {
+	margin-top: 30px;
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+	width: 100%;
+	max-width: 300px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.btn-block-large {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	padding: 15px 25px;
+	font-size: 1.1rem;
+	font-weight: 600;
+	border-radius: 50px;
+	text-decoration: none;
+	width: 100%;
+	transition: all 0.3s ease;
+}
+
+.btn-block-large:hover {
+	transform: translateY(-3px);
+	box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: white !important;
+    border: none;
+}
+
+
+.book-info h1 {
+	font-size: 2.5rem;
+	color: #2c3e50;
+	margin-bottom: 25px;
+	border-bottom: 3px solid #3498db;
+	padding-bottom: 15px;
+}
+
+.info-grid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 20px;
+	margin-bottom: 30px;
+}
+
+.info-item {
+	display: flex;
+	align-items: center;
+	gap: 15px;
+	padding: 15px;
+	background: #f8f9fa;
+	border-radius: 12px;
+	transition: all 0.3s ease;
+}
+
+.info-item:hover {
+	background: #e9ecef;
+	transform: translateY(-2px);
+}
+
+.info-icon {
+	width: 50px;
+	height: 50px;
+	background: #3498db;
+	border-radius: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: white;
+	font-size: 1.3rem;
+}
+
+.info-content {
+	flex: 1;
+}
+
+.info-label {
+	font-size: 0.85rem;
+	color: #7f8c8d;
+	margin-bottom: 5px;
+}
+
+.info-value {
+	font-size: 1.1rem;
+	font-weight: 600;
+	color: #2c3e50;
+}
+
+.book-description {
+	background: #f8f9fa;
+	padding: 25px;
+	border-radius: 15px;
+	margin-top: 20px;
+}
+
+.book-description h3 {
+	color: #2c3e50;
+	margin-bottom: 15px;
+	font-size: 1.3rem;
+}
+
+.book-description p {
+	line-height: 1.8;
+	color: #555;
+}
+
+.btn-large {
+	padding: 15px 30px;
+	font-size: 1.1rem;
+	border-radius: 50px;
+}
+
+.back-btn {
+	display: inline-block;
+	margin-bottom: 20px;
+	color: #3498db;
+	text-decoration: none;
+	font-size: 1.1rem;
+	transition: all 0.3s;
+}
+
+.back-btn:hover {
+	color: #2980b9;
+	transform: translateX(-5px);
+}
+
+@media ( max-width : 768px) {
+	.book-detail {
+		grid-template-columns: 1fr;
+	}
+	.info-grid {
+		grid-template-columns: 1fr;
+	}
+}
+</style>
+</head>
+<body>
+	<div class="container">
+		<!-- Header -->
+		<div th:replace="~{fragments/header :: header}"></div>
+
+		<!-- Main Content -->
+		<main class="main fade-in">
+			<a th:href="@{/sach}" class="back-btn"> <i
+				class="fas fa-arrow-left"></i> Quay lại danh sách
+			</a>
+
+			<div class="book-detail-container">
+				<div class="book-detail">
+					<!-- Book Cover -->
+					<div class="book-cover">
+						<img th:src="@{'/img/sach/' + ${sach.imageUrl}}"
+							alt="Ảnh bìa sách" onerror="this.src='/img/bookicon.png'">
+
+						<div class="book-actions-detail">
+							<!-- Nút Mượn Sách -->
+							<a th:if="${sach.soLuong != null and sach.soLuong > 0}" 
+							   th:href="@{'/muon-sach/' + ${sach.id}}" class="btn btn-primary btn-block-large">
+								<i class="fas fa-hand-holding"></i> Mượn Sách
+							</a>
+							<button th:unless="${sach.soLuong != null and sach.soLuong > 0}" 
+							   class="btn btn-primary btn-block-large" style="opacity: 0.5; cursor: not-allowed;" title="Đã hết sách">
+								<i class="fas fa-ban"></i> Hết Sách
+							</button>
+
+							<!-- Nút Đặt trước -->
+							<a th:href="@{'/dat-truoc/' + ${sach.id}}" class="btn btn-warning btn-block-large">
+								<i class="fas fa-calendar-check"></i> Đặt Trước
+							</a>
+
+							<!-- Nút Yêu Thích -->
+							<button id="btnFavorite" class="btn btn-outline btn-block-large" onclick="toggleFavorite()">
+								<i class="fas fa-bookmark" id="iconFavorite"></i> <span id="textFavorite">Yêu Thích</span>
+							</button>
+						</div>
+					</div>
+
+					<!-- Book Info -->
+					<div class="book-info">
+						<h1 th:text="${sach.tenSach}">Tên Sách</h1>
+						<div th:if="${sach.ratingCount > 0}" style="margin-bottom: 20px; color: #ffc107; font-size: 1.2rem;">
+							<span th:each="i : ${#numbers.sequence(1, 5)}">
+								<i th:class="${i <= sach.averageRating ? 'fas fa-star' : (i - 0.5 <= sach.averageRating ? 'fas fa-star-half-alt' : 'far fa-star')}"></i>
+							</span>
+							<span style="color: #7f8c8d; font-size: 1rem; margin-left: 10px;" 
+								  th:text="${#numbers.formatDecimal(sach.averageRating, 1, 1)} + ' (' + ${sach.ratingCount} + ' đánh giá)'"></span>
+						</div>
+						<div th:if="${sach.ratingCount == 0}" style="margin-bottom: 20px; color: #7f8c8d;">
+							Chưa có đánh giá cho sách này. <a th:href="@{/dien-dan/sach/{id}(id=${sach.id})}" style="color: #3498db; text-decoration: none;">Hãy là người đầu tiên đánh giá!</a>
+						</div>
+
+						<div class="info-grid">
+							<div class="info-item">
+								<div class="info-icon">
+									<i class="fas fa-user"></i>
+								</div>
+								<div class="info-content">
+									<div class="info-label">Tác Giả</div>
+									<div class="info-value" th:text="${sach.tacGia}">Tác giả</div>
+								</div>
+							</div>
+
+							<div class="info-item">
+								<div class="info-icon">
+									<i class="fas fa-building"></i>
+								</div>
+								<div class="info-content">
+									<div class="info-label">Nhà Xuất Bản</div>
+									<div class="info-value" th:text="${sach.nhaXuatBan}">NXB</div>
+								</div>
+							</div>
+
+							<div class="info-item">
+								<div class="info-icon">
+									<i class="fas fa-tag"></i>
+								</div>
+								<div class="info-content">
+									<div class="info-label">Thể Loại</div>
+									<div class="info-value" th:text="${sach.loaiSach}">Thể
+										loại</div>
+								</div>
+							</div>
+
+							<div class="info-item">
+								<div class="info-icon">
+									<i class="fas fa-map-pin"></i>
+								</div>
+								<div class="info-content">
+									<div class="info-label">Vị Trí Kệ</div>
+									<div class="info-value" th:text="${sach.keSach}">Vị trí</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="book-description">
+							<h3>
+								<i class="fas fa-info-circle"></i> Giới Thiệu Sách
+							</h3>
+							<p>
+								Đây là cuốn sách <strong th:text="${sach.tenSach}">Tên
+									sách</strong> được viết bởi tác giả <strong th:text="${sach.tacGia}">Tác
+									giả</strong>, xuất bản bởi <strong th:text="${sach.nhaXuatBan}">NXB</strong>.
+								Sách thuộc thể loại <strong th:text="${sach.loaiSach}">Thể
+									loại</strong> và hiện đang được đặt tại <strong th:text="${sach.keSach}">Vị
+									trí</strong>.
+							</p>
+							<p style="margin-top: 15px;">
+								<i class="fas fa-check-circle" style="color: #27ae60;"></i> <strong>Tình
+									trạng:</strong> Còn sách để mượn
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+
+		<footer class="footer">
+			<p>&copy; 2026 Quản Lý Thư Viện. All rights reserved.</p>
+		</footer>
+	</div>
+
+	<script>
+		// Script xử lý Yêu Thích phía front-end
+		function toggleFavorite() {
+			var btn = document.getElementById("btnFavorite");
+			var icon = document.getElementById("iconFavorite");
+			var text = document.getElementById("textFavorite");
+			
+			if (btn.classList.contains("btn-outline")) {
+				btn.classList.remove("btn-outline");
+				btn.classList.add("btn-primary"); // Chuyển sang xanh đặc
+				icon.style.color = "gold";
+				text.innerText = "Đã Yêu Thích";
+				// alert("Đã lưu sách vào danh sách yêu thích cá nhân!");
+			} else {
+				btn.classList.remove("btn-primary");
+				btn.classList.add("btn-outline");
+				icon.style.color = "";
+				text.innerText = "Yêu Thích";
+			}
+		}
+	</script>
+</body>
+</html>

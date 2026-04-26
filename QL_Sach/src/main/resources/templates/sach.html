@@ -1,0 +1,192 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Danh Sách Sách - Thư Viện</title>
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+	<div class="container">
+		<!-- Header -->
+		<div th:replace="~{fragments/header :: header}"></div>
+
+		<!-- Main Content -->
+		<main class="main fade-in">
+			<!-- Advanced Search & Filter Bar -->
+			<form action="/sach" method="GET" class="filter-bar">
+				<!-- Keyword -->
+				<div class="filter-group keyword-group">
+					<i class="fas fa-search filter-icon"></i>
+					<input type="text" name="keyword" th:value="${keyword}"
+						placeholder="Tìm theo tên sách, tác giả..." class="form-control filter-input" />
+				</div>
+				
+				<!-- Category -->
+				<div class="filter-group select-group">
+					<select name="loaiSachId" class="form-control filter-select">
+						<option value="">Tất cả Thể loại</option>
+						<option th:each="ls : ${loaiSachList}" th:value="${ls.id}" th:text="${ls.tenLoaiSach}" th:selected="${loaiSachId != null && loaiSachId == ls.id}"></option>
+					</select>
+				</div>
+				
+				<!-- Status (Filter) -->
+				<div class="filter-group select-group">
+					<select name="filter" class="form-control filter-select">
+						<option value="">Mọi trạng thái</option>
+						<option value="available" th:selected="${filter == 'available'}">Còn trong kho</option>
+					</select>
+				</div>
+				
+				<!-- Action Buttons -->
+				<div class="filter-actions">
+					<button type="submit" class="btn btn-primary filter-btn">
+						<i class="fas fa-filter"></i> Lọc
+					</button>
+					<a th:href="@{/sach}" class="btn btn-outline filter-btn-icon" title="Xóa toàn bộ bộ lọc">
+						<i class="fas fa-times"></i>
+					</a>
+					<a th:if="${#authorization.expression('hasAnyAuthority(''ROLE_ADMIN'', ''ROLE_THUTHU'', ''ROLE_NHANVIEN'')')}"
+						th:href="@{/admin/dashboard}" class="btn btn-secondary filter-btn-icon">
+						<i class="fas fa-tachometer-alt"></i>
+					</a>
+				</div>
+			</form>
+
+			<!-- Search Result Info -->
+			<div th:if="${keyword != null}" class="search-result-info">
+				<div class="result-text">
+					<i class="fas fa-search" style="margin-right: 10px;"></i> Kết quả
+					tìm kiếm cho: "<span th:text="${keyword}"></span>" <a
+						th:href="@{/sach}" class="clear-search"> <i
+						class="fas fa-times-circle"></i> Xóa tìm kiếm
+					</a>
+				</div>
+				<div class="result-count">
+					<span th:text="${resultCount}">0</span> kết quả
+				</div>
+			</div>
+
+			<!-- Filter Info -->
+			<div th:if="${filter == 'available'}" class="search-result-info">
+				<div class="result-text">
+					<i class="fas fa-filter" style="margin-right: 10px;"></i> Đang lọc:
+					Sách còn trong kho <a th:href="@{/sach}" class="clear-search">
+						<i class="fas fa-times-circle"></i> Bỏ lọc
+					</a>
+				</div>
+			</div>
+
+			<!-- No Results -->
+			<div th:if="${sachList == null || sachList.isEmpty()}"
+				class="no-results">
+				<i class="fas fa-book-open"></i>
+				<h3>Không tìm thấy sách</h3>
+				<p th:if="${keyword != null}">
+					Không có sách nào phù hợp với từ khóa "<span th:text="${keyword}"></span>".
+				</p>
+				<p th:unless="${keyword != null}">Hiện chưa có sách nào trong
+					thư viện.</p>
+				<a th:href="@{/sach}" class="btn btn-primary"
+					style="margin-top: 20px;"> <i class="fas fa-list"></i> Xem tất
+					cả sách
+				</a>
+			</div>
+
+			<!-- Book Grid -->
+			<div class="book-grid"
+				th:if="${sachList != null && !sachList.isEmpty()}">
+				<div class="book-card" th:each="sach : ${sachList}">
+					<div class="book-image">
+						<img
+							th:src="@{${sach.imageUrl != null ? '/img/sach/' + sach.imageUrl : '/img/default-book.jpg'}}"
+							alt="Ảnh sách" onerror="this.src = '/img/default-book.jpg'" />
+					</div>
+					<div class="book-info">
+						<div class="book-title" th:text="${sach.tenSach}">Tên sách</div>
+						<div class="book-meta">
+							<div>
+								<i class="fas fa-user"></i> <span th:text="${sach.tacGia}">Tác
+									giả</span>
+							</div>
+							<div>
+								<i class="fas fa-building"></i> <span
+									th:text="${sach.nhaXuatBan}">NXB</span>
+							</div>
+							<div>
+								<i class="fas fa-tag"></i> <span th:text="${sach.loaiSach}">Thể
+									loại</span>
+							</div>
+							<div>
+								<i class="fas fa-map-pin"></i> <span th:text="${sach.keSach}">Vị
+									trí</span>
+							</div>
+						</div>
+						<div class="stars-display" th:if="${sach.ratingCount > 0}" style="margin-top: 5px; color: #ffc107;">
+							<span th:each="i : ${#numbers.sequence(1, 5)}">
+								<i th:class="${i <= sach.averageRating ? 'fas fa-star' : (i - 0.5 <= sach.averageRating ? 'fas fa-star-half-alt' : 'far fa-star')}"></i>
+							</span>
+							<span style="color: var(--gray-color); font-size: 0.85rem;" th:text="'(' + ${sach.ratingCount} + ')'"></span>
+						</div>
+						<div style="color: var(--gray-color); font-size: 0.85rem; margin-top: 5px;" th:if="${sach.ratingCount == 0}">
+							Chưa có đánh giá
+						</div>
+						<div style="margin-top: 10px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+					<span th:if="${sach.soLuong != null and sach.soLuong > 0}" 
+					      class="badge badge-success">Còn <span th:text="${sach.soLuong}"></span> quyển</span>
+					<span th:if="${sach.soLuong == null or sach.soLuong <= 0}" 
+					      class="badge badge-danger">Hết sách</span>
+					<span th:if="${sach.giaMuon != null and sach.giaMuon > 0}" 
+					      style="color: #4e73df; font-weight: 600; font-size: 0.9rem;">
+						<i class="fas fa-tag"></i> <span th:text="${#numbers.formatDecimal(sach.giaMuon, 0, 'COMMA', 0, 'POINT')} + ' đ/ngày'"></span>
+					</span>
+					<span th:unless="${sach.giaMuon != null and sach.giaMuon > 0}" 
+					      style="color: #27ae60; font-weight: 600; font-size: 0.9rem;">
+						<i class="fas fa-gift"></i> Miễn phí
+					</span>
+				</div>
+				<div class="book-actions">
+					<a th:href="@{'/sach/' + ${sach.id}}" class="btn btn-outline btn-details"> 
+						<i class="fas fa-eye"></i> Chi tiết
+					</a>
+					<a th:if="${sach.soLuong != null and sach.soLuong > 0}" 
+					   th:href="@{'/muon-sach/' + ${sach.id}}"
+						class="btn btn-primary"> 
+						<i class="fas fa-hand-holding"></i> Mượn
+					</a>
+					<a th:href="@{'/dat-truoc/' + ${sach.id}}"
+						class="btn btn-warning"> 
+						<i class="fas fa-calendar-check"></i> Đặt trước
+					</a>
+					<span th:unless="${sach.soLuong != null and sach.soLuong > 0}"
+					      class="btn btn-outline" style="opacity: 0.5; cursor: not-allowed;">
+						<i class="fas fa-ban"></i> Hết sách
+					</span>
+				</div>
+					</div>
+				</div>
+			</div>
+		</main>
+
+		<footer class="footer">
+			<p>&copy; 2026 Quản Lý Thư Viện. All rights reserved.</p>
+		</footer>
+	</div>
+
+	<script>
+		// Focus vào ô tìm kiếm khi trang load
+		document.addEventListener('DOMContentLoaded', function() {
+			const keywordInput = document.querySelector('input[name="keyword"]');
+			if (keywordInput && keywordInput.value) {
+				keywordInput.focus();
+				// Đưa con trỏ chớp nháy về cuối dòng
+				const val = keywordInput.value;
+				keywordInput.value = '';
+				keywordInput.value = val;
+			}
+		});
+	</script>
+</body>
+</html>

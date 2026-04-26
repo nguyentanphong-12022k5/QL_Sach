@@ -1,0 +1,185 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Thống Kê - Thư Viện</title>
+<link rel="stylesheet" th:href="@{/css/style.css}" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+<div class="container">
+    <header class="header fade-in">
+        <h1><i class="fas fa-chart-bar"></i> Thống Kê Hệ Thống</h1>
+        <nav class="nav">
+            <a th:href="@{/}" class="nav-link"><i class="fas fa-home"></i> Trang Chủ</a>
+            <a th:href="@{/sach}" class="nav-link"><i class="fas fa-book"></i> Sách</a>
+            <a th:href="@{/docgia}" class="nav-link"><i class="fas fa-users"></i> Độc Giả</a>
+            <a th:href="@{/phieumuon}" class="nav-link"><i class="fas fa-hand-holding"></i> Phiếu Mượn</a>
+        </nav>
+    </header>
+
+    <main class="main fade-in">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-book"></i></div>
+                <h3 th:text="${stats.totalSach}">0</h3>
+                <p>Tổng Sách</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-users"></i></div>
+                <h3 th:text="${stats.totalDocGia}">0</h3>
+                <p>Tổng Độc Giả</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-hand-holding-heart"></i></div>
+                <h3 th:text="${stats.dangMuon}">0</h3>
+                <p>Đang Mượn</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                <h3 th:text="${stats.quaHan}">0</h3>
+                <p>Quá Hạn</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-truck"></i></div>
+                <h3 th:text="${stats.totalPhieuNhap}">0</h3>
+                <p>Phiếu Nhập</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-user-shield"></i></div>
+                <h3 th:text="${stats.totalTaiKhoan}">0</h3>
+                <p>Tài Khoản</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-box"></i></div>
+                <h3 th:text="${stats.sachConTrongKho}">0</h3>
+                <p>Sách Còn Trong Kho</p>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon"><i class="fas fa-exclamation-circle"></i></div>
+                <h3 th:text="${stats.sachSapHet}">0</h3>
+                <p>Sách Sắp Hết (&lt;5)</p>
+            </div>
+        </div>
+
+        <div style="margin-top: 40px; padding: 30px; background: #f8fafc; border-radius: 20px; text-align: center;">
+            <i class="fas fa-calendar-alt" style="font-size: 2rem; color: var(--primary-color); margin-bottom: 15px;"></i>
+            <h3 style="margin-bottom: 10px;">Ngày Thống Kê</h3>
+            <p style="font-size: 1.2rem; color: var(--dark-color);" th:text="${#temporals.format(stats.today, 'dd/MM/yyyy')}"></p>
+        </div>
+
+        <!-- CHARTS SECTION -->
+        <div class="dashboard-charts" style="margin-top: 50px; display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 30px;">
+            <!-- Revenue Chart -->
+            <div class="chart-container" style="background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+                <h3 style="margin-bottom: 20px;"><i class="fas fa-money-bill-trend-up" style="color: #4CAF50;"></i> Xu Hướng Doanh Thu (VNĐ)</h3>
+                <canvas id="revenueChart"></canvas>
+            </div>
+
+            <!-- Borrow Chart -->
+            <div class="chart-container" style="background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+                <h3 style="margin-bottom: 20px;"><i class="fas fa-chart-line" style="color: #2196F3;"></i> Lượt Mượn Sách</h3>
+                <canvas id="borrowChart"></canvas>
+            </div>
+
+            <!-- New Readers Chart -->
+            <div class="chart-container" style="background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+                <h3 style="margin-bottom: 20px;"><i class="fas fa-user-plus" style="color: #FF9800;"></i> Độc Giả Mới</h3>
+                <canvas id="readersChart"></canvas>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const chartData = /*[[${stats.chartData}]]*/ {};
+        
+        // Helper to prepare labels (Last 6 months)
+        const getLabels = () => {
+            const labels = [];
+            const d = new Date();
+            for (let i = 5; i >= 0; i--) {
+                const month = new Date(d.getFullYear(), d.getMonth() - i, 1);
+                labels.push("Tháng " + (month.getMonth() + 1));
+            }
+            return labels;
+        };
+
+        const getMonthValues = () => {
+            const values = [];
+            const d = new Date();
+            for (let i = 5; i >= 0; i--) {
+                const month = new Date(d.getFullYear(), d.getMonth() - i, 1).getMonth() + 1;
+                values.push(month);
+            }
+            return values;
+        };
+
+        const labels = getLabels();
+        const monthOrder = getMonthValues();
+
+        const mapData = (source) => monthOrder.map(m => source[m] || 0);
+
+        // 1. Revenue Chart
+        new Chart(document.getElementById('revenueChart'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Doanh thu',
+                    data: mapData(chartData.revenue),
+                    borderColor: '#4CAF50',
+                    backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 6,
+                    pointBackgroundColor: '#4CAF50'
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { display: false } } }
+        });
+
+        // 2. Borrow Chart
+        new Chart(document.getElementById('borrowChart'), {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Số lượt mượn',
+                    data: mapData(chartData.borrows),
+                    backgroundColor: '#2196F3',
+                    borderRadius: 8
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { display: false } } }
+        });
+
+        // 3. Readers Chart
+        new Chart(document.getElementById('readersChart'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Độc giả mới',
+                    data: mapData(chartData.readers),
+                    borderColor: '#FF9800',
+                    backgroundColor: 'rgba(255, 152, 0, 0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    pointRadius: 6,
+                    pointBackgroundColor: '#FF9800'
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { display: false } } }
+        });
+        /*]]>*/
+    </script>
+
+    <footer class="footer">
+        <p>&copy; 2026 Quản Lý Thư Viện. All rights reserved.</p>
+    </footer>
+</div>
+</body>
+</html>
